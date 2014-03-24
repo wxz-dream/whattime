@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+	android:orientation="vertical" 
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent" 
+	xmlns:android="http://schemas.android.com/apk/res/android">
+		    <LinearLayout
+		    	android:id="@+id/top"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content" 
+				android:orientation="horizontal" 
+				android:focusable="true" 
+				android:focusableInTouchMode="true"
+				>
+				<ImageView android:layout_width="wrap_content"
+						android:layout_height="wrap_content" 
+						android:src="@drawable/abc_ic_search"
+						android:layout_marginTop="3dip">
+				</ImageView>
+		
+			   	<AutoCompleteTextView android:id="@+id/edit"
+			        android:layout_width="fill_parent"
+			        android:completionThreshold="1"
+			        android:layout_height="wrap_content" 
+			        android:layout_marginRight="7px"
+			        android:layout_marginTop="3dip"
+			        android:hint="收件人" 
+			        />
+		    </LinearLayout>
+		    <LinearLayout 
+		    	android:id="@+id/bottom"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content" 
+				android:orientation="vertical"
+				android:layout_alignParentBottom="true"
+				>
+				<TableLayout
+				android:layout_width="fill_parent" 
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:stretchColumns="2"
+				>
+				<TableRow android:gravity="center_horizontal">
+				<Button  
+			        android:id="@+id/btn_add"    
+					android:textSize="18dip"
+					android:textStyle="bold"
+			        android:layout_weight="1"
+			        android:text="确定" />
+				<Button  
+			        android:id="@+id/btn_back"   
+					android:textSize="18dip"
+					android:textStyle="bold"
+			        android:layout_weight="1"
+			        android:text="返回" />
+			    </TableRow>
+				</TableLayout>
+			</LinearLayout>	
+			<TextView 
+				android:id="@+id/empty" 
+				android:text="对不起,未能查找到手机号!"
+				android:layout_below="@id/top"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content" 
+				android:textSize="20dip" 
+				android:textColor="#FFFFFF"
+				android:textStyle="bold" 
+				android:layout_marginTop="10dip" 
+				android:layout_marginRight="10dip" 
+				android:gravity="center"
+				/>
+			<ListView android:id="@+id/list"
+				        android:layout_width="fill_parent"
+				        android:layout_height="fill_parent"
+				        android:drawSelectorOnTop="false"
+						android:layout_below="@id/top"
+						android:layout_above="@id/bottom" 
+						android:nextFocusUp="@+id/edit" 
+				    />
+</RelativeLayout>

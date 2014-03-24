@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="app_name">天天有约</string>
+    <string name="menu_settings">Settings</string>
+    <string name="tab_schedule">日程</string>
+    <string name="tab_health_life">生活</string>
+    <string name="tab_merchant">商家</string>
+    <string name="tab_travel">旅行</string>
+    <string name="tab_movies">影视</string>
+    <string name="tab_game">游戏</string>
+    <string name="tab_school">校园</string>
+    <string name="tab_other">其它</string>
+    <string name="add">添加</string>
+    <string name="edit">修改</string>
+    <string name="tab_my_schedule">日程</string>
+    <string name="tab_my_friends">朋友圈</string>
+    <string name="tab_my_books">通讯录</string>
+    <string name="weather_title">天气预报</string>
+    <string name="city">城市</string>
+    <string name="province">省份</string>
+    <string name="today_wea">今日天气</string>
+    <string name="qiweng">气温：</string>
+    <string name="jinri">今日天气实况</string>
+    <string name="fengli">风力：</string>
+    <string name="shidu">旅游指数：</string>
+    <string name="kongqi">空气质量：</string>
+    <string name="zhiwai">紫外线强度：</string>
+    <string name="add_task">活动一</string>
+    <string name="city_str">城</string>
+    <string name="xiaotieshi">今日小贴士今日小贴士今日小贴士今日小贴士今日小贴士</string>
+    <string name="unkwon">\?\?\?</string>
+    <string name="plus">+</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="warnming_delete">请慎重操作删除</string>
+    <string name="warnming_text">距离下一次提醒还有 * </string>
+    <string name="default_label">"提醒"</string>
+    <string name="label">"备注"</string>
+    <string name="every_day">"每天"</string>
+    <string name="never">"一律不"</string>
+    <string name="day_concat">", "</string>
+    <string name="add_alarm">"添加"</string>
+    <string name="desk_clock_button_description">"时钟显示"</string>
+    <string name="silent_alarm_summary">"静音"</string>
+    <string name="done">"完成"</string>
+    <string name="revert">"还原"</string>
+    <string name="delete">"取消"</string>
+    <string name="enable_alarm">"启用提醒"</string>
+    <string name="delete_alarm">"删除提醒"</string>
+    <string name="disable_alarm">"停用提醒"</string>
+    <string name="delete_alarm_confirm">"确认删除此提醒？"</string>
+    <string name="alarm_repeat">"重复"</string>
+    <string name="alarm_vibrate">"振动"</string>
+    <string name="alert">"铃声"</string>
+    <string name="time">"时间"</string>
+    <string name="settings">"设置"</string>
+    <string name="alarm_in_silent_mode_title">"静音模式下闹钟响"</string>
+    <string name="alarm_in_silent_mode_summary">"手机处于静音模式时，闹钟仍会响"</string>
+    <string name="snooze_duration_title">"再响间隔"</string>
+    <string name="alarm_volume_title">"铃声音量"</string>
+    <string name="alarm_volume_summary">"设置铃声音量"</string>
+    <string name="day">"1 天"</string>
+    <string name="days">"<xliff:g id="DAYS">%s</xliff:g> 天"</string>
+    <string name="hour">"1 小时"</string>
+    <string name="hour_label">"时"</string>
+    <string name="hours" msgid="2071487018566991613">"<xliff:g id="HOURS">%s</xliff:g> 小时"</string>
+    <string name="minute">"1 分钟"</string>
+    <string name="minute_label">"分"</string>
+    <string name="minutes">"<xliff:g id="MINUTES">%s</xliff:g> 分钟"</string>
+    <string name="menu_desk_clock">"座钟"</string>
+    <string name="menu_edit_alarm">"修改提醒设置"</string>
+    <string name="alarm_list_title">"提醒"</string>
+    <string name="alarm_alert_snooze_text">"延迟10分钟"</string>
+    <string name="alarm_alert_alert_silenced">"提醒提醒时间为 <xliff:g id="MINUTES">%d</xliff:g> 分钟"</string>
+    <string name="alarm_notify_snooze_text">"已将提醒设置为从现在起 <xliff:g id="TIME">%s</xliff:g>后再提醒。选中可以取消。"</string>
+    <string name="alarm_alert_snooze_set">"暂停 <xliff:g id="MINUTES">%d</xliff:g> 分钟。"</string>
+    <string name="alarm_alert_dismiss_text">"取消"</string>
+    <string name="alarm_notify_snooze_label">"<xliff:g id="LABEL">%s</xliff:g>（已暂停）"</string>
+    <string name="alarm_notify_text">"选择暂停或关闭此提醒。"</string>
+    <string name="alarm_klaxon_service_desc">"在 DeskClock 中设置的提醒铃声播放服务。"</string>
+    <string name="waiting">载入中 ·　·　· </string>
+    <string name="alertType">分类</string>
+    <string name="quick_alarm">快速</string>
+    <string name="drink">喝水</string>
+    <string name="take_pills">吃药</string>
+    <string name="get_up">起床</string>
+    <string name="get_up_default">懒虫起床</string>
+    <string name="sleep">睡眠</string>
+    <string name="birthday">生日</string>
+    <string name="someday">纪念日</string>
+    <string name="countdown">倒计时</string>
+    <string name="other">自定义</string>
+    <string name="child_add">加一次</string>
+    <string name="alarm_title_warn">点击添加标题</string>
+    <string name="alarm_message_warn">点击添加备注</string>
+    <string name="music_label">响铃</string>
+    <string name="music_default">默认铃声</string>
+    <string name="repeat_label">周期</string>
+    <string name="repeat_default">不重复</string>
+    <string name="repeat_everyyear">每年</string>
+    <string name="repeat_everymonth">每月</string>
+    <string name="repeat_everyweekday">每周</string>
+    <string name="repeat_everyday">每天</string>
+    <string name="repeat_m_f">周一至周五</string>
+    <string name="repeat_s_s">周六日</string>
+    <string name="repeat_work">工作日</string>
+    <string name="sleep_label">小睡</string>
+    <string name="sleep_default">5分钟/3次</string>
+    <string name="work_des">法定节假日(智能跳过节假日)</string>
+    <string name="everyday_des">温馨提醒每一天</string>
+    <string name="minite_label">分钟</string>
+    <string name="order_label">次</string>
+    <string name="Monday">"星期一"</string>
+    <string name="Tuesday">"星期二"</string>
+    <string name="Wednesday">"星期三"</string>
+    <string name="Thursday">"星期四"</string>
+    <string name="Friday">"星期五"</string>
+    <string name="Saturday">"星期六"</string>
+    <string name="Sunday">"星期日"</string>
+    <string name="year_label">年</string>
+    <string name="month_label">月</string>
+    <string name="day_label">日</string>
+    <string name="btn_days">年月日</string>
+    <string name="btn_times">时分</string>
+    <string name="login_cur">立即登录</string>
+    <string name="login_label">登录</string>
+    <string name="login_back">返回</string>
+    <string name="login_username">用户名</string>
+    <string name="login_passwd">密码</string>
+    <string name="login_forget_passwd">忘记密码</string>
+    <string name="login_regist">注册</string>
+    <string name="regist_username_hint">邮箱地址/手机号</string>
+    <string name="regist_passwd_hint">6-16位数字或者字母</string>
+
+    <!-- AlarmAddActivity -->
+    <string name="alarm_add_share_label">分享:</string>
+    <string name="alarm_add_share_friend">朋友圈</string>
+    <string name="alarm_add_share_net">网络</string>
+    <string name="alarm_add_share_third">第三方</string>
+    <string name="alarm_add_linkman">联系人:</string>
+    <string name="alarm_add_joinnum">参加人数:</string>
+    <string name="alarm_add_endtime">截止日期:</string>
+    <string name="alarm_add_task_hint_label">待完善</string>
+    <string name="alarm_add_task_time_label">时间:</string>
+    <string name="alarm_add_task_des_label">描述:</string>
+    <string name="alarm_add_task_cycle_label">周期:</string>
+    <string name="alarm_add_task_nap_label">延迟响铃:</string>
+    <string name="alarm_add_task_ring_label">响铃:</string>
+    <string name="alarm_add_task_shake_label">震动:</string>
+    <string name="alarm_add_task_supervise_label">监督人:</string>
+    <string name="alalarm_add_task_add__label">加一项</string>
+    <string name="alalarm_add_task_edit">编辑</string>
+    <string name="alalarm_add_task_skip">跳过</string>
+    <string name="alalarm_add_task_delete">删除</string>
+    <string name="alarm_add_task_category_label">分类:</string>
+    <string name="alarm_add_task_address_label">地址:</string>
+    <string name="alarm_add_task_notice_label">注意事项:</string>
+    <string name="alarm_add_task_bt_title_label">标题</string>
+    <string name="alarm_add_task_bt_time_label">时间</string>
+    <string name="alarm_add_task_bt_des_label">描述</string>
+    <string name="alarm_add_task_bt_cycle_label">周期</string>
+    <string name="alarm_add_task_bt_nap_label">小睡</string>
+    <string name="alarm_add_task_bt_ring_label">响铃</string>
+    <string name="alarm_add_task_bt_shake_label">震动</string>
+    <string name="alarm_add_task_bt_supervise_label">监督人</string>
+    <string name="alarm_add_task_bt_address_label">地址</string>
+    <string name="alarm_add_task_bt_notice_label">注意事项</string>
+    <string name="add_quick_title_hint">快速提醒标题</string>
+    <string name="thrid_auth">第三方授权</string>
+    <string name="sinaweibo">新浪微博</string>
+    <string name="tencentweibo">腾讯微博</string>
+    <string name="qzone_customer_share_style">自定义QQ空间分享风格</string>
+    <string name="sm_item_fl_weibo">关注新浪微博</string>
+    <string name="sm_item_fl_tc">关注腾讯微博</string>
+    <string name="renren">人人网</string>
+    <string name="qzone">QQ</string>
+    <string name="not_yet_authorized">尚未授权</string>
+    <string name="share_content">ShareSDK for Android不仅集成简单、支持如QQ好友、微信、新浪微博、腾讯微博等所有社交平台，而且还有强大的统计分析管理后台，实时了解用户、信息流、回流率、传播效应等数据，详情见官网http://sharesdk.cn @ShareSDK</string>
+    <string name="share">分享</string>
+    <string name="get_user_info_sw">获取新浪微博授权用户资料</string>
+    <string name="get_user_info_tc">获取腾讯微博授权用户资料</string>
+    <string name="get_user_info_rr">获取人人网授权用户资料</string>
+    <string name="get_user_info_qz">获取QQ空间授权用户资料</string>
+    <string name="get_my_info">获取授权用户资料</string>
+    <string name="get_other_info">获取其他用户资料</string>
+
+    <string-array name="snooze_duration_entries">
+        <item msgid="8337408933053603125">"5 分钟"</item>
+        <item msgid="5294206441496024610">"10 分钟"</item>
+        <item msgid="2165904039211935470">"15 分钟"</item>
+        <item msgid="7248236967714374250">"20 分钟"</item>
+        <item msgid="738394723625179423">"25 分钟"</item>
+        <item msgid="1180222611308391616">"30 分钟"</item>
+    </string-array>
+    <string-array name="snooze_duration_values">
+        <item msgid="3655014754453084122">"5"</item>
+        <item msgid="8939029597449573449">"10"</item>
+        <item msgid="3922647341176353315">"15"</item>
+        <item msgid="5821804105985044459">"20"</item>
+        <item msgid="6048861883552402852">"25"</item>
+        <item msgid="2740866721232379791">"30"</item>
+    </string-array>
+    <string-array name="alarm_set">
+        <item msgid="5163476010406761625">"已将此提醒设置为从现在起不到 1 分钟后提醒。"</item>
+        <item msgid="7110525731259629055">"已将此提醒设置为从现在起 <xliff:g id="DAYS">%1$s</xliff:g>后再提醒。"</item>
+        <item msgid="7003982794086186185">"已将此提醒设置为从现在起 <xliff:g id="HOURS">%2$s</xliff:g>后再提醒。"</item>
+        <item msgid="7311021123230077742">"已将此提醒设置为从现在起 <xliff:g id="DAYS">%1$s</xliff:g><xliff:g id="HOURS">%2$s</xliff:g>后再提醒。"</item>
+        <item msgid="8431715191823114872">"已将此提醒设置为从现在起 <xliff:g id="MINUTES">%3$s</xliff:g>后再提醒。"</item>
+        <item msgid="3244151088673185428">"已将此提醒设置为从现在起 <xliff:g id="DAYS">%1$s</xliff:g><xliff:g id="MINUTES">%3$s</xliff:g>后再提醒。"</item>
+        <item msgid="3663661342600168814">"已将此提醒设置为从现在起 <xliff:g id="HOURS">%2$s</xliff:g><xliff:g id="MINUTES">%3$s</xliff:g>后再提醒。"</item>
+        <item msgid="7779544127785487304">"已将该提醒设置为从现在起 <xliff:g id="DAYS">%1$s</xliff:g><xliff:g id="HOURS">%2$s</xliff:g><xliff:g id="MINUTES">%3$s</xliff:g>后再提醒。"</item>
+    </string-array>
+    <string-array name="repeat_type">
+        <item>年</item>
+        <item>月</item>
+        <item>周</item>
+    </string-array>
+
+    <string name="app_error">应用程序错误</string>
+    <string name="app_error_message">很抱歉，应用程序出现错误，即将退出。\n请选择邮件的方式将此错误报告提交给我，我会尽快修复这个问题，谢谢！</string>
+    <string name="submit_report">提交报告</string>
+    
+    
+</resources>
