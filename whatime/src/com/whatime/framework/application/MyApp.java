@@ -13,13 +13,6 @@ import com.whatime.db.DaoSession;
 import com.whatime.db.User;
 import com.whatime.module.weather.util.WebServiceUtil;
 
-/**
- * @TiTle AppShareApplication.java
- * @Package com.chipwing.appshare
- * @Description Application Global Management Class 
- * @Date 2013-4-18
- * @Author siyuan
- */
 public class MyApp extends RoboApplication {
     public static final String DB_NAME = "wtx.db";
 	private static MyApp instance;
