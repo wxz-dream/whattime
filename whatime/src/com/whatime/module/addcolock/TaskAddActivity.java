@@ -645,7 +645,10 @@ public class TaskAddActivity extends Activity
     @Click
     void add_save()
     {
-        parseAdvanceData();
+        if(mTask.getAdvanceOrder()!=AdvanceCons.ORDER_DEFAULT)
+        {
+            parseAdvanceData();
+        }
         long setTime = time.getTimeInMillis();
         if(mTask.getAdvanceOrder()!=AdvanceCons.ORDER_DEFAULT||mTask.getSetTime()!=null)
         {
