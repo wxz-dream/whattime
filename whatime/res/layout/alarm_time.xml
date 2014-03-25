@@ -65,7 +65,7 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:layout_marginBottom="2dip"
         android:layout_marginLeft="2.0dip"
         android:layout_marginRight="2.0dip"
@@ -104,7 +104,7 @@
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_toLeftOf="@id/indicator"
             android:orientation="vertical" >
             <TextView

@@ -137,6 +137,16 @@ public class DBHelper
         return qb.list();
     }
     
+    /** 查询历史记录 */
+    public List<Alarm> getHistoryAlarmByTime(long start, long end)
+    {
+        QueryBuilder<Alarm> qb = alarmDao.queryBuilder();
+        qb.where(new StringCondition("ALARM_TIME BETWEEN " + start + " AND " + end),
+            com.whatime.db.AlarmDao.Properties.Del.eq(false),com.whatime.db.AlarmDao.Properties.Open.eq(false));
+        qb.orderDesc(com.whatime.db.AlarmDao.Properties.AlarmTime);
+        return qb.list();
+    }
+    
     /** 查询 */
     public Alarm getAlarmById(long id)
     {

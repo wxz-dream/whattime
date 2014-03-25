@@ -150,7 +150,6 @@ public class SchedulePagerAdapter extends PagerAdapter
                     @Override
                     public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id)
                     {
-                        
                         return true;
                     }
                 });

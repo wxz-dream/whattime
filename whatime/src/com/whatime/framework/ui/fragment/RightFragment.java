@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.whatime.R;
 import com.whatime.db.User;
 import com.whatime.framework.application.MyApp;
+import com.whatime.module.history.HistoryActivity_;
 import com.whatime.module.login.LoginActivity;
 import com.whatime.module.login.UserInfoActivity;
 import com.whatime.module.thirdLogin.AuthActivity;
@@ -44,6 +45,12 @@ public class RightFragment extends Fragment
     private Context mContext;
     
     private TextView share_iv;
+    
+    private TextView history_iv;
+    
+    private TextView help_iv;
+    
+    private TextView about_iv;
     
     private MyOnclickListener listener;
     
@@ -73,7 +80,13 @@ public class RightFragment extends Fragment
         logedUI();
         login_iv.setOnClickListener(listener);
         share_iv = (TextView)view.findViewById(R.id.share_iv);
+        history_iv = (TextView)view.findViewById(R.id.history_iv);
+        help_iv = (TextView)view.findViewById(R.id.help_iv);
+        about_iv = (TextView)view.findViewById(R.id.about_iv);
         share_iv.setOnClickListener(listener);
+        history_iv.setOnClickListener(listener);
+        help_iv.setOnClickListener(listener);
+        about_iv.setOnClickListener(listener);
     }
     
     private void logedUI()
@@ -111,6 +124,13 @@ public class RightFragment extends Fragment
                     break;
                 case R.id.share_iv:
                     startActivity(new Intent(mContext, AuthActivity.class));
+                    break;
+                case R.id.history_iv:
+                    startActivity(new Intent(mContext, HistoryActivity_.class));
+                    break;
+                case R.id.help_iv:
+                    break;
+                case R.id.about_iv:
                     break;
             }
         }

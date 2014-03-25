@@ -1,37 +1,28 @@
-package com.whatime.module.schedule.adapter;
+package com.whatime.module.history;
 
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.whatime.R;
 import com.whatime.controller.service.AlarmService;
-import com.whatime.controller.service.AlarmUtil;
 import com.whatime.db.Alarm;
-import com.whatime.db.DBHelper;
-import com.whatime.db.Task;
-import com.whatime.framework.ui.view.ToastMaster;
 import com.whatime.module.addcolock.AlarmAddActivity_;
+import com.whatime.module.schedule.adapter.OneBar;
 import com.whatime.module.schedule.view.DigitalClock;
 
-public class StatusExpandAdapter extends BaseExpandableListAdapter
+public class HistoryExpandAdapter extends BaseExpandableListAdapter
 {
     //private static final String TAG = "StatusExpandAdapter";
     private LayoutInflater inflater = null;
@@ -40,14 +31,11 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
     
     private Context context;
     
-    private SchedulePagerAdapter schedulePagerAdapter;
-    
-    public StatusExpandAdapter(SchedulePagerAdapter schedulePagerAdapter, Context context, List<OneBar> oneList)
+    public HistoryExpandAdapter(Context context, List<OneBar> oneList)
     {
         this.oneList = oneList;
         inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.context = context;
-        this.schedulePagerAdapter = schedulePagerAdapter;
     }
     
     public void setList(List<OneBar> oneList)
@@ -158,51 +146,8 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
                     entity.getId()).putExtra(AlarmService.ALARM_TYPE, childPosition));
             }
         });
-        digitalClock.setOnLongClickListener(new OnLongClickListener()
-        {
-            
-            @Override
-            public boolean onLongClick(View arg0)
-            {
-                // Confirm that the alarm will be deleted.
-                new AlertDialog.Builder(context).setTitle(context.getString(R.string.delete_alarm))
-                    .setMessage(context.getString(R.string.delete_alarm_confirm))
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface d, int w)
-                        {
-                            for (Task task : entity.getTasks())
-                            {
-                                task.setDel(true);
-                                task.setOpen(false);
-                                DBHelper.getInstance().uptTask(task);
-                            }
-                            entity.setDel(true);
-                            entity.setOpen(false);
-                            DBHelper.getInstance().uptAlarm(entity);
-                            schedulePagerAdapter.notifyDataChange();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show();
-                return true;
-            }
-        });
         View indicator = convertView.findViewById(R.id.indicator);
-        final ImageView barOnOff = (ImageView)indicator.findViewById(R.id.bar_onoff);
-        barOnOff.setImageResource(entity.getOpen() ? R.drawable.ic_indicator_on : R.drawable.ic_indicator_off);
-        final CheckBox clockOnOff = (CheckBox)indicator.findViewById(R.id.clock_onoff);
-        clockOnOff.setChecked(entity.getOpen());
-        clockOnOff.setBackgroundResource(entity.getOpen() ? R.drawable.ic_clock_alarm_on
-            : R.drawable.ic_clock_alarm_off);
-        indicator.setOnClickListener(new OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                clockOnOff.toggle();
-                updateIndicatorAndAlarm(clockOnOff.isChecked(), barOnOff, clockOnOff, entity);
-            }
-        });
+        indicator.setVisibility(View.GONE);
         final Calendar c = Calendar.getInstance();
         c.setTimeInMillis(entity.getAlarmTime());
         digitalClock.updateTime(c);
@@ -223,36 +168,6 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
             {
                 context.startActivity(new Intent(context, AlarmAddActivity_.class).putExtra(AlarmService.ALARM_ID,
                     entity.getId()).putExtra(AlarmService.ALARM_TYPE, childPosition));
-            }
-        });
-        content.setOnLongClickListener(new OnLongClickListener()
-        {
-            
-            @Override
-            public boolean onLongClick(View arg0)
-            {
-                // Confirm that the alarm will be deleted.
-                new AlertDialog.Builder(context).setTitle(context.getString(R.string.delete_alarm))
-                    .setMessage(context.getString(R.string.delete_alarm_confirm))
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface d, int w)
-                        {
-                            for (Task task : entity.getTasks())
-                            {
-                                task.setDel(true);
-                                task.setOpen(false);
-                                DBHelper.getInstance().uptTask(task);
-                            }
-                            entity.setDel(true);
-                            entity.setOpen(false);
-                            DBHelper.getInstance().uptAlarm(entity);
-                            schedulePagerAdapter.notifyDataChange();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show();
-                return true;
             }
         });
         TextView labelView = (TextView)convertView.findViewById(R.id.alarm_title);
@@ -291,22 +206,6 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
         
         return convertView;
     }
-    
-    //更新checkbox
-    private void updateIndicatorAndAlarm(boolean enabled, ImageView bar, CheckBox clockOnOff, Alarm alarm)
-    {
-        clockOnOff.setBackgroundResource(enabled ? R.drawable.ic_clock_alarm_on : R.drawable.ic_clock_alarm_off);
-        bar.setImageResource(enabled ? R.drawable.ic_indicator_on : R.drawable.ic_indicator_off);
-        AlarmService.enableAlarm(context, alarm.getId(), enabled);
-        if (enabled)
-        {
-            String toastText = AlarmUtil.formatToast(context, alarm.getAlarmTime());
-            Toast toast = Toast.makeText(context, toastText, Toast.LENGTH_LONG);
-            ToastMaster.setToast(toast);
-            toast.show();
-        }
-    }
-    
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition)
     {

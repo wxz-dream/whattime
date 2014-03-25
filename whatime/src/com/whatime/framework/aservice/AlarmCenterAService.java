@@ -18,6 +18,8 @@ package com.whatime.framework.aservice;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -509,6 +511,15 @@ public class AlarmCenterAService extends Service
             player.setLooping(true);
             player.prepare();
             player.start();
+            new Timer().schedule(new TimerTask()
+            {
+                
+                @Override
+                public void run()
+                {
+                    stopSelf();
+                }
+            }, 1000*60);
         }
     }
     
