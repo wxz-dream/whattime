@@ -182,6 +182,7 @@
             android:process="com.qh.whatime.AlarmService">
             <intent-filter>
                 <action android:name="com.whatime.ALARM_ALERT" />
+                <action android:name="com.whatime.UPT_NOTIFICATION" />
                 <action android:name="start" />
             </intent-filter>
         </service>

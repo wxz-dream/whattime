@@ -9,6 +9,7 @@ import android.text.format.DateFormat;
 import com.whatime.R;
 import com.whatime.db.Alarm;
 import com.whatime.framework.application.MyApp;
+import com.whatime.framework.util.SysUtil;
 import com.whatime.module.holiday.HolidayCache;
 
 public class AlarmUtil
@@ -127,5 +128,16 @@ public class AlarmUtil
             c1.add(Calendar.DATE, 1);
         }
         return c1.getTimeInMillis();
+    }
+    
+    public static String getShowTime(Context context,long time)
+    {
+        Calendar c = Calendar.getInstance(TimeZone.getDefault());
+        c.setTimeInMillis(time);
+        return new StringBuilder().append(c.get(Calendar.YEAR)).append("-")
+            .append(c.get(Calendar.MONTH)+1).append("-").append(c.get(Calendar.DAY_OF_MONTH))
+            .append("  (").append(SysUtil.getCurrentDayOfWeek(context, c.get(Calendar.DAY_OF_WEEK)))
+            .append(")  ").append(c.get(Calendar.HOUR_OF_DAY)).append(":").append(SysUtil.doubleDataFormat(c.get(Calendar.MINUTE)))
+            .toString();
     }
 }

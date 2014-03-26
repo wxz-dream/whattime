@@ -49,6 +49,7 @@ import com.whatime.R;
 import com.whatime.controller.center.AlarmController;
 import com.whatime.controller.service.AlarmAlertWakeLock;
 import com.whatime.controller.service.AlarmService;
+import com.whatime.controller.service.AlarmUtil;
 import com.whatime.db.Alarm;
 import com.whatime.db.Task;
 import com.whatime.framework.ui.activity.MainActivity;
@@ -111,6 +112,8 @@ public class AlarmCenterAService extends Service
     
     private static final int FOCUSCHANGE = 2;
     
+    Notification notification;
+    
     private Handler mHandler = new Handler()
     {
         public void handleMessage(Message msg)
@@ -168,8 +171,7 @@ public class AlarmCenterAService extends Service
             // we register onCallStateChanged, we get the initial in-call state
             // which kills the alarm. Check against the initial call state so
             // we don't kill the alarm during a call.
-            if (state != TelephonyManager.CALL_STATE_IDLE && state != mInitialCallState
-                &&mCurrentAlarm!=null)
+            if (state != TelephonyManager.CALL_STATE_IDLE && state != mInitialCallState && mCurrentAlarm != null)
             {
                 sendKillBroadcast(mCurrentAlarm);
                 stopSelf();
@@ -199,14 +201,7 @@ public class AlarmCenterAService extends Service
         {
             throw new IllegalStateException("OS doesn't have Service.startForeground OR Service.setForeground!");
         }
-        
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
-        Notification notification = new Notification();
-        notification.icon = R.drawable.icon;
-        notification.tickerText = "天天有约";
-        notification.when = System.currentTimeMillis();
-        notification.setLatestEventInfo(this, "天天有约", "详情", contentIntent);
-        startForegroundCompat(NOTIFICATION_ID, notification);
+        uptNot();
         mVibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
         mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
         // Listen for incoming calls to kill the alarm.
@@ -217,6 +212,26 @@ public class AlarmCenterAService extends Service
         AlarmController.setNextAlert(this);
         AlarmController.sync(this);
         
+    }
+    
+    private void uptNot()
+    {
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
+        notification = new Notification();
+        notification.icon = R.drawable.icon;
+        notification.tickerText = "天天有约";
+        notification.when = System.currentTimeMillis();
+        String title = "天天有约";
+        String time = "详情";
+        Alarm a = AlarmService.getNextAlarm(this);
+        if (a != null)
+        {
+            title = a.getTask().getTitle();
+            time = AlarmUtil.getShowTime(this, a.getAlarmTime());
+            
+        }
+        notification.setLatestEventInfo(this, title, time, contentIntent);
+        startForegroundCompat(NOTIFICATION_ID, notification);
     }
     
     void invokeMethod(Method method, Object[] args)
@@ -372,6 +387,11 @@ public class AlarmCenterAService extends Service
             // Record the initial call state here so that the new alarm has the
             // newest state.
             mInitialCallState = mTelephonyManager.getCallState();
+            uptNot();
+        }
+        else if(AlarmService.UPT_NOTIFICATION.equals(intent.getAction()))
+        {
+            uptNot();
         }
         return START_STICKY;
     }
@@ -519,7 +539,7 @@ public class AlarmCenterAService extends Service
                 {
                     stopSelf();
                 }
-            }, 1000*60);
+            }, 1000 * 60);
         }
     }
     

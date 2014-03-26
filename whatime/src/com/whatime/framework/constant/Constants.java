@@ -14,7 +14,7 @@ public class Constants
     //http://192.168.11.5:8080/whatimeServer/android/
     //http://whatimeServer.sinaapp.com/android/
     //http://192.168.11.7:8080/whatimeSae/android/
-    public static final String URL = "http://192.168.11.4:8080/whatimeServer/android/";
+    public static final String URL = "http://whatime.duapp.com/android/";
     
     public static final String REGIST_USER_POST_URL = "user/registUser";
     

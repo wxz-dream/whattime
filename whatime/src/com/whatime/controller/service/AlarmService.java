@@ -11,7 +11,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.whatime.controller.alarm.AdvanceCons;
@@ -53,6 +52,8 @@ public class AlarmService
     public static final String ALARM_TYPE = "alarm_type";
     
     public static final String ALARM_UUID = "alarm_uuid";
+    
+    public static final String UPT_NOTIFICATION = "com.whatime.UPT_NOTIFICATION";
     
     /**
      * Creates a new Alarm and fills in the given alarm's id.
@@ -107,6 +108,7 @@ public class AlarmService
                 ed.remove(AlarmCons.PREF_SNOOZE_TIME);
                 ed.apply();
                 saveSnoozeAlert(context, prefs, id, alarmTime);
+                uptNotification(context);
             }
         }
         else
@@ -115,6 +117,13 @@ public class AlarmService
         }
     }
     
+    private static void uptNotification(Context context)
+    {
+        Intent uptNotify = new Intent(UPT_NOTIFICATION);
+        context.startService(uptNotify);
+        
+    }
+
     /**
      * Return an Alarm object representing the alarm id in the database.
      * Returns null if no alarm exists.
@@ -152,7 +161,15 @@ public class AlarmService
     {
         return DBHelper.getInstance().getTaskById(id);
     }
-    
+    public static Alarm getNextAlarm(final Context context)
+    {
+        List<Alarm> alarms = getOpenAlarms(context);
+        if (alarms.size() > 0)
+        {
+            return alarms.get(0);
+        }
+        return null;
+    }
     /**
      * Called at system startup, on time/timezone change, and whenever
      * the user changes alarm settings.  Activates snooze if set,
@@ -200,11 +217,6 @@ public class AlarmService
         
         am.set(AlarmManager.RTC_WAKEUP, time, sender);
         
-        setStatusBarIcon(context, true);
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(time);
-        String timeString = AlarmUtil.formatDayAndTime(context, c);
-        saveNextAlarm(context, timeString);
     }
     
     /**
@@ -221,8 +233,6 @@ public class AlarmService
                 new Intent(AlarmCons.ALARM_ALERT_ACTION),
                 PendingIntent.FLAG_CANCEL_CURRENT);
         am.cancel(sender);
-        setStatusBarIcon(context, false);
-        saveNextAlarm(context, "");
     }
     
     public static void saveSnoozeAlert(final Context context, final SharedPreferences prefs, final long id,
@@ -241,26 +251,6 @@ public class AlarmService
             enableAlert(context, id, time);
         }
     }
-    
-    /**
-     * Tells the StatusBar whether the alarm is enabled or disabled
-     */
-    private static void setStatusBarIcon(Context context, boolean enabled)
-    {
-        Intent alarmChanged = new Intent("android.intent.action.ALARM_CHANGED");
-        alarmChanged.putExtra("alarmSet", enabled);
-        context.sendBroadcast(alarmChanged);
-    }
-    
-    /**
-     * Save time of the next alarm, as a formatted string, into the system
-     * settings so those who care can make use of it.
-     */
-    static void saveNextAlarm(final Context context, String timeString)
-    {
-        Settings.System.putString(context.getContentResolver(), Settings.System.NEXT_ALARM_FORMATTED, timeString);
-    }
-    
     public static void disableExpiredAlarms(Context context)
     {
         List<Alarm> alarms = DBHelper.getInstance().getOpenAlarms();
