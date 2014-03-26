@@ -51,7 +51,7 @@ public class DBHelper
             instance = new DBHelper();
             
             // 数据库对象
-            DaoSession daoSession = MyApp.getDaoSession(mContext);
+            DaoSession daoSession = MyApp.getDaoSession();
             instance.alarmDao = daoSession.getAlarmDao();
             instance.taskDao = daoSession.getTaskDao();
             instance.hosDao = daoSession.getHolidayDao();

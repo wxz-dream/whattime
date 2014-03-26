@@ -7,7 +7,6 @@ import java.util.UUID;
 import roboguice.application.RoboApplication;
 import android.content.Context;
 
-import com.whatime.db.DBHelper;
 import com.whatime.db.DaoMaster;
 import com.whatime.db.DaoMaster.OpenHelper;
 import com.whatime.db.DaoSession;
@@ -105,13 +104,13 @@ public class MyApp extends RoboApplication {
 	 * @param context
 	 * @return
 	 */
-	public static DaoSession getDaoSession(Context context)
+	public static DaoSession getDaoSession()
 	{
 	    if (daoSession == null)
 	    {
 	        if (daoMaster == null)
 	        {
-	            daoMaster = getDaoMaster(context);
+	            daoMaster = getDaoMaster(instance.getApplicationContext());
 	        }
 	        daoSession = daoMaster.newSession();
 	    }
