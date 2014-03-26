@@ -1,4 +1,4 @@
-package com.whatime.module.market.merchant;
+package com.whatime.module.market.recreation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,16 +15,16 @@ import android.widget.ListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.whatime.R;
-import com.whatime.controller.center.AlarmController;
 import com.whatime.db.Alarm;
+import com.whatime.db.Category;
 import com.whatime.db.DBHelper;
 import com.whatime.framework.ui.adapter.MyListAdapter;
 import com.whatime.framework.ui.view.ToastMaster;
 
-public class MerchantPagerAdapter extends PagerAdapter
+public class RecreationPagerAdapter extends PagerAdapter
 {
     
-    private int itemCount;
+    private List<Category> cates;
     
     private OnRefreshListener<ListView> listener;
     
@@ -32,10 +32,10 @@ public class MerchantPagerAdapter extends PagerAdapter
     
     private List<Alarm> alarms = new ArrayList<Alarm>();
     
-    public MerchantPagerAdapter(OnRefreshListener<ListView> listener, int itemCount)
+    public RecreationPagerAdapter(OnRefreshListener<ListView> listener, List<Category> cates)
     {
         this.listener = listener;
-        this.itemCount = itemCount;
+        this.cates = cates;
     }
     
     @Override
@@ -77,10 +77,11 @@ public class MerchantPagerAdapter extends PagerAdapter
         return view == object;
     }
     
+    
     @Override
     public int getCount()
     {
-        return itemCount;
+        return cates.size();
     }
     
 }

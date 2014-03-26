@@ -6,7 +6,7 @@
 
     <include
         android:id="@+id/head_layout"
-        layout="@layout/head_layout" />
+        layout="@layout/market_head_layout" />
 
     <LinearLayout
         android:id="@+id/middle"

@@ -1,5 +1,6 @@
 package com.whatime.controller.service;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +18,7 @@ import com.whatime.controller.alarm.AdvanceCons;
 import com.whatime.controller.alarm.AlarmCons;
 import com.whatime.controller.alarm.RepeatCons;
 import com.whatime.db.Alarm;
+import com.whatime.db.Category;
 import com.whatime.db.DBHelper;
 import com.whatime.db.Task;
 import com.whatime.db.User;
@@ -418,8 +420,61 @@ public class AlarmService
             User user = MyApp.getInstance().getUser();
             if (user != null)
             {
-                new RemoteApiImpl().getSyncCategory(user.getUuid(), user.getMime(), DBHelper.getInstance()
-                    .getCategoryCount());
+                /*new RemoteApiImpl().getSyncCategory(user.getUuid(), user.getMime(), DBHelper.getInstance()
+                    .getCategoryCount());*/
+                List<Category> cates = new ArrayList<Category>();
+                Category cate1 = new Category();
+                cate1.setUuid("c18366a3-6f2a-41ab-9111-2f964383690a");
+                cate1.setName("根分类");
+                cate1.setDesc("根");
+                cate1.setDel(false);
+                cates.add(cate1);
+                Category cate2 = new Category();
+                cate2.setUuid("74b0988f-71a0-4512-b85e-00e1a66db280");
+                cate2.setName("健康生活");
+                cate2.setDesc("生活");
+                cate2.setParentUuid("c18366a3-6f2a-41ab-9111-2f964383690a");
+                cate2.setDel(false);
+                cates.add(cate2);
+                Category cate3 = new Category();
+                cate3.setUuid("e6a01e37-cf0c-4768-b247-09c3bb11d6a9");
+                cate3.setName("娱乐活动");
+                cate3.setDesc("娱乐");
+                cate3.setParentUuid("c18366a3-6f2a-41ab-9111-2f964383690a");
+                cate3.setDel(false);
+                cates.add(cate3);
+                Category cate4 = new Category();
+                cate4.setUuid("4592570a-11f6-47ed-8e6e-6a7ac0ef4dad");
+                cate4.setName("发布会");
+                cate4.setDesc("发布会");
+                cate4.setParentUuid("e6a01e37-cf0c-4768-b247-09c3bb11d6a9");
+                cate4.setDel(false);
+                cates.add(cate4);
+                Category cate5 = new Category();
+                cate5.setUuid("11d124b3-b9ac-4f36-8e07-80f07b66fc1c");
+                cate5.setName("演唱会");
+                cate5.setDesc("演唱会");
+                cate5.setParentUuid("e6a01e37-cf0c-4768-b247-09c3bb11d6a9");
+                cate5.setDel(false);
+                cates.add(cate5);
+                
+                
+                
+                DBHelper.getInstance().clearCate();
+                for(Category cate :cates)
+                {
+                    String parentUuid = cate.getParentUuid();
+                    if(parentUuid!=null&&parentUuid.length()>0)
+                    {
+                        Category c = DBHelper.getInstance().getcateByUuid(parentUuid);
+                        if(c!=null)
+                        {
+                            cate.setParentId(c.getId());
+                        }
+                    }
+                    DBHelper.getInstance().addCate(cate);
+                }
+                
             }
         }
     }

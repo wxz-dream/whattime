@@ -13,6 +13,7 @@ public class Category {
     private Long parentId;
     private String parentUuid;
     private String imgUri;
+    private Boolean del;
 
     public Category() {
     }
@@ -21,7 +22,7 @@ public class Category {
         this.id = id;
     }
 
-    public Category(Long id, String uuid, String name, String desc, Long parentId, String parentUuid, String imgUri) {
+    public Category(Long id, String uuid, String name, String desc, Long parentId, String parentUuid, String imgUri, Boolean del) {
         this.id = id;
         this.uuid = uuid;
         this.name = name;
@@ -29,6 +30,7 @@ public class Category {
         this.parentId = parentId;
         this.parentUuid = parentUuid;
         this.imgUri = imgUri;
+        this.del = del;
     }
 
     public Long getId() {
@@ -85,6 +87,14 @@ public class Category {
 
     public void setImgUri(String imgUri) {
         this.imgUri = imgUri;
+    }
+
+    public Boolean getDel() {
+        return del;
+    }
+
+    public void setDel(Boolean del) {
+        this.del = del;
     }
 
 }

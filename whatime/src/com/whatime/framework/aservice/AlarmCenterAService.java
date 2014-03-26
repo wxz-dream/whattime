@@ -201,7 +201,7 @@ public class AlarmCenterAService extends Service
         {
             throw new IllegalStateException("OS doesn't have Service.startForeground OR Service.setForeground!");
         }
-        uptNot();
+        
         mVibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
         mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE);
         // Listen for incoming calls to kill the alarm.
@@ -211,6 +211,7 @@ public class AlarmCenterAService extends Service
         AlarmController.disableExpiredAlarms(this);
         AlarmController.setNextAlert(this);
         AlarmController.sync(this);
+        uptNot();
         
     }
     

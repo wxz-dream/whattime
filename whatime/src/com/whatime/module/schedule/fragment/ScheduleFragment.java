@@ -27,11 +27,11 @@ import android.view.ViewGroup;
 
 import com.whatime.R;
 import com.whatime.framework.ui.adapter.ScheduleScrollingTabsAdapter;
-import com.whatime.framework.ui.fragment.BaseFragment;
+import com.whatime.framework.ui.fragment.ScheduleBaseFragment;
 import com.whatime.framework.ui.view.ScrollableTabView;
 import com.whatime.module.schedule.adapter.SchedulePagerAdapter;
 
-public class ScheduleFragment extends BaseFragment
+public class ScheduleFragment extends ScheduleBaseFragment
 {
     private String[] tabs;
     

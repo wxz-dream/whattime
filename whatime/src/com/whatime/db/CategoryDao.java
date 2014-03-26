@@ -30,6 +30,7 @@ public class CategoryDao extends AbstractDao<Category, Long> {
         public final static Property ParentId = new Property(4, Long.class, "parentId", false, "PARENT_ID");
         public final static Property ParentUuid = new Property(5, String.class, "parentUuid", false, "PARENT_UUID");
         public final static Property ImgUri = new Property(6, String.class, "imgUri", false, "IMG_URI");
+        public final static Property Del = new Property(7, Boolean.class, "del", false, "DEL");
     };
 
 
@@ -51,7 +52,8 @@ public class CategoryDao extends AbstractDao<Category, Long> {
                 "'DESC' TEXT," + // 3: desc
                 "'PARENT_ID' INTEGER," + // 4: parentId
                 "'PARENT_UUID' TEXT," + // 5: parentUuid
-                "'IMG_URI' TEXT);"); // 6: imgUri
+                "'IMG_URI' TEXT," + // 6: imgUri
+                "'DEL' INTEGER);"); // 7: del
     }
 
     /** Drops the underlying database table. */
@@ -99,6 +101,11 @@ public class CategoryDao extends AbstractDao<Category, Long> {
         if (imgUri != null) {
             stmt.bindString(7, imgUri);
         }
+ 
+        Boolean del = entity.getDel();
+        if (del != null) {
+            stmt.bindLong(8, del ? 1l: 0l);
+        }
     }
 
     /** @inheritdoc */
@@ -117,7 +124,8 @@ public class CategoryDao extends AbstractDao<Category, Long> {
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // desc
             cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4), // parentId
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // parentUuid
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // imgUri
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // imgUri
+            cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0 // del
         );
         return entity;
     }
@@ -132,6 +140,7 @@ public class CategoryDao extends AbstractDao<Category, Long> {
         entity.setParentId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
         entity.setParentUuid(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
         entity.setImgUri(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setDel(cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0);
      }
     
     /** @inheritdoc */

@@ -3,7 +3,6 @@ package com.whatime.framework.ui.adapter;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import android.app.Activity;

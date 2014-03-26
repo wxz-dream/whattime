@@ -1,6 +1,7 @@
-package com.whatime.module.market.merchant;
+package com.whatime.module.market.recreation;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,39 +12,46 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.whatime.R;
-import com.whatime.framework.ui.adapter.ScheduleScrollingTabsAdapter;
-import com.whatime.framework.ui.fragment.BaseFragment;
+import com.whatime.db.Category;
+import com.whatime.db.DBHelper;
+import com.whatime.framework.ui.adapter.MarketScrollingTabsAdapter;
+import com.whatime.framework.ui.fragment.MarketFragment;
 import com.whatime.framework.ui.view.ScrollableTabView;
 
-public class MerchantFragment extends BaseFragment
+public class RecreationFragment extends MarketFragment
 {
-    private String[] tabs;
+    private int page;
+    private Category cate;
     
-    private MerchantPagerAdapter listViewPagerAdapter;
+    private List<Category> cates;
     
-    private ScheduleScrollingTabsAdapter mScrollingTabsAdapter;
+    private RecreationPagerAdapter listViewPagerAdapter;
     
-    public MerchantFragment()
+    private MarketScrollingTabsAdapter mScrollingTabsAdapter;
+    
+    public RecreationFragment()
     {
     }
     
-    public MerchantFragment(Activity activity)
+    public RecreationFragment(Activity activity,int page)
     {
         this.mActivity = activity;
+        this.page = page;
     }
     
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        tabs = getResources().getStringArray(R.array.tab_my_schedule);
-        mTopTitleView.setText(getString(R.string.tab_merchant));
+        cate = DBHelper.getInstance().getcaById(page);
+        mTopTitleView.setText(cate.getDesc());
         mTopBackView.setBackgroundResource(R.drawable.biz_local_news_main_back_normal);
+        cates = DBHelper.getInstance().getcateByParentId(page);
         
-        listViewPagerAdapter = new MerchantPagerAdapter(this, tabs.length);
+        listViewPagerAdapter = new RecreationPagerAdapter(this, cates);
         mPager.setAdapter(listViewPagerAdapter);
         
         pagerItemList = new ArrayList<Fragment>();
-        for (int i = 0; i < tabs.length; i++)
+        for (int i = 0; i < cates.size(); i++)
         {
             pagerItemList.add(new Fragment());
         }
@@ -55,7 +63,7 @@ public class MerchantFragment extends BaseFragment
     protected void initScrollableTabs(View view, ViewPager mViewPager)
     {
         mScrollableTabView = (ScrollableTabView)view.findViewById(R.id.scrollabletabview);
-        mScrollingTabsAdapter = new ScheduleScrollingTabsAdapter(mActivity, tabs);
+        mScrollingTabsAdapter = new MarketScrollingTabsAdapter(mActivity, cates);
         mScrollableTabView.setAdapter(mScrollingTabsAdapter);
         mScrollableTabView.setViewPage(mViewPager);
     }

@@ -7,17 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.whatime.R;
-import com.whatime.framework.ui.fragment.BaseFragment;
+import com.whatime.framework.ui.fragment.MarketFragment;
 
-public class MoviesFragment extends BaseFragment {
+public class MoviesFragment extends MarketFragment {
     
+    private int page;
     public MoviesFragment()
     {
     }
     
-    public MoviesFragment(Activity activity)
+    public MoviesFragment(Activity activity, int page)
     {
         this.mActivity = activity;
+        this.page = page;
     }
     
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

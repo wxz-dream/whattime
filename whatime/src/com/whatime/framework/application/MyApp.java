@@ -2,6 +2,7 @@ package com.whatime.framework.application;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.UUID;
 
 import roboguice.application.RoboApplication;
 import android.content.Context;
@@ -79,7 +80,13 @@ public class MyApp extends RoboApplication {
 	{
 	    if(null==user)
 	    {
-	        user = DBHelper.getInstance().getUser();
+	        //user = DBHelper.getInstance().getUser();
+	        user = new User();
+	        user.setId(1l);
+	        user.setUserName("aaa");
+	        user.setPassword("aaa");
+	        user.setAvailable(true);
+	        user.setUuid(UUID.randomUUID().toString());
 	    }
 	    return user;
 	}

@@ -7,17 +7,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.whatime.R;
-import com.whatime.framework.ui.fragment.BaseFragment;
+import com.whatime.framework.ui.fragment.MarketFragment;
 
-public class HealthLiftFragment extends BaseFragment {
+public class HealthLiftFragment extends MarketFragment {
     
+    private int page;
     public HealthLiftFragment()
     {
     }
     
-    public HealthLiftFragment(Activity activity)
+    public HealthLiftFragment(Activity activity,int page)
     {
         this.mActivity = activity;
+        this.page = page;
     }
     
     

@@ -34,9 +34,9 @@ import com.whatime.framework.ui.fragment.RightFragment;
 import com.whatime.framework.ui.view.SlidingMenu;
 import com.whatime.module.market.game.GameFragment;
 import com.whatime.module.market.health.HealthLiftFragment;
-import com.whatime.module.market.merchant.MerchantFragment;
 import com.whatime.module.market.movies.MoviesFragment;
 import com.whatime.module.market.other.OtherFragment;
+import com.whatime.module.market.recreation.RecreationFragment;
 import com.whatime.module.market.school.SchoolFragment;
 import com.whatime.module.market.travel.TravelFragment;
 import com.whatime.module.schedule.fragment.ScheduleFragment;
@@ -143,25 +143,25 @@ public class MainActivity extends FragmentActivity implements IChangeFragment
                 fragment = new ScheduleFragment(this);
                 break;
             case 1:
-                fragment = new HealthLiftFragment(this);
+                fragment = new HealthLiftFragment(this,2);
                 break;
             case 2:
-                fragment = new MerchantFragment(this);
+                fragment = new RecreationFragment(this,3);
                 break;
             case 3:
-                fragment = new TravelFragment(this);
+                fragment = new TravelFragment(this,4);
                 break;
             case 4:
-                fragment = new MoviesFragment(this);
+                fragment = new MoviesFragment(this,5);
                 break;
             case 5:
-                fragment = new GameFragment(this);
+                fragment = new GameFragment(this,6);
                 break;
             case 6:
-                fragment = new SchoolFragment(this);
+                fragment = new SchoolFragment(this,7);
                 break;
             case 7:
-                fragment = new OtherFragment(this);
+                fragment = new OtherFragment(this,8);
                 break;
             default:
                 break;

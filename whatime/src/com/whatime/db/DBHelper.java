@@ -284,14 +284,14 @@ public class DBHelper
             + cal.getTimeInMillis()
             + ","
             + System.currentTimeMillis() + ",0,0," + AlarmCons.FROMS_ANDROID + ",1,'" + taskUuid + "',0)");
-        db.execSQL("INSERT INTO CATEGORY (_id,NAME,DESC) values (0,'根分类','it is gen')");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('健康生活','',0)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('商家活动','',0)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('结伴旅行','',0)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('热播影视','',0)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('热玩游戏','',0)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('校园生活','',0)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('其它','',0)");
+        db.execSQL("INSERT INTO CATEGORY (_id,NAME,DESC) values (1,'根分类','it is gen')");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('健康生活','',1)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('商家活动','',1)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('结伴旅行','',1)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('热播影视','',1)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('热玩游戏','',1)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('校园生活','',1)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('其它','',1)");
     }
     
     private static void insertDataFromAssert(SQLiteDatabase db)
@@ -413,6 +413,49 @@ public class DBHelper
             }
         }
         return 0;
+    }
+
+    public void clearCate()
+    {
+        cateDao.deleteAll();
+    }
+
+    public void addCate(Category cate)
+    {
+        cateDao.insert(cate);
+    }
+
+    public Category getcateByUuid(String parentUuid)
+    {
+        QueryBuilder<Category> qb = cateDao.queryBuilder();
+        qb.where(com.whatime.db.CategoryDao.Properties.Uuid.eq(parentUuid));
+        if (qb.buildCount().count() > 0)
+        {
+            return qb.list().get(0);
+        }
+        return null;
+    }
+
+    public List<Category> getcateByParentId(long parentId)
+    {
+        QueryBuilder<Category> qb = cateDao.queryBuilder();
+        qb.where(com.whatime.db.CategoryDao.Properties.ParentId.eq(parentId));
+        if (qb.buildCount().count() > 0)
+        {
+            return qb.list();
+        }
+        return null;
+    }
+
+    public Category getcaById(int page)
+    {
+        QueryBuilder<Category> qb = cateDao.queryBuilder();
+        qb.where(com.whatime.db.CategoryDao.Properties.Id.eq(page));
+        if (qb.buildCount().count() > 0)
+        {
+            return qb.list().get(0);
+        }
+        return null;
     }
     
 }

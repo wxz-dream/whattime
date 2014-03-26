@@ -51,7 +51,7 @@ public class LeftFragment extends Fragment implements OnItemClickListener
         
         View view = inflater.inflate(R.layout.left, null);
         mListView = (ListView)view.findViewById(R.id.left_listview);
-        data = DBHelper.getInstance().getAllCateByParentId(0);
+        data = DBHelper.getInstance().getAllCateByParentId(1);
         Category c = new Category();
         c.setName("我的日程");
         data.add(0, c);
