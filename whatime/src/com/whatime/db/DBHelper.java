@@ -284,14 +284,14 @@ public class DBHelper
             + cal.getTimeInMillis()
             + ","
             + System.currentTimeMillis() + ",0,0," + AlarmCons.FROMS_ANDROID + ",1,'" + taskUuid + "',0)");
-        db.execSQL("INSERT INTO CATEGORY (_id,NAME,DESC) values (1,'根分类','it is gen')");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('健康生活','',1)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('商家活动','',1)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('结伴旅行','',1)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('热播影视','',1)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('热玩游戏','',1)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('校园生活','',1)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('其它','',1)");
+        db.execSQL("INSERT INTO CATEGORY (_id,NAME,DESC) values (0,'根分类','it is gen')");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('健康生活','生活',0)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('娱乐活动','娱乐',0)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('结伴旅行','旅行',0)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('热播影视','影视',0)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('热玩游戏','游戏',0)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('校园生活','校园',0)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('其它','其它',0)");
     }
     
     private static void insertDataFromAssert(SQLiteDatabase db)
@@ -425,17 +425,6 @@ public class DBHelper
         cateDao.insert(cate);
     }
 
-    public Category getcateByUuid(String parentUuid)
-    {
-        QueryBuilder<Category> qb = cateDao.queryBuilder();
-        qb.where(com.whatime.db.CategoryDao.Properties.Uuid.eq(parentUuid));
-        if (qb.buildCount().count() > 0)
-        {
-            return qb.list().get(0);
-        }
-        return null;
-    }
-
     public List<Category> getcateByParentId(long parentId)
     {
         QueryBuilder<Category> qb = cateDao.queryBuilder();
@@ -444,7 +433,7 @@ public class DBHelper
         {
             return qb.list();
         }
-        return null;
+        return new ArrayList<Category>();
     }
 
     public Category getcaById(int page)
@@ -456,6 +445,16 @@ public class DBHelper
             return qb.list().get(0);
         }
         return null;
+    }
+
+    public void uptCate(Category cate)
+    {
+        cateDao.update(cate);
+    }
+
+    public void clearUser()
+    {
+        userDao.deleteAll();
     }
     
 }

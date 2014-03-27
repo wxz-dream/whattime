@@ -7,11 +7,9 @@ package com.whatime.db;
 public class Category {
 
     private Long id;
-    private String uuid;
     private String name;
     private String desc;
     private Long parentId;
-    private String parentUuid;
     private String imgUri;
     private Boolean del;
 
@@ -22,13 +20,11 @@ public class Category {
         this.id = id;
     }
 
-    public Category(Long id, String uuid, String name, String desc, Long parentId, String parentUuid, String imgUri, Boolean del) {
+    public Category(Long id, String name, String desc, Long parentId, String imgUri, Boolean del) {
         this.id = id;
-        this.uuid = uuid;
         this.name = name;
         this.desc = desc;
         this.parentId = parentId;
-        this.parentUuid = parentUuid;
         this.imgUri = imgUri;
         this.del = del;
     }
@@ -39,14 +35,6 @@ public class Category {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public String getName() {
@@ -71,14 +59,6 @@ public class Category {
 
     public void setParentId(Long parentId) {
         this.parentId = parentId;
-    }
-
-    public String getParentUuid() {
-        return parentUuid;
-    }
-
-    public void setParentUuid(String parentUuid) {
-        this.parentUuid = parentUuid;
     }
 
     public String getImgUri() {

@@ -24,13 +24,11 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Uuid = new Property(1, String.class, "uuid", false, "UUID");
-        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
-        public final static Property Desc = new Property(3, String.class, "desc", false, "DESC");
-        public final static Property ParentId = new Property(4, Long.class, "parentId", false, "PARENT_ID");
-        public final static Property ParentUuid = new Property(5, String.class, "parentUuid", false, "PARENT_UUID");
-        public final static Property ImgUri = new Property(6, String.class, "imgUri", false, "IMG_URI");
-        public final static Property Del = new Property(7, Boolean.class, "del", false, "DEL");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
+        public final static Property Desc = new Property(2, String.class, "desc", false, "DESC");
+        public final static Property ParentId = new Property(3, Long.class, "parentId", false, "PARENT_ID");
+        public final static Property ImgUri = new Property(4, String.class, "imgUri", false, "IMG_URI");
+        public final static Property Del = new Property(5, Boolean.class, "del", false, "DEL");
     };
 
 
@@ -47,13 +45,11 @@ public class CategoryDao extends AbstractDao<Category, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "'CATEGORY' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
-                "'UUID' TEXT," + // 1: uuid
-                "'NAME' TEXT," + // 2: name
-                "'DESC' TEXT," + // 3: desc
-                "'PARENT_ID' INTEGER," + // 4: parentId
-                "'PARENT_UUID' TEXT," + // 5: parentUuid
-                "'IMG_URI' TEXT," + // 6: imgUri
-                "'DEL' INTEGER);"); // 7: del
+                "'NAME' TEXT," + // 1: name
+                "'DESC' TEXT," + // 2: desc
+                "'PARENT_ID' INTEGER," + // 3: parentId
+                "'IMG_URI' TEXT," + // 4: imgUri
+                "'DEL' INTEGER);"); // 5: del
     }
 
     /** Drops the underlying database table. */
@@ -72,39 +68,29 @@ public class CategoryDao extends AbstractDao<Category, Long> {
             stmt.bindLong(1, id);
         }
  
-        String uuid = entity.getUuid();
-        if (uuid != null) {
-            stmt.bindString(2, uuid);
-        }
- 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(3, name);
+            stmt.bindString(2, name);
         }
  
         String desc = entity.getDesc();
         if (desc != null) {
-            stmt.bindString(4, desc);
+            stmt.bindString(3, desc);
         }
  
         Long parentId = entity.getParentId();
         if (parentId != null) {
-            stmt.bindLong(5, parentId);
-        }
- 
-        String parentUuid = entity.getParentUuid();
-        if (parentUuid != null) {
-            stmt.bindString(6, parentUuid);
+            stmt.bindLong(4, parentId);
         }
  
         String imgUri = entity.getImgUri();
         if (imgUri != null) {
-            stmt.bindString(7, imgUri);
+            stmt.bindString(5, imgUri);
         }
  
         Boolean del = entity.getDel();
         if (del != null) {
-            stmt.bindLong(8, del ? 1l: 0l);
+            stmt.bindLong(6, del ? 1l: 0l);
         }
     }
 
@@ -119,13 +105,11 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     public Category readEntity(Cursor cursor, int offset) {
         Category entity = new Category( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // uuid
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // desc
-            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4), // parentId
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // parentUuid
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // imgUri
-            cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0 // del
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // desc
+            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // parentId
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // imgUri
+            cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0 // del
         );
         return entity;
     }
@@ -134,13 +118,11 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     @Override
     public void readEntity(Cursor cursor, Category entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setUuid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setDesc(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setParentId(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
-        entity.setParentUuid(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setImgUri(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setDel(cursor.isNull(offset + 7) ? null : cursor.getShort(offset + 7) != 0);
+        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setDesc(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setParentId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setImgUri(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setDel(cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0);
      }
     
     /** @inheritdoc */

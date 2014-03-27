@@ -123,6 +123,10 @@ public class UserInfoActivity extends Activity
                     Log.e("Exception", e.getMessage(), e);
                 }
             }
+            else
+            {
+                
+            }
             if(user.getUserName()!=null)
             {
                 userName.setText(user.getUserName());
@@ -208,7 +212,10 @@ public class UserInfoActivity extends Activity
                     startActivityForResult(intent, 1);
                     break;
                 case R.id.userinfo_save:
-                    user.setUserphotoUri(photoUri.toString());
+                    if(photoUri!=null)
+                    {
+                        user.setUserphotoUri(photoUri.toString());
+                    }
                     user.setNickName(nickName.getText().toString());
                     user.setSex(sex.getSelectedItemPosition());
                     user.setEmail(email.getText().toString());

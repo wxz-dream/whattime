@@ -55,6 +55,13 @@ public class RemoteApiImpl
         params.put("password", md5Pwd);
         params.put("mime", mime);
         params.put("phoneInfo", phoneInfo);
+        Resources r = MyApp.getInstance().getApplicationContext().getResources();
+        Uri uri =
+            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
+                + r.getResourcePackageName(R.drawable.icon) + "/"
+                + r.getResourceTypeName(R.drawable.icon) + "/"
+                + r.getResourceEntryName(R.drawable.icon));
+        params.put("userphotoUri",uri.toString());
         final Message msg = new Message();
         final Bundle data = new Bundle();
         msg.what = 0x001;
@@ -77,20 +84,10 @@ public class RemoteApiImpl
                     data.putString(ResponseCons.STATEINFO, stateInfo);
                     if (state == ResponseCons.STATE_SUCCESS)
                     {
-                        User user = new User();
-                        user.setUuid(uuid);
-                        user.setUserName(userName);
-                        user.setPassword(md5Pwd);
-                        user.setMime(mime);
-                        user.setPhoneInfo(phoneInfo);
-                        Resources r = MyApp.getInstance().getApplicationContext().getResources();
-                        Uri uri =
-                            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
-                                + r.getResourcePackageName(R.drawable.icon) + "/"
-                                + r.getResourceTypeName(R.drawable.icon) + "/"
-                                + r.getResourceEntryName(R.drawable.icon));
-                        user.setUserphotoUri(uri.toString());
+                        DBHelper.getInstance().clearUser();
+                        User user = JSON.parseObject(response.getString("resInfo"), User.class);
                         DBHelper.getInstance().addUser(user);
+                        MyApp.getInstance().setUser(user);
                     }
                 }
                 catch (JSONException e)
@@ -119,7 +116,7 @@ public class RemoteApiImpl
         msg.what = 0x001;
         RequestParams params = new RequestParams();
         final String md5Pwd = MD5.GetMD5Code(newPassword);
-        params.put("uuid", user.getUuid());
+        params.put("userUuid", user.getUuid());
         params.put("mime", user.getMime());
         params.put("oldPassword", MD5.GetMD5Code(oldPassword));
         params.put("newPassword", md5Pwd);
@@ -195,25 +192,9 @@ public class RemoteApiImpl
                     data.putString(ResponseCons.STATEINFO, stateInfo);
                     if (state == ResponseCons.STATE_SUCCESS)
                     {
-                        User user = MyApp.getInstance().getUser();
-                        if (user == null)
-                        {
-                            user = new User();
-                        }
-                        else
-                        {
-                            user.setUuid(user.getUuid());
-                        }
-                        user.setUserName(userName);
-                        user.setPassword(md5Pwd);
-                        if(MyApp.getInstance().getUser()==null)
-                        {
-                            DBHelper.getInstance().addUser(user);
-                        }
-                        else
-                        {
-                            DBHelper.getInstance().uptUser(user);
-                        }
+                        DBHelper.getInstance().clearUser();
+                        User user = JSON.parseObject(response.getString("resInfo"), User.class);
+                        DBHelper.getInstance().addUser(user);
                         MyApp.getInstance().setUser(user);
                     }
                 }
@@ -240,21 +221,9 @@ public class RemoteApiImpl
         final Bundle data = new Bundle();
         msg.what = 0x001;
         RequestParams params = new RequestParams();
-        params.put("uuid", user.getUuid());
+        params.put("userUuid", user.getUuid());
         params.put("mime", user.getMime());
-        params.put("nickName", user.getNickName());
-        params.put("sex", user.getSex());
-        params.put("userphotoUri", user.getUserphotoUri());
-        params.put("city", user.getCity());
-        params.put("uptTime", user.getUptTime());
-        params.put("available", user.getAvailable());
-        params.put("levelUuid", user.getLevelUuid());
-        params.put("email", user.getEmail());
-        params.put("realName", user.getRealName());
-        params.put("telphone", user.getTelphone());
-        params.put("identityCard", user.getIdentityCard());
-        params.put("qq", user.getQq());
-        params.put("authType", user.getAuthType());
+        params.put("user", JSON.toJSONString(user));
         HttpSycnUtil.post(HttpSycnUtil.getUrl(Constants.MODIFY_USER_POST_URL), params, new MyJsonHttpResponseHandler(
             msg, data, handler)
         {
@@ -297,7 +266,7 @@ public class RemoteApiImpl
      * @param alarm
      * @param handler
      */
-    public void alrmLocalAdd(final User user, final Alarm alarm, final Handler handler)
+    public void alarmLocalAdd(final User user, final Alarm alarm, final Handler handler)
     {
         final Message msg = new Message();
         final Bundle data = new Bundle();
@@ -305,7 +274,7 @@ public class RemoteApiImpl
         RequestParams params = new RequestParams();
         params.put("userUuid", user.getUuid());
         params.put("mime", user.getMime());
-        params.put("userLocalAlarm", JSON.toJSON(alarm));
+        params.put("userLocalAlarm", JSON.toJSONString(alarm));
         HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.ALARM_LOCAL_ADD_POST_URL),
             params,
             new MyJsonHttpResponseHandler(msg, data, handler)
@@ -325,7 +294,15 @@ public class RemoteApiImpl
                         data.putString(ResponseCons.STATEINFO, stateInfo);
                         if (state == ResponseCons.STATE_SUCCESS)
                         {
-                            alarm.setSyncTime(System.currentTimeMillis());
+                            AlarmParser resAlarm = (AlarmParser)JSON.parseObject(response.getString("resInfo"), AlarmParser.class);
+                            alarm.setSyncTime(resAlarm.getSyncTime());
+                            alarm.setJoinNum(resAlarm.getJoinNum());
+                            alarm.setUptTime(resAlarm.getUptTime());
+                            for(Task t : alarm.getTasks())
+                            {
+                                t.setSyncTime(resAlarm.getSyncTime());
+                                t.setUptTime(resAlarm.getUptTime());
+                            }
                             DBHelper.getInstance().uptAlarm(alarm);
                         }
                     }
@@ -346,7 +323,7 @@ public class RemoteApiImpl
      * @param alarm
      * @param handler
      */
-    public void alrmShareAdd(final User user, final Alarm alarm, final Handler handler)
+    public void alarmShareAdd(final User user, final Alarm alarm, final Handler handler)
     {
         final Message msg = new Message();
         final Bundle data = new Bundle();
@@ -403,7 +380,7 @@ public class RemoteApiImpl
      * @param alarm
      * @param handler
      */
-    public void alrmLocalEdit(final User user, final Alarm alarm, final Handler handler)
+    public void alarmLocalEdit(final User user, final Alarm alarm, final Handler handler)
     {
         final Message msg = new Message();
         final Bundle data = new Bundle();
@@ -411,7 +388,7 @@ public class RemoteApiImpl
         RequestParams params = new RequestParams();
         params.put("userUuid", user.getUuid());
         params.put("mime", user.getMime());
-        params.put("userLocalAlarm", JSON.toJSON(alarm));
+        params.put("userLocalAlarm", JSON.toJSONString(alarm));
         HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.ALARM_LOCAL_EDIT_POST_URL),
             params,
             new MyJsonHttpResponseHandler(msg, data, handler)
@@ -431,7 +408,15 @@ public class RemoteApiImpl
                         data.putString(ResponseCons.STATEINFO, stateInfo);
                         if (state == ResponseCons.STATE_SUCCESS)
                         {
-                            alarm.setSyncTime(System.currentTimeMillis());
+                            AlarmParser resAlarm = (AlarmParser)JSON.parseObject(response.getString("resInfo"), AlarmParser.class);
+                            alarm.setSyncTime(resAlarm.getSyncTime());
+                            alarm.setJoinNum(resAlarm.getJoinNum());
+                            alarm.setUptTime(resAlarm.getUptTime());
+                            for(Task t : alarm.getTasks())
+                            {
+                                t.setSyncTime(resAlarm.getSyncTime());
+                                t.setUptTime(resAlarm.getUptTime());
+                            }
                             DBHelper.getInstance().uptAlarm(alarm);
                         }
                     }
@@ -452,7 +437,7 @@ public class RemoteApiImpl
      * @param alarm
      * @param handler
      */
-    public void alrmShareEdit(final User user, final Alarm alarm, final Handler handler)
+    public void alarmShareEdit(final User user, final Alarm alarm, final Handler handler)
     {
         final Message msg = new Message();
         final Bundle data = new Bundle();
@@ -460,7 +445,7 @@ public class RemoteApiImpl
         RequestParams params = new RequestParams();
         params.put("userUuid", user.getUuid());
         params.put("mime", user.getMime());
-        params.put("userShareAlarm", JSON.toJSON(alarm));
+        params.put("userShareAlarm", JSON.toJSONString(alarm));
         HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.ALARM_SHARE_EDIT_POST_URL),
             params,
             new MyJsonHttpResponseHandler(msg, data, handler)
@@ -519,7 +504,7 @@ public class RemoteApiImpl
      * @param uuid
      * @param mime
      */
-    public void alrmShareGetLastSyncTime(final String uuid, final String mime)
+    public void alarmShareGetLastSyncTime(final String uuid, final String mime)
     {
         RequestParams params = new RequestParams();
         params.put("userUuid", uuid);
@@ -547,7 +532,7 @@ public class RemoteApiImpl
                             //本地同步时间小于服务器同步时间
                             if (localSyncTime < shareSyncTime)
                             {
-                                alrmShareSync(uuid, mime, localSyncTime);
+                                alarmShareSync(uuid, mime, localSyncTime);
                             }
                         }
                     }
@@ -564,7 +549,7 @@ public class RemoteApiImpl
      * @param mime
      * @param syncTime
      */
-    public void alrmShareSync(String uuid, String mime, long syncTime)
+    public void alarmShareSync(String uuid, String mime, long syncTime)
     {
         RequestParams params = new RequestParams();
         params.put("userUuid", uuid);
@@ -603,7 +588,7 @@ public class RemoteApiImpl
         RequestParams params = new RequestParams();
         params.put("userUuid", uuid);
         params.put("mime", mime);
-        params.put("count", count);
+        params.put("count", String.valueOf(count));
         HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.MARKET_GET_SYNC_CATEGORY_POST_URL),
             params,
             new JsonHttpResponseHandler()
@@ -618,11 +603,18 @@ public class RemoteApiImpl
                     try
                     {
                         int state = response.getInt("state");
-                        String resInfo = response.getString("resInfo");
                         if (state == ResponseCons.STATE_SUCCESS)
                         {
-                            List<Category> cates = JSONArray.parseArray(resInfo, Category.class);
-                            
+                            if(response.has("resInfo"))
+                            {
+                                String resInfo = response.getString("resInfo");
+                                List<Category> cates = JSONArray.parseArray(resInfo, Category.class);
+                                DBHelper.getInstance().clearCate();
+                                for(Category cate :cates)
+                                {
+                                    DBHelper.getInstance().addCate(cate);
+                                }
+                            }
                         }
                     }
                     catch (JSONException e)

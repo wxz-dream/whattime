@@ -143,25 +143,25 @@ public class MainActivity extends FragmentActivity implements IChangeFragment
                 fragment = new ScheduleFragment(this);
                 break;
             case 1:
-                fragment = new HealthLiftFragment(this,2);
+                fragment = new HealthLiftFragment(this,1);
                 break;
             case 2:
-                fragment = new RecreationFragment(this,3);
+                fragment = new RecreationFragment(this,2);
                 break;
             case 3:
-                fragment = new TravelFragment(this,4);
+                fragment = new TravelFragment(this,3);
                 break;
             case 4:
-                fragment = new MoviesFragment(this,5);
+                fragment = new MoviesFragment(this,4);
                 break;
             case 5:
-                fragment = new GameFragment(this,6);
+                fragment = new GameFragment(this,5);
                 break;
             case 6:
-                fragment = new SchoolFragment(this,7);
+                fragment = new SchoolFragment(this,6);
                 break;
             case 7:
-                fragment = new OtherFragment(this,8);
+                fragment = new OtherFragment(this,7);
                 break;
             default:
                 break;

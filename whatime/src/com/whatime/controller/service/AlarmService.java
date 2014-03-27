@@ -110,7 +110,6 @@ public class AlarmService
                 ed.remove(AlarmCons.PREF_SNOOZE_TIME);
                 ed.apply();
                 saveSnoozeAlert(context, prefs, id, alarmTime);
-                uptNotification(context);
             }
         }
         else
@@ -185,6 +184,7 @@ public class AlarmService
         {
             //获取下一个响铃
             Alarm alarm = alarms.get(0);
+            uptNotification(context);
             if (alarm != null)
             {
                 uptPreferences(context, alarm.getId(), alarm.getAlarmTime());
@@ -408,7 +408,7 @@ public class AlarmService
             User user = MyApp.getInstance().getUser();
             if (user != null)
             {
-                new RemoteApiImpl().alrmShareGetLastSyncTime(user.getUuid(), user.getMime());
+                new RemoteApiImpl().alarmShareGetLastSyncTime(user.getUuid(), user.getMime());
             }
         }
     }
@@ -420,9 +420,9 @@ public class AlarmService
             User user = MyApp.getInstance().getUser();
             if (user != null)
             {
-                /*new RemoteApiImpl().getSyncCategory(user.getUuid(), user.getMime(), DBHelper.getInstance()
-                    .getCategoryCount());*/
-                List<Category> cates = new ArrayList<Category>();
+                new RemoteApiImpl().getSyncCategory(user.getUuid(), user.getMime(), DBHelper.getInstance()
+                    .getCategoryCount());
+                /*List<Category> cates = new ArrayList<Category>();
                 Category cate1 = new Category();
                 cate1.setUuid("c18366a3-6f2a-41ab-9111-2f964383690a");
                 cate1.setName("根分类");
@@ -473,7 +473,7 @@ public class AlarmService
                         }
                     }
                     DBHelper.getInstance().addCate(cate);
-                }
+                }*/
                 
             }
         }

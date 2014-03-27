@@ -14,7 +14,7 @@ public class Constants
     //http://192.168.11.5:8080/whatimeServer/android/
     //http://whatimeServer.sinaapp.com/android/
     //http://192.168.11.7:8080/whatimeSae/android/
-    public static final String URL = "http://whatime.duapp.com/android/";
+    public static final String URL = "http://192.168.11.9:8080/whatimeServer/android/";
     
     public static final String REGIST_USER_POST_URL = "user/registUser";
     
@@ -24,19 +24,19 @@ public class Constants
     
     public static final String MODIFY_USER_POST_URL = "user/uptUserInfo";
     
-    public static final String ALARM_LOCAL_ADD_POST_URL = "alarm/alrmLocalAdd";
+    public static final String ALARM_LOCAL_ADD_POST_URL = "userLocalAlarm/alarmLocalAdd";
     
-    public static final String ALARM_SHARE_ADD_POST_URL = "userShareAlarm/alrmShareAdd";
+    public static final String ALARM_SHARE_ADD_POST_URL = "userShareAlarm/alarmShareAdd";
     
-    public static final String ALARM_LOCAL_EDIT_POST_URL = "alarm/alrmLocalEdit";
+    public static final String ALARM_LOCAL_EDIT_POST_URL = "userLocalAlarm/alarmLocalEdit";
     
-    public static final String ALARM_SHARE_EDIT_POST_URL = "userShareAlarm/alrmShareEdit";
+    public static final String ALARM_SHARE_EDIT_POST_URL = "userShareAlarm/alarmShareEdit";
     
-    public static final String ALARM_SHARE_GETSYNCTIME_POST_URL = "userShareAlarm/alrmShareGetLastSyncTime";
+    public static final String ALARM_SHARE_GETSYNCTIME_POST_URL = "userShareAlarm/alarmShareGetLastSyncTime";
     
-    public static final String ALARM_SHARE_SYNC_POST_URL = "userShareAlarm/alrmShareSync";
+    public static final String ALARM_SHARE_SYNC_POST_URL = "userShareAlarm/alarmShareSync";
     
-    public static final String MARKET_GET_SYNC_CATEGORY_POST_URL = "market/getSyncCategory";
+    public static final String MARKET_GET_SYNC_CATEGORY_POST_URL = "cate/getSyncCategory";
     
     //操作
     public static final String OPT = "OPT";

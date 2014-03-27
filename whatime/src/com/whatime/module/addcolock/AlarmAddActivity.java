@@ -38,6 +38,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
@@ -58,8 +59,8 @@ import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.tencent.weibo.TencentWeibo;
 
 import com.whatime.R;
-import com.whatime.controller.alarm.AlarmCons;
 import com.whatime.controller.alarm.AdvanceCons;
+import com.whatime.controller.alarm.AlarmCons;
 import com.whatime.controller.alarm.PlayDelayCons;
 import com.whatime.controller.alarm.RepeatCons;
 import com.whatime.controller.alarm.TaskCons;
@@ -286,6 +287,28 @@ public class AlarmAddActivity extends Activity
             {
                 startActivity(new Intent(AlarmAddActivity.this, TaskAddActivity_.class).putExtra(AlarmService.ALARM_ID,
                     mAlarm.getId()).putExtra(TaskCons.TASK_ID, mAlarm.getTasks().get(arg2).getId()));
+            }
+            
+        });
+        add_common_lv.setOnItemLongClickListener(new OnItemLongClickListener()
+        {
+            
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,final int arg2, long arg3)
+            {
+                new AlertDialog.Builder(context).setTitle("删除子活动")
+                    .setMessage("确认删除此子活动？")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface d, int w)
+                        {
+                            DBHelper.getInstance().deleteTask(mAlarm.getTasks().get(arg2).getId());
+                            adapter.notifyDataSetChanged();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+                return true;
             }
             
         });
@@ -555,11 +578,11 @@ public class AlarmAddActivity extends Activity
                     {
                         if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
                         {
-                            new RemoteApiImpl().alrmShareAdd(user, mAlarm, myHandler);
+                            new RemoteApiImpl().alarmShareAdd(user, mAlarm, myHandler);
                         }
                         else
                         {
-                            new RemoteApiImpl().alrmLocalAdd(user, mAlarm, myHandler);
+                            new RemoteApiImpl().alarmLocalAdd(user, mAlarm, myHandler);
                         }
                     }
                     //share
@@ -578,11 +601,11 @@ public class AlarmAddActivity extends Activity
                     {
                         if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
                         {
-                            new RemoteApiImpl().alrmShareEdit(user, mAlarm, myHandler);
+                            new RemoteApiImpl().alarmShareEdit(user, mAlarm, myHandler);
                         }
                         else
                         {
-                            new RemoteApiImpl().alrmLocalEdit(user, mAlarm, myHandler);
+                            new RemoteApiImpl().alarmLocalEdit(user, mAlarm, myHandler);
                         }
                     }
                 }
@@ -737,11 +760,11 @@ public class AlarmAddActivity extends Activity
             }
         });
         String scope = mAlarm.getScope();
-        if(scope==null)
+        if (scope == null)
         {
             no_scope.setChecked(true);
         }
-        else if(!scope.contains("|"))
+        else if (!scope.contains("|"))
         {
             pro.setChecked(true);
             province_spinner.setSelection(provinces.indexOf(scope));
@@ -780,7 +803,7 @@ public class AlarmAddActivity extends Activity
         else
         {
             long taskUptTime = DBHelper.getInstance().getTaskMaxUptTime();
-            if(0==mAlarm.getUptTime()||taskUptTime>mAlarm.getUptTime())
+            if (0 == mAlarm.getUptTime() || taskUptTime > mAlarm.getUptTime())
             {
                 add_save();
             }
@@ -969,7 +992,7 @@ public class AlarmAddActivity extends Activity
             }
             TextView time = (TextView)v.findViewById(R.id.item_time);
             Calendar c = Calendar.getInstance(TimeZone.getDefault());
-            if(task.getAdvanceOrder()!=AdvanceCons.ORDER_DEFAULT||task.getSetTime()!=null)
+            if (task.getAdvanceOrder() != AdvanceCons.ORDER_DEFAULT || task.getSetTime() != null)
             {
                 c.setTimeInMillis(task.getSetTime());
             }
@@ -1083,7 +1106,7 @@ public class AlarmAddActivity extends Activity
                     }
                     else
                     {
-                        if(ct.isChecked())
+                        if (ct.isChecked())
                         {
                             pro.setChecked(true);
                         }
@@ -1104,7 +1127,7 @@ public class AlarmAddActivity extends Activity
                     }
                     else
                     {
-                        if(!pro.isChecked())
+                        if (!pro.isChecked())
                         {
                             province_spinner.setVisibility(View.GONE);
                         }

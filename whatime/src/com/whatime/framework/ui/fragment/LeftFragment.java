@@ -37,9 +37,6 @@ import com.whatime.framework.ui.activity.MainActivity;
 
 public class LeftFragment extends Fragment implements OnItemClickListener
 {
-    
-    private static final String TAG = "LeftFragment";
-    
     private ListView mListView;
     
     private MyAdapter myAdapter;
@@ -51,7 +48,7 @@ public class LeftFragment extends Fragment implements OnItemClickListener
         
         View view = inflater.inflate(R.layout.left, null);
         mListView = (ListView)view.findViewById(R.id.left_listview);
-        data = DBHelper.getInstance().getAllCateByParentId(1);
+        data = DBHelper.getInstance().getAllCateByParentId(0);
         Category c = new Category();
         c.setName("我的日程");
         data.add(0, c);

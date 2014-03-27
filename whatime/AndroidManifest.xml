@@ -45,7 +45,7 @@
         <activity
             android:name="com.whatime.framework.ui.activity.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" android:launchMode="singleTop">
             <intent-filter android:priority="1000" >
                 <action android:name="android.intent.action.MAIN" />
 

@@ -105,10 +105,13 @@ public class ScrollableTabView extends HorizontalScrollView {
 			tab.setSelected(pos == position);
 		}
 		View selectView = mContainer.getChildAt(position);
-		final int w = selectView.getMeasuredWidth();
-		final int l = selectView.getLeft();
-		final int x = l - this.getWidth() / 2 + w / 2;
-		smoothScrollTo(x, this.getScrollY());
+		if(selectView!=null)
+		{
+		    final int w = selectView.getMeasuredWidth();
+	        final int l = selectView.getLeft();
+	        final int x = l - this.getWidth() / 2 + w / 2;
+	        smoothScrollTo(x, this.getScrollY());
+		}
 		
 	}
 	

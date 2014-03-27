@@ -10,9 +10,12 @@ import net.simonvt.datepicker.DatePickerDialog;
 import net.simonvt.numberpicker.NumberPicker;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +40,10 @@ import com.whatime.controller.service.AlarmService;
 import com.whatime.db.Alarm;
 import com.whatime.db.DBHelper;
 import com.whatime.db.Task;
+import com.whatime.db.User;
+import com.whatime.framework.application.MyApp;
+import com.whatime.framework.network.pojo.ResponseCons;
+import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.view.GVData;
 import com.whatime.framework.ui.view.MyGridView;
 import com.whatime.framework.ui.view.ToastMaster;
@@ -60,14 +67,42 @@ public class QuickAddActivity extends Activity
     
     private MyGridView grid;
     
-    final Calendar time = Calendar.getInstance(TimeZone.getDefault());
+    private Context context;
     
+    final Calendar time = Calendar.getInstance(TimeZone.getDefault());
+    private Handler myHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            super.handleMessage(msg);
+            switch (msg.what)
+            {
+                case 0x001:
+                    int state = msg.getData().getInt(ResponseCons.STATE);
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        Toast toast = Toast.makeText(context, "同步成功", Toast.LENGTH_SHORT);
+                        ToastMaster.setToast(toast);
+                        toast.show();
+                    }
+                    else
+                    {
+                        Toast toast = Toast.makeText(context, "同步失败", Toast.LENGTH_SHORT);
+                        ToastMaster.setToast(toast);
+                        toast.show();
+                    }
+                    break;
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_quick);
         time.set(Calendar.SECOND, 0);
+        context = this;
         initUi();
         uptUi();
         
@@ -230,6 +265,14 @@ public class QuickAddActivity extends Activity
                     alarm.setTaskUuid(currentTask.getUuid());
                     DBHelper.getInstance().uptAlarm(alarm);
                     AlarmController.addAlarm(QuickAddActivity.this, alarm.getId());
+                    if (SysUtil.hasNetWorkConection(context))
+                    {
+                        User user = MyApp.getInstance().getUser();
+                        if (user != null)
+                        {
+                          new RemoteApiImpl().alarmLocalAdd(user, alarm, myHandler);
+                        }
+                    }
                     QuickAddActivity.this.finish();
                     break;
             }

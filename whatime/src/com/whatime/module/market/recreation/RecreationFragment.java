@@ -46,7 +46,6 @@ public class RecreationFragment extends MarketFragment
         mTopTitleView.setText(cate.getDesc());
         mTopBackView.setBackgroundResource(R.drawable.biz_local_news_main_back_normal);
         cates = DBHelper.getInstance().getcateByParentId(page);
-        
         listViewPagerAdapter = new RecreationPagerAdapter(this, cates);
         mPager.setAdapter(listViewPagerAdapter);
         

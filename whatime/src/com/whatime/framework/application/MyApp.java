@@ -2,11 +2,11 @@ package com.whatime.framework.application;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.UUID;
 
 import roboguice.application.RoboApplication;
 import android.content.Context;
 
+import com.whatime.db.DBHelper;
 import com.whatime.db.DaoMaster;
 import com.whatime.db.DaoMaster.OpenHelper;
 import com.whatime.db.DaoSession;
@@ -21,9 +21,6 @@ public class MyApp extends RoboApplication {
 	private static DaoSession daoSession;
 	private static HashMap<String, String> providers;
 	private static HashMap<String, HashMap<String,String>> citys;
-	
-
-	
 	public MyApp() {
 	}
 	
@@ -79,13 +76,7 @@ public class MyApp extends RoboApplication {
 	{
 	    if(null==user)
 	    {
-	        //user = DBHelper.getInstance().getUser();
-	        user = new User();
-	        user.setId(1l);
-	        user.setUserName("aaa");
-	        user.setPassword("aaa");
-	        user.setAvailable(true);
-	        user.setUuid(UUID.randomUUID().toString());
+	        user = DBHelper.getInstance().getUser();
 	    }
 	    return user;
 	}
