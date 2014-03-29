@@ -30,26 +30,28 @@ public class AlarmDao extends AbstractDao<Alarm, Long> {
         public final static Property Uuid = new Property(1, String.class, "uuid", false, "UUID");
         public final static Property AlarmTime = new Property(2, Long.class, "alarmTime", false, "ALARM_TIME");
         public final static Property CateId = new Property(3, Long.class, "cateId", false, "CATE_ID");
-        public final static Property CateUuid = new Property(4, String.class, "cateUuid", false, "CATE_UUID");
-        public final static Property CreateTime = new Property(5, Long.class, "createTime", false, "CREATE_TIME");
-        public final static Property Des = new Property(6, String.class, "des", false, "DES");
-        public final static Property EndTime = new Property(7, Long.class, "endTime", false, "END_TIME");
-        public final static Property Froms = new Property(8, Integer.class, "froms", false, "FROMS");
-        public final static Property Del = new Property(9, Boolean.class, "del", false, "DEL");
-        public final static Property EndJoin = new Property(10, Boolean.class, "endJoin", false, "END_JOIN");
-        public final static Property Open = new Property(11, Boolean.class, "open", false, "OPEN");
-        public final static Property JoinNum = new Property(12, Long.class, "joinNum", false, "JOIN_NUM");
-        public final static Property Linkman = new Property(13, String.class, "linkman", false, "LINKMAN");
-        public final static Property MaxJoinNum = new Property(14, Long.class, "maxJoinNum", false, "MAX_JOIN_NUM");
-        public final static Property Scope = new Property(15, String.class, "scope", false, "SCOPE");
-        public final static Property Share = new Property(16, String.class, "share", false, "SHARE");
-        public final static Property SyncTime = new Property(17, Long.class, "syncTime", false, "SYNC_TIME");
-        public final static Property TaskId = new Property(18, Long.class, "taskId", false, "TASK_ID");
-        public final static Property TaskUuid = new Property(19, String.class, "taskUuid", false, "TASK_UUID");
-        public final static Property Title = new Property(20, String.class, "title", false, "TITLE");
-        public final static Property Type = new Property(21, Integer.class, "type", false, "TYPE");
-        public final static Property UptTime = new Property(22, Long.class, "uptTime", false, "UPT_TIME");
-        public final static Property UserUuid = new Property(23, String.class, "userUuid", false, "USER_UUID");
+        public final static Property CreateTime = new Property(4, Long.class, "createTime", false, "CREATE_TIME");
+        public final static Property Des = new Property(5, String.class, "des", false, "DES");
+        public final static Property EndTime = new Property(6, Long.class, "endTime", false, "END_TIME");
+        public final static Property Froms = new Property(7, Integer.class, "froms", false, "FROMS");
+        public final static Property Del = new Property(8, Boolean.class, "del", false, "DEL");
+        public final static Property EndJoin = new Property(9, Boolean.class, "endJoin", false, "END_JOIN");
+        public final static Property Open = new Property(10, Boolean.class, "open", false, "OPEN");
+        public final static Property JoinNum = new Property(11, Long.class, "joinNum", false, "JOIN_NUM");
+        public final static Property Linkman = new Property(12, String.class, "linkman", false, "LINKMAN");
+        public final static Property MaxJoinNum = new Property(13, Long.class, "maxJoinNum", false, "MAX_JOIN_NUM");
+        public final static Property Scope = new Property(14, String.class, "scope", false, "SCOPE");
+        public final static Property Share = new Property(15, String.class, "share", false, "SHARE");
+        public final static Property SyncTime = new Property(16, Long.class, "syncTime", false, "SYNC_TIME");
+        public final static Property TaskId = new Property(17, Long.class, "taskId", false, "TASK_ID");
+        public final static Property TaskUuid = new Property(18, String.class, "taskUuid", false, "TASK_UUID");
+        public final static Property Title = new Property(19, String.class, "title", false, "TITLE");
+        public final static Property Type = new Property(20, Integer.class, "type", false, "TYPE");
+        public final static Property UptTime = new Property(21, Long.class, "uptTime", false, "UPT_TIME");
+        public final static Property UserUuid = new Property(22, String.class, "userUuid", false, "USER_UUID");
+        public final static Property AllowChange = new Property(23, Boolean.class, "allowChange", false, "ALLOW_CHANGE");
+        public final static Property OwerUuid = new Property(24, String.class, "owerUuid", false, "OWER_UUID");
+        public final static Property OwerUserUuid = new Property(25, String.class, "owerUserUuid", false, "OWER_USER_UUID");
     };
 
     private DaoSession daoSession;
@@ -72,26 +74,28 @@ public class AlarmDao extends AbstractDao<Alarm, Long> {
                 "'UUID' TEXT," + // 1: uuid
                 "'ALARM_TIME' INTEGER," + // 2: alarmTime
                 "'CATE_ID' INTEGER," + // 3: cateId
-                "'CATE_UUID' TEXT," + // 4: cateUuid
-                "'CREATE_TIME' INTEGER," + // 5: createTime
-                "'DES' TEXT," + // 6: des
-                "'END_TIME' INTEGER," + // 7: endTime
-                "'FROMS' INTEGER," + // 8: froms
-                "'DEL' INTEGER," + // 9: del
-                "'END_JOIN' INTEGER," + // 10: endJoin
-                "'OPEN' INTEGER," + // 11: open
-                "'JOIN_NUM' INTEGER," + // 12: joinNum
-                "'LINKMAN' TEXT," + // 13: linkman
-                "'MAX_JOIN_NUM' INTEGER," + // 14: maxJoinNum
-                "'SCOPE' TEXT," + // 15: scope
-                "'SHARE' TEXT," + // 16: share
-                "'SYNC_TIME' INTEGER," + // 17: syncTime
-                "'TASK_ID' INTEGER," + // 18: taskId
-                "'TASK_UUID' TEXT," + // 19: taskUuid
-                "'TITLE' TEXT," + // 20: title
-                "'TYPE' INTEGER," + // 21: type
-                "'UPT_TIME' INTEGER," + // 22: uptTime
-                "'USER_UUID' TEXT);"); // 23: userUuid
+                "'CREATE_TIME' INTEGER," + // 4: createTime
+                "'DES' TEXT," + // 5: des
+                "'END_TIME' INTEGER," + // 6: endTime
+                "'FROMS' INTEGER," + // 7: froms
+                "'DEL' INTEGER," + // 8: del
+                "'END_JOIN' INTEGER," + // 9: endJoin
+                "'OPEN' INTEGER," + // 10: open
+                "'JOIN_NUM' INTEGER," + // 11: joinNum
+                "'LINKMAN' TEXT," + // 12: linkman
+                "'MAX_JOIN_NUM' INTEGER," + // 13: maxJoinNum
+                "'SCOPE' TEXT," + // 14: scope
+                "'SHARE' TEXT," + // 15: share
+                "'SYNC_TIME' INTEGER," + // 16: syncTime
+                "'TASK_ID' INTEGER," + // 17: taskId
+                "'TASK_UUID' TEXT," + // 18: taskUuid
+                "'TITLE' TEXT," + // 19: title
+                "'TYPE' INTEGER," + // 20: type
+                "'UPT_TIME' INTEGER," + // 21: uptTime
+                "'USER_UUID' TEXT," + // 22: userUuid
+                "'ALLOW_CHANGE' INTEGER," + // 23: allowChange
+                "'OWER_UUID' TEXT," + // 24: owerUuid
+                "'OWER_USER_UUID' TEXT);"); // 25: owerUserUuid
     }
 
     /** Drops the underlying database table. */
@@ -125,104 +129,114 @@ public class AlarmDao extends AbstractDao<Alarm, Long> {
             stmt.bindLong(4, cateId);
         }
  
-        String cateUuid = entity.getCateUuid();
-        if (cateUuid != null) {
-            stmt.bindString(5, cateUuid);
-        }
- 
         Long createTime = entity.getCreateTime();
         if (createTime != null) {
-            stmt.bindLong(6, createTime);
+            stmt.bindLong(5, createTime);
         }
  
         String des = entity.getDes();
         if (des != null) {
-            stmt.bindString(7, des);
+            stmt.bindString(6, des);
         }
  
         Long endTime = entity.getEndTime();
         if (endTime != null) {
-            stmt.bindLong(8, endTime);
+            stmt.bindLong(7, endTime);
         }
  
         Integer froms = entity.getFroms();
         if (froms != null) {
-            stmt.bindLong(9, froms);
+            stmt.bindLong(8, froms);
         }
  
         Boolean del = entity.getDel();
         if (del != null) {
-            stmt.bindLong(10, del ? 1l: 0l);
+            stmt.bindLong(9, del ? 1l: 0l);
         }
  
         Boolean endJoin = entity.getEndJoin();
         if (endJoin != null) {
-            stmt.bindLong(11, endJoin ? 1l: 0l);
+            stmt.bindLong(10, endJoin ? 1l: 0l);
         }
  
         Boolean open = entity.getOpen();
         if (open != null) {
-            stmt.bindLong(12, open ? 1l: 0l);
+            stmt.bindLong(11, open ? 1l: 0l);
         }
  
         Long joinNum = entity.getJoinNum();
         if (joinNum != null) {
-            stmt.bindLong(13, joinNum);
+            stmt.bindLong(12, joinNum);
         }
  
         String linkman = entity.getLinkman();
         if (linkman != null) {
-            stmt.bindString(14, linkman);
+            stmt.bindString(13, linkman);
         }
  
         Long maxJoinNum = entity.getMaxJoinNum();
         if (maxJoinNum != null) {
-            stmt.bindLong(15, maxJoinNum);
+            stmt.bindLong(14, maxJoinNum);
         }
  
         String scope = entity.getScope();
         if (scope != null) {
-            stmt.bindString(16, scope);
+            stmt.bindString(15, scope);
         }
  
         String share = entity.getShare();
         if (share != null) {
-            stmt.bindString(17, share);
+            stmt.bindString(16, share);
         }
  
         Long syncTime = entity.getSyncTime();
         if (syncTime != null) {
-            stmt.bindLong(18, syncTime);
+            stmt.bindLong(17, syncTime);
         }
  
         Long taskId = entity.getTaskId();
         if (taskId != null) {
-            stmt.bindLong(19, taskId);
+            stmt.bindLong(18, taskId);
         }
  
         String taskUuid = entity.getTaskUuid();
         if (taskUuid != null) {
-            stmt.bindString(20, taskUuid);
+            stmt.bindString(19, taskUuid);
         }
  
         String title = entity.getTitle();
         if (title != null) {
-            stmt.bindString(21, title);
+            stmt.bindString(20, title);
         }
  
         Integer type = entity.getType();
         if (type != null) {
-            stmt.bindLong(22, type);
+            stmt.bindLong(21, type);
         }
  
         Long uptTime = entity.getUptTime();
         if (uptTime != null) {
-            stmt.bindLong(23, uptTime);
+            stmt.bindLong(22, uptTime);
         }
  
         String userUuid = entity.getUserUuid();
         if (userUuid != null) {
-            stmt.bindString(24, userUuid);
+            stmt.bindString(23, userUuid);
+        }
+ 
+        Boolean allowChange = entity.getAllowChange();
+        if (allowChange != null) {
+            stmt.bindLong(24, allowChange ? 1l: 0l);
+        }
+ 
+        String owerUuid = entity.getOwerUuid();
+        if (owerUuid != null) {
+            stmt.bindString(25, owerUuid);
+        }
+ 
+        String owerUserUuid = entity.getOwerUserUuid();
+        if (owerUserUuid != null) {
+            stmt.bindString(26, owerUserUuid);
         }
     }
 
@@ -246,26 +260,28 @@ public class AlarmDao extends AbstractDao<Alarm, Long> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // uuid
             cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // alarmTime
             cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // cateId
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // cateUuid
-            cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5), // createTime
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // des
-            cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7), // endTime
-            cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8), // froms
-            cursor.isNull(offset + 9) ? null : cursor.getShort(offset + 9) != 0, // del
-            cursor.isNull(offset + 10) ? null : cursor.getShort(offset + 10) != 0, // endJoin
-            cursor.isNull(offset + 11) ? null : cursor.getShort(offset + 11) != 0, // open
-            cursor.isNull(offset + 12) ? null : cursor.getLong(offset + 12), // joinNum
-            cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13), // linkman
-            cursor.isNull(offset + 14) ? null : cursor.getLong(offset + 14), // maxJoinNum
-            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // scope
-            cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16), // share
-            cursor.isNull(offset + 17) ? null : cursor.getLong(offset + 17), // syncTime
-            cursor.isNull(offset + 18) ? null : cursor.getLong(offset + 18), // taskId
-            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // taskUuid
-            cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20), // title
-            cursor.isNull(offset + 21) ? null : cursor.getInt(offset + 21), // type
-            cursor.isNull(offset + 22) ? null : cursor.getLong(offset + 22), // uptTime
-            cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23) // userUuid
+            cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4), // createTime
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // des
+            cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6), // endTime
+            cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7), // froms
+            cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0, // del
+            cursor.isNull(offset + 9) ? null : cursor.getShort(offset + 9) != 0, // endJoin
+            cursor.isNull(offset + 10) ? null : cursor.getShort(offset + 10) != 0, // open
+            cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11), // joinNum
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // linkman
+            cursor.isNull(offset + 13) ? null : cursor.getLong(offset + 13), // maxJoinNum
+            cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14), // scope
+            cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15), // share
+            cursor.isNull(offset + 16) ? null : cursor.getLong(offset + 16), // syncTime
+            cursor.isNull(offset + 17) ? null : cursor.getLong(offset + 17), // taskId
+            cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18), // taskUuid
+            cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19), // title
+            cursor.isNull(offset + 20) ? null : cursor.getInt(offset + 20), // type
+            cursor.isNull(offset + 21) ? null : cursor.getLong(offset + 21), // uptTime
+            cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22), // userUuid
+            cursor.isNull(offset + 23) ? null : cursor.getShort(offset + 23) != 0, // allowChange
+            cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24), // owerUuid
+            cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25) // owerUserUuid
         );
         return entity;
     }
@@ -277,26 +293,28 @@ public class AlarmDao extends AbstractDao<Alarm, Long> {
         entity.setUuid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setAlarmTime(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
         entity.setCateId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
-        entity.setCateUuid(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setCreateTime(cursor.isNull(offset + 5) ? null : cursor.getLong(offset + 5));
-        entity.setDes(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setEndTime(cursor.isNull(offset + 7) ? null : cursor.getLong(offset + 7));
-        entity.setFroms(cursor.isNull(offset + 8) ? null : cursor.getInt(offset + 8));
-        entity.setDel(cursor.isNull(offset + 9) ? null : cursor.getShort(offset + 9) != 0);
-        entity.setEndJoin(cursor.isNull(offset + 10) ? null : cursor.getShort(offset + 10) != 0);
-        entity.setOpen(cursor.isNull(offset + 11) ? null : cursor.getShort(offset + 11) != 0);
-        entity.setJoinNum(cursor.isNull(offset + 12) ? null : cursor.getLong(offset + 12));
-        entity.setLinkman(cursor.isNull(offset + 13) ? null : cursor.getString(offset + 13));
-        entity.setMaxJoinNum(cursor.isNull(offset + 14) ? null : cursor.getLong(offset + 14));
-        entity.setScope(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
-        entity.setShare(cursor.isNull(offset + 16) ? null : cursor.getString(offset + 16));
-        entity.setSyncTime(cursor.isNull(offset + 17) ? null : cursor.getLong(offset + 17));
-        entity.setTaskId(cursor.isNull(offset + 18) ? null : cursor.getLong(offset + 18));
-        entity.setTaskUuid(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
-        entity.setTitle(cursor.isNull(offset + 20) ? null : cursor.getString(offset + 20));
-        entity.setType(cursor.isNull(offset + 21) ? null : cursor.getInt(offset + 21));
-        entity.setUptTime(cursor.isNull(offset + 22) ? null : cursor.getLong(offset + 22));
-        entity.setUserUuid(cursor.isNull(offset + 23) ? null : cursor.getString(offset + 23));
+        entity.setCreateTime(cursor.isNull(offset + 4) ? null : cursor.getLong(offset + 4));
+        entity.setDes(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setEndTime(cursor.isNull(offset + 6) ? null : cursor.getLong(offset + 6));
+        entity.setFroms(cursor.isNull(offset + 7) ? null : cursor.getInt(offset + 7));
+        entity.setDel(cursor.isNull(offset + 8) ? null : cursor.getShort(offset + 8) != 0);
+        entity.setEndJoin(cursor.isNull(offset + 9) ? null : cursor.getShort(offset + 9) != 0);
+        entity.setOpen(cursor.isNull(offset + 10) ? null : cursor.getShort(offset + 10) != 0);
+        entity.setJoinNum(cursor.isNull(offset + 11) ? null : cursor.getLong(offset + 11));
+        entity.setLinkman(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setMaxJoinNum(cursor.isNull(offset + 13) ? null : cursor.getLong(offset + 13));
+        entity.setScope(cursor.isNull(offset + 14) ? null : cursor.getString(offset + 14));
+        entity.setShare(cursor.isNull(offset + 15) ? null : cursor.getString(offset + 15));
+        entity.setSyncTime(cursor.isNull(offset + 16) ? null : cursor.getLong(offset + 16));
+        entity.setTaskId(cursor.isNull(offset + 17) ? null : cursor.getLong(offset + 17));
+        entity.setTaskUuid(cursor.isNull(offset + 18) ? null : cursor.getString(offset + 18));
+        entity.setTitle(cursor.isNull(offset + 19) ? null : cursor.getString(offset + 19));
+        entity.setType(cursor.isNull(offset + 20) ? null : cursor.getInt(offset + 20));
+        entity.setUptTime(cursor.isNull(offset + 21) ? null : cursor.getLong(offset + 21));
+        entity.setUserUuid(cursor.isNull(offset + 22) ? null : cursor.getString(offset + 22));
+        entity.setAllowChange(cursor.isNull(offset + 23) ? null : cursor.getShort(offset + 23) != 0);
+        entity.setOwerUuid(cursor.isNull(offset + 24) ? null : cursor.getString(offset + 24));
+        entity.setOwerUserUuid(cursor.isNull(offset + 25) ? null : cursor.getString(offset + 25));
      }
     
     /** @inheritdoc */

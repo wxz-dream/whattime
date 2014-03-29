@@ -25,7 +25,7 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
-        public final static Property Desc = new Property(2, String.class, "desc", false, "DESC");
+        public final static Property Des = new Property(2, String.class, "des", false, "DES");
         public final static Property ParentId = new Property(3, Long.class, "parentId", false, "PARENT_ID");
         public final static Property ImgUri = new Property(4, String.class, "imgUri", false, "IMG_URI");
         public final static Property Del = new Property(5, Boolean.class, "del", false, "DEL");
@@ -46,7 +46,7 @@ public class CategoryDao extends AbstractDao<Category, Long> {
         db.execSQL("CREATE TABLE " + constraint + "'CATEGORY' (" + //
                 "'_id' INTEGER PRIMARY KEY ," + // 0: id
                 "'NAME' TEXT," + // 1: name
-                "'DESC' TEXT," + // 2: desc
+                "'DES' TEXT," + // 2: des
                 "'PARENT_ID' INTEGER," + // 3: parentId
                 "'IMG_URI' TEXT," + // 4: imgUri
                 "'DEL' INTEGER);"); // 5: del
@@ -73,9 +73,9 @@ public class CategoryDao extends AbstractDao<Category, Long> {
             stmt.bindString(2, name);
         }
  
-        String desc = entity.getDesc();
-        if (desc != null) {
-            stmt.bindString(3, desc);
+        String des = entity.getDes();
+        if (des != null) {
+            stmt.bindString(3, des);
         }
  
         Long parentId = entity.getParentId();
@@ -106,7 +106,7 @@ public class CategoryDao extends AbstractDao<Category, Long> {
         Category entity = new Category( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // desc
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // des
             cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3), // parentId
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // imgUri
             cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0 // del
@@ -119,7 +119,7 @@ public class CategoryDao extends AbstractDao<Category, Long> {
     public void readEntity(Cursor cursor, Category entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setDesc(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setDes(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setParentId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
         entity.setImgUri(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setDel(cursor.isNull(offset + 5) ? null : cursor.getShort(offset + 5) != 0);

@@ -32,7 +32,11 @@ public class Constants
     
     public static final String ALARM_SHARE_EDIT_POST_URL = "userShareAlarm/alarmShareEdit";
     
+    public static final String ALARM_LOCAL_GETSYNCTIME_POST_URL = "userLocalAlarm/alarmLocalGetLastSyncTime";
+    
     public static final String ALARM_SHARE_GETSYNCTIME_POST_URL = "userShareAlarm/alarmShareGetLastSyncTime";
+    
+    public static final String ALARM_LOCAL_SYNC_POST_URL = "userLocalAlarm/alarmLocalSync";
     
     public static final String ALARM_SHARE_SYNC_POST_URL = "userShareAlarm/alarmShareSync";
     

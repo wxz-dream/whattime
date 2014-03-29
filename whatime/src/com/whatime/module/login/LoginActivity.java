@@ -255,7 +255,7 @@ public class LoginActivity extends Activity implements Callback, OnClickListener
                     u = new User();
                     u.setNickName(weibo.getDb().get("nickname"));
                     u.setUuid(UUID.randomUUID().toString());
-                    u.setUserName(weibo.getDb().getPlatformNname());
+                    u.setUserName(weibo.getDb().get("token"));
                     String name = weibo.getName();
                     int type = UserCons.AUTH_OUR;
                     if (SinaWeibo.NAME.equals(name))
@@ -275,7 +275,8 @@ public class LoginActivity extends Activity implements Callback, OnClickListener
                         type = UserCons.AUTH_QQ;
                     }
                     u.setAuthType(type);
-                    //new RemoteApiImpl().registUser(userName, password, handler);
+                    new RemoteApiImpl().registUser(u.getUserName(), "000000", handler);
+                    this.finish();
                 }
                 
             }

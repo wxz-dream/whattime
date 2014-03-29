@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.whatime.R;
 import com.whatime.controller.alarm.AdvanceCons;
+import com.whatime.controller.alarm.AlarmCons;
 import com.whatime.controller.alarm.PlayDelayCons;
 import com.whatime.controller.alarm.RepeatCons;
 import com.whatime.controller.center.AlarmController;
@@ -236,13 +237,20 @@ public class QuickAddActivity extends Activity
                         toast.show();
                         return;
                     }
+                    User user = MyApp.getInstance().getUser();
                     Alarm alarm = new Alarm();
                     String alarmUuid = UUID.randomUUID().toString();
                     alarm.setDel(false);
                     alarm.setUuid(alarmUuid);
                     alarm.setTitle("快速闹钟");
                     alarm.setAlarmTime(time.getTimeInMillis());
+                    alarm.setFroms(AlarmCons.FROMS_ANDROID);
+                    alarm.setType(AlarmCons.TYPE_QUICK);
                     alarm.setOpen(true);
+                    if(user!=null)
+                    {
+                        alarm.setUserUuid(user.getUuid());
+                    }
                     long alarmId = DBHelper.getInstance().addAlarm(alarm);
                     //
                     Task task = new Task();
@@ -264,10 +272,9 @@ public class QuickAddActivity extends Activity
                     alarm.setTask(currentTask);
                     alarm.setTaskUuid(currentTask.getUuid());
                     DBHelper.getInstance().uptAlarm(alarm);
-                    AlarmController.addAlarm(QuickAddActivity.this, alarm.getId());
+                    AlarmController.setNextAlert(QuickAddActivity.this);
                     if (SysUtil.hasNetWorkConection(context))
                     {
-                        User user = MyApp.getInstance().getUser();
                         if (user != null)
                         {
                           new RemoteApiImpl().alarmLocalAdd(user, alarm, myHandler);

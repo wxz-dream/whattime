@@ -10,7 +10,6 @@ public class AlarmParser
     private String uuid;
     private Long alarmTime;
     private Long cateId;
-    private String cateUuid;
     private Long createTime;
     private String des;
     private Long endTime;
@@ -30,6 +29,9 @@ public class AlarmParser
     private Integer type;
     private Long uptTime;
     private String userUuid;
+    private Boolean allowChange;
+    private String owerUuid;
+    private String owerUserUuid;
     private List<Task> tasks;
     public Long getId()
     {
@@ -62,14 +64,6 @@ public class AlarmParser
     public void setCateId(Long cateId)
     {
         this.cateId = cateId;
-    }
-    public String getCateUuid()
-    {
-        return cateUuid;
-    }
-    public void setCateUuid(String cateUuid)
-    {
-        this.cateUuid = cateUuid;
     }
     public Long getCreateTime()
     {
@@ -230,6 +224,30 @@ public class AlarmParser
     public void setTasks(List<Task> tasks)
     {
         this.tasks = tasks;
+    }
+    public Boolean getAllowChange()
+    {
+        return allowChange;
+    }
+    public void setAllowChange(Boolean allowChange)
+    {
+        this.allowChange = allowChange;
+    }
+    public String getOwerUuid()
+    {
+        return owerUuid;
+    }
+    public void setOwerUuid(String owerUuid)
+    {
+        this.owerUuid = owerUuid;
+    }
+    public String getOwerUserUuid()
+    {
+        return owerUserUuid;
+    }
+    public void setOwerUserUuid(String owerUserUuid)
+    {
+        this.owerUserUuid = owerUserUuid;
     }
     
     

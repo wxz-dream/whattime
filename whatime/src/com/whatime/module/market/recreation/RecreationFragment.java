@@ -20,7 +20,7 @@ import com.whatime.framework.ui.view.ScrollableTabView;
 
 public class RecreationFragment extends MarketFragment
 {
-    private int page;
+    private long page;
     private Category cate;
     
     private List<Category> cates;
@@ -43,7 +43,7 @@ public class RecreationFragment extends MarketFragment
     {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         cate = DBHelper.getInstance().getcaById(page);
-        mTopTitleView.setText(cate.getDesc());
+        mTopTitleView.setText(cate.getDes());
         mTopBackView.setBackgroundResource(R.drawable.biz_local_news_main_back_normal);
         cates = DBHelper.getInstance().getcateByParentId(page);
         listViewPagerAdapter = new RecreationPagerAdapter(this, cates);

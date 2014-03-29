@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.whatime.R;
+import com.whatime.controller.center.AlarmController;
 import com.whatime.framework.ui.adapter.ScheduleScrollingTabsAdapter;
 import com.whatime.framework.ui.fragment.ScheduleBaseFragment;
 import com.whatime.framework.ui.view.ScrollableTabView;
@@ -77,6 +78,7 @@ public class ScheduleFragment extends ScheduleBaseFragment
     public void onResume()
     {
         super.onResume();
+        AlarmController.setNextAlert(mContext);
         listViewPagerAdapter.notifyDataChange();
     }
     

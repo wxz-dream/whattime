@@ -258,7 +258,12 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
         TextView labelView = (TextView)convertView.findViewById(R.id.alarm_title);
         StringBuilder oneLine = new StringBuilder();
         String alarmTitle = entity.getTitle();
-        String taskTitle = entity.getTask().getTitle();
+        Task task = entity.getTask();
+        if(task==null)
+        {
+            return convertView;
+        }
+        String taskTitle = task.getTitle();
         
         if (alarmTitle != null || taskTitle != null)
         {

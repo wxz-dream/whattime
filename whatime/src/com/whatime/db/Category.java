@@ -8,7 +8,7 @@ public class Category {
 
     private Long id;
     private String name;
-    private String desc;
+    private String des;
     private Long parentId;
     private String imgUri;
     private Boolean del;
@@ -20,10 +20,10 @@ public class Category {
         this.id = id;
     }
 
-    public Category(Long id, String name, String desc, Long parentId, String imgUri, Boolean del) {
+    public Category(Long id, String name, String des, Long parentId, String imgUri, Boolean del) {
         this.id = id;
         this.name = name;
-        this.desc = desc;
+        this.des = des;
         this.parentId = parentId;
         this.imgUri = imgUri;
         this.del = del;
@@ -45,12 +45,12 @@ public class Category {
         this.name = name;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getDes() {
+        return des;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDes(String des) {
+        this.des = des;
     }
 
     public Long getParentId() {

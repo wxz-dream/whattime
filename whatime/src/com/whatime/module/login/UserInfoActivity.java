@@ -56,6 +56,8 @@ public class UserInfoActivity extends Activity
     
     private Button save;
     
+    private Button login_reback_btn;
+    
     private User user = MyApp.getInstance().getUser();
     
     private Handler myHandler = new Handler()
@@ -180,6 +182,8 @@ public class UserInfoActivity extends Activity
         identityCard = (EditText)findViewById(R.id.identityCard);
         qq = (EditText)findViewById(R.id.qq);
         initSave();
+        login_reback_btn = (Button)findViewById(R.id.login_reback_btn);
+        login_reback_btn.setOnClickListener(listener);
     }
     
     private void initSave()
@@ -210,6 +214,9 @@ public class UserInfoActivity extends Activity
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     /* 取得相片后返回本画面 */
                     startActivityForResult(intent, 1);
+                    break;
+                case R.id.login_reback_btn:
+                    finish();
                     break;
                 case R.id.userinfo_save:
                     if(photoUri!=null)

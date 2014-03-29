@@ -427,8 +427,12 @@ public class AlarmAddActivity extends Activity
             mAlarm.setFroms(AlarmCons.FROMS_ANDROID);
             mAlarm.setType(alarm_type);
             mAlarm.setEndTime(time.getTimeInMillis());
+            User user = MyApp.getInstance().getUser();
+            if (user != null)
+            {
+                mAlarm.setUserUuid(user.getUuid());
+            }
             DBHelper.getInstance().addAlarm(mAlarm);
-            
             initTypeData();
         }
         else
@@ -568,7 +572,7 @@ public class AlarmAddActivity extends Activity
             mAlarm.setTaskUuid(currentTask.getUuid());
             mAlarm.setAlarmTime(currentTask.getAlarmTime());
             DBHelper.getInstance().uptAlarm(mAlarm);
-            AlarmController.addAlarm(context, mAlarm.getId());
+            AlarmController.setNextAlert(context);
             if (alarm_id == -1)
             {
                 if (SysUtil.hasNetWorkConection(context))
@@ -578,6 +582,8 @@ public class AlarmAddActivity extends Activity
                     {
                         if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
                         {
+                            mAlarm.setOwerUuid(mAlarm.getUuid());
+                            mAlarm.setOwerUserUuid(mAlarm.getUserUuid());
                             new RemoteApiImpl().alarmShareAdd(user, mAlarm, myHandler);
                         }
                         else

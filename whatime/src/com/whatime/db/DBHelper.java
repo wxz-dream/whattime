@@ -107,7 +107,17 @@ public class DBHelper
      */
     public void uptAlarm(Alarm alarm)
     {
-        alarm.setUptTime(System.currentTimeMillis());
+        long time = System.currentTimeMillis();
+        //同步到服务器后，将更新时间修改为同步时间
+        if (alarm.getSyncTime() != null && (time - alarm.getSyncTime() < 10000))
+        {
+            alarm.setUptTime(alarm.getSyncTime());
+        }
+        else
+        {
+            alarm.setUptTime(time);
+        }
+        
         alarmDao.update(alarm);
     }
     
@@ -142,7 +152,8 @@ public class DBHelper
     {
         QueryBuilder<Alarm> qb = alarmDao.queryBuilder();
         qb.where(new StringCondition("ALARM_TIME BETWEEN " + start + " AND " + end),
-            com.whatime.db.AlarmDao.Properties.Del.eq(false),com.whatime.db.AlarmDao.Properties.Open.eq(false));
+            com.whatime.db.AlarmDao.Properties.Del.eq(false),
+            com.whatime.db.AlarmDao.Properties.Open.eq(false));
         qb.orderDesc(com.whatime.db.AlarmDao.Properties.AlarmTime);
         return qb.list();
     }
@@ -276,22 +287,21 @@ public class DBHelper
             + taskUuid + "',1,'" + alarmUuid + "','起床了~','早起的鸟儿有虫吃'," + +cal.getTimeInMillis() + ","
             + RepeatCons.TYPE_WORK + ",''," + AdvanceCons.ORDER_DEFAULT + "," + PlayDelayCons.TYPE_DEFAULT + ",0,'',"
             + "1," + System.currentTimeMillis() + ",0,0,1,0)");
-        db.execSQL("INSERT INTO ALARM (UUID,TYPE,TITLE,DES,OPEN,ALARM_TIME,CREATE_TIME,UPT_TIME,SYNC_TIME,FROMS,TASK_ID,TASK_UUID,DEL) values ('"
+        db.execSQL("INSERT INTO ALARM (UUID,TYPE,TITLE,DES,OPEN,ALARM_TIME,CREATE_TIME,UPT_TIME,FROMS,TASK_ID,TASK_UUID,DEL) values ('"
             + alarmUuid
             + "',"
             + AlarmCons.TYPE_GETUP
             + ",'起床闹钟','懒虫起床啦',1,"
             + cal.getTimeInMillis()
-            + ","
-            + System.currentTimeMillis() + ",0,0," + AlarmCons.FROMS_ANDROID + ",1,'" + taskUuid + "',0)");
-        db.execSQL("INSERT INTO CATEGORY (_id,NAME,DESC) values (0,'根分类','it is gen')");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('健康生活','生活',0)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('娱乐活动','娱乐',0)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('结伴旅行','旅行',0)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('热播影视','影视',0)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('热玩游戏','游戏',0)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('校园生活','校园',0)");
-        db.execSQL("INSERT INTO CATEGORY (NAME,DESC,PARENT_ID) values ('其它','其它',0)");
+            + ",0,0," + AlarmCons.FROMS_ANDROID + ",1,'" + taskUuid + "',0)");
+        db.execSQL("INSERT INTO CATEGORY (_id,NAME,DES) values (0,'根分类','it is gen')");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DES,PARENT_ID) values ('健康生活','生活',0)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DES,PARENT_ID) values ('娱乐活动','娱乐',0)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DES,PARENT_ID) values ('结伴旅行','旅行',0)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DES,PARENT_ID) values ('热播影视','影视',0)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DES,PARENT_ID) values ('热玩游戏','游戏',0)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DES,PARENT_ID) values ('校园生活','校园',0)");
+        db.execSQL("INSERT INTO CATEGORY (NAME,DES,PARENT_ID) values ('其它','其它',0)");
     }
     
     private static void insertDataFromAssert(SQLiteDatabase db)
@@ -387,10 +397,15 @@ public class DBHelper
     public long getAlarmMaxSyncTime()
     {
         QueryBuilder<Alarm> qb = alarmDao.queryBuilder();
-        qb.orderAsc(com.whatime.db.AlarmDao.Properties.SyncTime);
+        qb.where(com.whatime.db.AlarmDao.Properties.SyncTime.isNotNull())
+        .orderAsc(com.whatime.db.AlarmDao.Properties.SyncTime);
         if (qb.buildCount().count() > 0)
         {
-            return qb.list().get(0).getAlarmTime();
+            Long syncTime = qb.list().get(0).getSyncTime();
+            if(null!=syncTime)
+            {
+                return syncTime;
+            }
         }
         return 0;
     }
@@ -403,7 +418,8 @@ public class DBHelper
     public long getTaskMaxUptTime()
     {
         QueryBuilder<Task> qb = taskDao.queryBuilder();
-        qb.orderAsc(com.whatime.db.TaskDao.Properties.UptTime);
+        qb.where(com.whatime.db.AlarmDao.Properties.UptTime.isNotNull())
+        .orderAsc(com.whatime.db.TaskDao.Properties.UptTime);
         if (qb.buildCount().count() > 0)
         {
             Long uptTime = qb.list().get(0).getUptTime();
@@ -414,17 +430,17 @@ public class DBHelper
         }
         return 0;
     }
-
+    
     public void clearCate()
     {
         cateDao.deleteAll();
     }
-
+    
     public void addCate(Category cate)
     {
         cateDao.insert(cate);
     }
-
+    
     public List<Category> getcateByParentId(long parentId)
     {
         QueryBuilder<Category> qb = cateDao.queryBuilder();
@@ -435,26 +451,94 @@ public class DBHelper
         }
         return new ArrayList<Category>();
     }
-
-    public Category getcaById(int page)
+    
+    public Category getcaById(Long id)
     {
         QueryBuilder<Category> qb = cateDao.queryBuilder();
-        qb.where(com.whatime.db.CategoryDao.Properties.Id.eq(page));
+        qb.where(com.whatime.db.CategoryDao.Properties.Id.eq(id));
         if (qb.buildCount().count() > 0)
         {
             return qb.list().get(0);
         }
         return null;
     }
-
+    
     public void uptCate(Category cate)
     {
         cateDao.update(cate);
     }
-
+    
     public void clearUser()
     {
         userDao.deleteAll();
+    }
+    
+    public void setAlarmUserUuid(String uuid)
+    {
+        String sql =
+            new StringBuilder().append("UPDATE ")
+                .append(AlarmDao.TABLENAME)
+                .append(" SET USER_UUID = '")
+                .append(uuid)
+                .append("' ")
+                .append("WHERE USER_UUID IS NULL")
+                .toString();
+        alarmDao.getDatabase().execSQL(sql);
+    }
+    
+    public Alarm getAlarmByUuidd(String uuid)
+    {
+        QueryBuilder<Alarm> qb = alarmDao.queryBuilder();
+        qb.where(com.whatime.db.AlarmDao.Properties.Uuid.eq(uuid));
+        if (qb.buildCount().count() > 0)
+        {
+            return qb.list().get(0);
+        }
+        return null;
+    }
+    
+    public Task getTaskByUuid(String uuid)
+    {
+        QueryBuilder<Task> qb = taskDao.queryBuilder();
+        qb.where(com.whatime.db.TaskDao.Properties.Uuid.eq(uuid));
+        if (qb.buildCount().count() > 0)
+        {
+            return qb.list().get(0);
+        }
+        return null;
+    }
+    
+    public List<Alarm> getNoSyncShareAlarms()
+    {
+        QueryBuilder<Alarm> qb = alarmDao.queryBuilder();
+        qb.where(com.whatime.db.AlarmDao.Properties.SyncTime.isNull(),
+            com.whatime.db.AlarmDao.Properties.Share.isNotNull())
+            .orderAsc(com.whatime.db.AlarmDao.Properties.AlarmTime);
+        return qb.list();
+    }
+    
+    public List<Alarm> getNoSyncLocalAlarms()
+    {
+        QueryBuilder<Alarm> qb = alarmDao.queryBuilder();
+        qb.where(com.whatime.db.AlarmDao.Properties.SyncTime.isNull(),
+            com.whatime.db.AlarmDao.Properties.Share.isNull()).orderAsc(com.whatime.db.AlarmDao.Properties.AlarmTime);
+        return qb.list();
+    }
+    
+    public List<Alarm> getNoUptLocalAlarms()
+    {
+        QueryBuilder<Alarm> qb = alarmDao.queryBuilder();
+        qb.where(com.whatime.db.AlarmDao.Properties.SyncTime.lt(com.whatime.db.AlarmDao.Properties.UptTime),
+            com.whatime.db.AlarmDao.Properties.Share.isNull()).orderAsc(com.whatime.db.AlarmDao.Properties.AlarmTime);
+        return qb.list();
+    }
+    
+    public List<Alarm> getNoUptShareAlarms()
+    {
+        QueryBuilder<Alarm> qb = alarmDao.queryBuilder();
+        qb.where(com.whatime.db.AlarmDao.Properties.SyncTime.lt(com.whatime.db.AlarmDao.Properties.UptTime),
+            com.whatime.db.AlarmDao.Properties.Share.isNotNull()).orderAsc(com.whatime.db.AlarmDao.Properties.AlarmTime);
+        return qb.list();
     }
     
 }

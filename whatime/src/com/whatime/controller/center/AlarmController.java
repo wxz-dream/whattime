@@ -24,17 +24,6 @@ public class AlarmController
         AlarmService.disableExpiredAlarms(context);
     }
     /**
-     * 添加一个提醒
-     * @param mContext
-     * @param alarm
-     * @param tasks 
-     * @return
-     */
-    public static boolean addAlarm(Context mContext, long alarmId)
-    {
-       return AlarmService.addAlarm(mContext, alarmId);
-    }
-    /**
      * 删除一个提醒
      * @param mContext
      * @param alarmId
