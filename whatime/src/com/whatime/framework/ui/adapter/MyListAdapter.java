@@ -9,6 +9,7 @@ import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
@@ -19,7 +20,7 @@ import com.whatime.db.User;
 import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.util.SysUtil;
 
-public class MyListAdapter implements ListAdapter
+public class MyListAdapter extends BaseAdapter implements ListAdapter
 {
     private Context context;
     private List<Alarm> alarms;
@@ -133,5 +134,11 @@ public class MyListAdapter implements ListAdapter
     {
         return true;
     }
+    @Override
+    public void notifyDataSetChanged()
+    {
+        super.notifyDataSetChanged();
+    }
+    
     
 }

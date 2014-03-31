@@ -14,7 +14,8 @@ public class Constants
     //http://192.168.11.5:8080/whatimeServer/android/
     //http://whatimeServer.sinaapp.com/android/
     //http://192.168.11.7:8080/whatimeSae/android/
-    public static final String URL = "http://192.168.11.9:8080/whatimeServer/android/";
+    //http://whatime.duapp.com/
+    public static final String URL = "http://whatime.duapp.com/android/";
     
     public static final String REGIST_USER_POST_URL = "user/registUser";
     
@@ -39,6 +40,8 @@ public class Constants
     public static final String ALARM_LOCAL_SYNC_POST_URL = "userLocalAlarm/alarmLocalSync";
     
     public static final String ALARM_SHARE_SYNC_POST_URL = "userShareAlarm/alarmShareSync";
+    
+    public static final String MARKET_GET_MARKET_ALARM_POST_URL = "market/getMarketAlarm";
     
     public static final String MARKET_GET_SYNC_CATEGORY_POST_URL = "cate/getSyncCategory";
     

@@ -1,5 +1,6 @@
 package com.whatime.framework.network.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +34,6 @@ import com.whatime.framework.network.http.HttpAsycnUtil;
 import com.whatime.framework.network.http.HttpSycnUtil;
 import com.whatime.framework.network.http.MD5;
 import com.whatime.framework.network.http.MyJsonHttpResponseHandler;
-import com.whatime.framework.network.pojo.AlarmParser;
 import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.ui.activity.MainActivity;
 import com.whatime.framework.util.SysUtil;
@@ -298,11 +298,7 @@ public class RemoteApiImpl
                         data.putString(ResponseCons.STATEINFO, stateInfo);
                         if (state == ResponseCons.STATE_SUCCESS)
                         {
-                            AlarmParser resAlarm =
-                                (AlarmParser)JSON.parseObject(response.getString("resInfo"), AlarmParser.class);
-                            alarm.setSyncTime(resAlarm.getSyncTime());
-                            alarm.setJoinNum(resAlarm.getJoinNum());
-                            alarm.setUptTime(resAlarm.getUptTime());
+                            Alarm resAlarm = JSON.parseObject(response.getString("resInfo"), Alarm.class);
                             for (Task t : alarm.getTasks())
                             {
                                 t.setSyncTime(resAlarm.getSyncTime());
@@ -356,11 +352,7 @@ public class RemoteApiImpl
                         data.putString(ResponseCons.STATEINFO, stateInfo);
                         if (state == ResponseCons.STATE_SUCCESS)
                         {
-                            AlarmParser resAlarm =
-                                (AlarmParser)JSON.parseObject(response.getString("resInfo"), AlarmParser.class);
-                            alarm.setSyncTime(resAlarm.getSyncTime());
-                            alarm.setJoinNum(resAlarm.getJoinNum());
-                            alarm.setUptTime(resAlarm.getUptTime());
+                            Alarm resAlarm = JSON.parseObject(response.getString("resInfo"), Alarm.class);
                             for (Task t : alarm.getTasks())
                             {
                                 t.setSyncTime(resAlarm.getSyncTime());
@@ -414,11 +406,7 @@ public class RemoteApiImpl
                         data.putString(ResponseCons.STATEINFO, stateInfo);
                         if (state == ResponseCons.STATE_SUCCESS)
                         {
-                            AlarmParser resAlarm =
-                                (AlarmParser)JSON.parseObject(response.getString("resInfo"), AlarmParser.class);
-                            alarm.setSyncTime(resAlarm.getSyncTime());
-                            alarm.setJoinNum(resAlarm.getJoinNum());
-                            alarm.setUptTime(resAlarm.getUptTime());
+                            Alarm resAlarm = JSON.parseObject(response.getString("resInfo"), Alarm.class);
                             for (Task t : alarm.getTasks())
                             {
                                 t.setSyncTime(resAlarm.getSyncTime());
@@ -472,11 +460,7 @@ public class RemoteApiImpl
                         data.putString(ResponseCons.STATEINFO, stateInfo);
                         if (state == ResponseCons.STATE_SUCCESS)
                         {
-                            AlarmParser resAlarm =
-                                (AlarmParser)JSON.parseObject(response.getString("resInfo"), AlarmParser.class);
-                            alarm.setSyncTime(resAlarm.getSyncTime());
-                            alarm.setJoinNum(resAlarm.getJoinNum());
-                            alarm.setUptTime(resAlarm.getUptTime());
+                            Alarm resAlarm = JSON.parseObject(response.getString("resInfo"), Alarm.class);
                             for (Task t : alarm.getTasks())
                             {
                                 t.setSyncTime(resAlarm.getSyncTime());
@@ -731,67 +715,18 @@ public class RemoteApiImpl
         
         for (Object obj : arrs)
         {
-            AlarmParser ps = JSON.parseObject(obj.toString(), AlarmParser.class);
-            
+            Alarm ps = JSON.parseObject(obj.toString(), Alarm.class);
             Alarm alarm = DBHelper.getInstance().getAlarmByUuidd(ps.getUuid());
             if (alarm != null)
             {
                 if (ps.getShare() != null || (ps.getShare() != null && !ps.getAllowChange()))
                 {
-                    alarm.setAlarmTime(ps.getAlarmTime());
-                    alarm.setCategory(DBHelper.getInstance().getcaById(ps.getCateId()));
-                    alarm.setCreateTime(ps.getCreateTime());
-                    alarm.setDes(ps.getDes());
-                    alarm.setEndTime(ps.getEndTime());
-                    alarm.setFroms(ps.getFroms());
-                    alarm.setDel(ps.getDel());
-                    alarm.setEndJoin(ps.getEndJoin());
-                    alarm.setOpen(ps.getOpen());
-                    alarm.setJoinNum(ps.getJoinNum());
-                    alarm.setLinkman(ps.getLinkman());
-                    alarm.setMaxJoinNum(ps.getMaxJoinNum());
-                    alarm.setScope(ps.getScope());
-                    alarm.setShare(ps.getShare());
-                    alarm.setSyncTime(ps.getSyncTime());
-                    alarm.setTitle(ps.getTitle());
-                    alarm.setType(ps.getType());
-                    alarm.setUptTime(ps.getUptTime());
-                    alarm.setAllowChange(ps.getAllowChange());
-                    alarm.setOwerUuid(ps.getOwerUuid());
-                    alarm.setOwerUserUuid(ps.getOwerUserUuid());
-                    DBHelper.getInstance().uptAlarm(alarm);
+                    DBHelper.getInstance().uptAlarm(ps);
                 }
             }
             else
             {
-                alarm = new Alarm();
-                alarm.setUuid(ps.getUuid());
-                alarm.setAlarmTime(ps.getAlarmTime());
-                if (ps.getCateId() != null)
-                {
-                    alarm.setCategory(DBHelper.getInstance().getcaById(ps.getCateId()));
-                }
-                alarm.setCreateTime(ps.getCreateTime());
-                alarm.setDes(ps.getDes());
-                alarm.setEndTime(ps.getEndTime());
-                alarm.setFroms(ps.getFroms());
-                alarm.setDel(ps.getDel());
-                alarm.setEndJoin(ps.getEndJoin());
-                alarm.setOpen(ps.getOpen());
-                alarm.setJoinNum(ps.getJoinNum());
-                alarm.setLinkman(ps.getLinkman());
-                alarm.setMaxJoinNum(ps.getMaxJoinNum());
-                alarm.setScope(ps.getScope());
-                alarm.setShare(ps.getShare());
-                alarm.setSyncTime(ps.getSyncTime());
-                alarm.setTitle(ps.getTitle());
-                alarm.setType(ps.getType());
-                alarm.setUptTime(ps.getUptTime());
-                alarm.setUserUuid(MyApp.getInstance().getUser().getUuid());
-                alarm.setAllowChange(ps.getAllowChange());
-                alarm.setOwerUuid(ps.getOwerUuid());
-                alarm.setOwerUserUuid(ps.getOwerUserUuid());
-                DBHelper.getInstance().addAlarm(alarm);
+                DBHelper.getInstance().addAlarm(ps);
             }
             for (Task psTask : ps.getTasks())
             {
@@ -800,19 +735,19 @@ public class RemoteApiImpl
                     Task t = DBHelper.getInstance().getTaskByUuid(psTask.getUuid());
                     if (t != null)
                     {
-                        psTask.setAlarm(alarm);
+                        psTask.setAlarm(ps);
                         psTask.setId(t.getId());
                         DBHelper.getInstance().uptTask(psTask);
                     }
                     else
                     {
-                        psTask.setAlarm(alarm);
+                        psTask.setAlarm(ps);
                         DBHelper.getInstance().addTask(psTask);
                     }
                 }
             }
-            Alarm uptAlarm = DBHelper.getInstance().getAlarmById(alarm.getId());
-            uptAlarm.setTask(DBHelper.getInstance().getNextTaskByAlarmId(alarm.getId()));
+            Alarm uptAlarm = DBHelper.getInstance().getAlarmById(ps.getId());
+            uptAlarm.setTask(DBHelper.getInstance().getNextTaskByAlarmId(ps.getId()));
             DBHelper.getInstance().uptAlarm(uptAlarm);
             
         }
@@ -859,6 +794,64 @@ public class RemoteApiImpl
                     catch (JSONException e)
                     {
                     }
+                }
+            });
+    }
+
+    public void getMarketAlarm(final Handler handler,Long cateid, String scope, long startTime, long endTime, int page)
+    {
+        final Message msg = new Message();
+        final Bundle data = new Bundle();
+        msg.what = 0x001;
+        final User user = MyApp.getInstance().getUser();
+        
+        RequestParams params = new RequestParams();
+        if(user!=null)
+        {
+            params.put("userUuid", user.getUuid());
+            params.put("mime", user.getMime());
+        }
+        params.put("cateId", String.valueOf(cateid));
+        params.put("scope", scope);
+        params.put("startTime", String.valueOf(startTime));
+        params.put("endTime", String.valueOf(endTime));
+        params.put("page", String.valueOf(page));
+        HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.MARKET_GET_MARKET_ALARM_POST_URL),
+            params,
+            new MyJsonHttpResponseHandler(msg, data, handler)
+            {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+                {
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    try
+                    {
+                        int state = response.getInt("state");
+                        String stateInfo = response.getString("stateInfo");
+                        data.putInt(ResponseCons.STATE, state);
+                        data.putString(ResponseCons.STATEINFO, stateInfo);
+                        if (state == ResponseCons.STATE_SUCCESS)
+                        {
+                            if (response.has("resInfo"))
+                            {
+                                String resInfo = response.getString("resInfo");
+                                ArrayList list = new ArrayList();
+                                List<Alarm> alarms = JSONArray.parseArray(resInfo, Alarm.class);
+                                list.add(alarms);
+                                data.putParcelableArrayList(ResponseCons.RESINFO, list);
+                            }
+                        }
+                    }
+                    catch (JSONException e)
+                    {
+                        data.putInt(ResponseCons.STATE, ResponseCons.STATE_EXCEPTION);
+                        data.putString(ResponseCons.STATEINFO, e.getMessage());
+                    }
+                    msg.setData(data);
+                    handler.sendMessage(msg);
                 }
             });
     }
