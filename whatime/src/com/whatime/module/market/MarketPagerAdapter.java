@@ -1,4 +1,4 @@
-package com.whatime.module.market.recreation;
+package com.whatime.module.market;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ import com.whatime.framework.ui.pull.XListView;
 import com.whatime.framework.ui.pull.XListView.IXListViewListener;
 import com.whatime.framework.ui.view.ToastMaster;
 
-public class RecreationPagerAdapter extends PagerAdapter implements IXListViewListener
+public class MarketPagerAdapter extends PagerAdapter implements IXListViewListener
 {
     
     private List<Category> cates;
@@ -58,13 +58,13 @@ public class RecreationPagerAdapter extends PagerAdapter implements IXListViewLi
                         ArrayList list = msg.getData().getParcelableArrayList(ResponseCons.RESINFO);
                         alarms = (List<Alarm>)list.get(0);
                         listAdapter.notifyDataSetChanged();
-                        Toast toast = Toast.makeText(context, "加载成功", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(context, "加载成功", 1000);
                         ToastMaster.setToast(toast);
                         toast.show();
                     }
                     else
                     {
-                        Toast toast = Toast.makeText(context, "加载失败", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(context, "加载失败", 1000);
                         ToastMaster.setToast(toast);
                         toast.show();
                     }
@@ -73,7 +73,7 @@ public class RecreationPagerAdapter extends PagerAdapter implements IXListViewLi
         };
     };
     
-    public RecreationPagerAdapter(List<Category> cates)
+    public MarketPagerAdapter(List<Category> cates)
     {
         this.cates = cates;
     }

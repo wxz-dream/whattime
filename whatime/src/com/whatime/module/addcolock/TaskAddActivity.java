@@ -43,13 +43,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whatime.R;
-import com.whatime.controller.alarm.AdvanceCons;
-import com.whatime.controller.alarm.AlarmCons;
-import com.whatime.controller.alarm.PlayDelayCons;
-import com.whatime.controller.alarm.RepeatCons;
-import com.whatime.controller.alarm.TaskCons;
 import com.whatime.controller.center.AlarmController;
-import com.whatime.controller.service.AlarmService;
+import com.whatime.controller.cons.AdvanceCons;
+import com.whatime.controller.cons.AlarmCons;
+import com.whatime.controller.cons.AlarmServiceCons;
+import com.whatime.controller.cons.PlayDelayCons;
+import com.whatime.controller.cons.RepeatCons;
+import com.whatime.controller.cons.TaskCons;
 import com.whatime.db.Alarm;
 import com.whatime.db.DBHelper;
 import com.whatime.db.Task;
@@ -159,6 +159,8 @@ public class TaskAddActivity extends Activity
     private long task_id;
     
     private Context context;
+    
+    private AlarmController controller = new AlarmController();
     
     private Calendar time = Calendar.getInstance(TimeZone.getDefault());
     
@@ -398,7 +400,7 @@ public class TaskAddActivity extends Activity
     
     private void initTask()
     {
-        mAlarm = AlarmController.getAlarmById(context, getIntent().getLongExtra(AlarmService.ALARM_ID, -1));
+        mAlarm = controller.getAlarmById(getIntent().getLongExtra(AlarmServiceCons.ALARM_ID, -1));
         task_id = getIntent().getLongExtra(TaskCons.TASK_ID, -1);
         if (task_id == -1)
         {

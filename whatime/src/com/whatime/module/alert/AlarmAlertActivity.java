@@ -26,7 +26,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import com.whatime.controller.service.AlarmService;
+import com.whatime.controller.cons.AlarmServiceCons;
 
 /**
  * Full screen alarm alert: pops visible indicator and plays alarm tone. This
@@ -96,7 +96,7 @@ public class AlarmAlertActivity extends AlarmAlertFullScreenActivity {
         } else {
             // Launch the full screen activity but do not turn the screen on.
             Intent i = new Intent(this, AlarmAlertFullScreenActivity.class);
-            i.putExtra(AlarmService.ALARM_INTENT_EXTRA, mAlarm.getId());
+            i.putExtra(AlarmServiceCons.ALARM_INTENT_EXTRA, mAlarm.getId());
             i.putExtra(SCREEN_OFF, true);
             startActivity(i);
             finish();

@@ -26,7 +26,7 @@ import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.tencent.weibo.TencentWeibo;
 
 import com.whatime.R;
-import com.whatime.controller.alarm.UserCons;
+import com.whatime.controller.cons.UserCons;
 import com.whatime.db.User;
 import com.whatime.framework.application.MyApp;
 import com.whatime.framework.network.pojo.ResponseCons;

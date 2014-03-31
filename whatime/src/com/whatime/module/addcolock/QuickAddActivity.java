@@ -32,12 +32,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whatime.R;
-import com.whatime.controller.alarm.AdvanceCons;
-import com.whatime.controller.alarm.AlarmCons;
-import com.whatime.controller.alarm.PlayDelayCons;
-import com.whatime.controller.alarm.RepeatCons;
 import com.whatime.controller.center.AlarmController;
-import com.whatime.controller.service.AlarmService;
+import com.whatime.controller.cons.AdvanceCons;
+import com.whatime.controller.cons.AlarmCons;
+import com.whatime.controller.cons.AlarmServiceCons;
+import com.whatime.controller.cons.PlayDelayCons;
+import com.whatime.controller.cons.RepeatCons;
 import com.whatime.db.Alarm;
 import com.whatime.db.DBHelper;
 import com.whatime.db.Task;
@@ -69,6 +69,8 @@ public class QuickAddActivity extends Activity
     private MyGridView grid;
     
     private Context context;
+    
+    private AlarmController controller = new AlarmController();
     
     final Calendar time = Calendar.getInstance(TimeZone.getDefault());
     private Handler myHandler = new Handler()
@@ -156,7 +158,7 @@ public class QuickAddActivity extends Activity
             public void onItemClick(AdapterView<?> adapterview, View view, int i, long l)
             {
                 startActivity(new Intent(QuickAddActivity.this, AlarmAddActivity_.class)
-                .putExtra(AlarmService.ALARM_ID,-1).putExtra(AlarmService.ALARM_TYPE,i));
+                .putExtra(AlarmServiceCons.ALARM_ID,-1).putExtra(AlarmServiceCons.ALARM_TYPE,i));
                 QuickAddActivity.this.finish();
             }
         });
@@ -272,7 +274,7 @@ public class QuickAddActivity extends Activity
                     alarm.setTask(currentTask);
                     alarm.setTaskUuid(currentTask.getUuid());
                     DBHelper.getInstance().uptAlarm(alarm);
-                    AlarmController.setNextAlert(QuickAddActivity.this);
+                    controller.setNextAlert();
                     if (SysUtil.hasNetWorkConection(context))
                     {
                         if (user != null)

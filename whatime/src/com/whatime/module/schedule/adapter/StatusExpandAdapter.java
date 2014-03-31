@@ -22,7 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whatime.R;
-import com.whatime.controller.service.AlarmService;
+import com.whatime.controller.center.AlarmController;
+import com.whatime.controller.cons.AlarmServiceCons;
 import com.whatime.controller.service.AlarmUtil;
 import com.whatime.db.Alarm;
 import com.whatime.db.DBHelper;
@@ -39,6 +40,8 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
     private List<OneBar> oneList;
     
     private Context context;
+    
+    private AlarmController controller = new AlarmController();
     
     private SchedulePagerAdapter schedulePagerAdapter;
     
@@ -121,13 +124,12 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
         
         GroupViewHolder holder = new GroupViewHolder();
         
-        if (convertView == null)
+        if (convertView == null||oneList.size()==0)
         {
             convertView = inflater.inflate(R.layout.one_status_item, null);
         }
         holder.groupName = (TextView)convertView.findViewById(R.id.one_status_name);
         holder.group_tiao = (TextView)convertView.findViewById(R.id.group_tiao);
-        
         holder.groupName.setText(oneList.get(groupPosition).name);
         if (oneList.get(groupPosition).alarms.get(0).getOpen())
         {
@@ -154,8 +156,8 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
             @Override
             public void onClick(View v)
             {
-                context.startActivity(new Intent(context, AlarmAddActivity_.class).putExtra(AlarmService.ALARM_ID,
-                    entity.getId()).putExtra(AlarmService.ALARM_TYPE, childPosition));
+                context.startActivity(new Intent(context, AlarmAddActivity_.class).putExtra(AlarmServiceCons.ALARM_ID,
+                    entity.getId()).putExtra(AlarmServiceCons.ALARM_TYPE, childPosition));
             }
         });
         digitalClock.setOnLongClickListener(new OnLongClickListener()
@@ -221,8 +223,8 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
             @Override
             public void onClick(View v)
             {
-                context.startActivity(new Intent(context, AlarmAddActivity_.class).putExtra(AlarmService.ALARM_ID,
-                    entity.getId()).putExtra(AlarmService.ALARM_TYPE, childPosition));
+                context.startActivity(new Intent(context, AlarmAddActivity_.class).putExtra(AlarmServiceCons.ALARM_ID,
+                    entity.getId()).putExtra(AlarmServiceCons.ALARM_TYPE, childPosition));
             }
         });
         content.setOnLongClickListener(new OnLongClickListener()
@@ -302,7 +304,7 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
     {
         clockOnOff.setBackgroundResource(enabled ? R.drawable.ic_clock_alarm_on : R.drawable.ic_clock_alarm_off);
         bar.setImageResource(enabled ? R.drawable.ic_indicator_on : R.drawable.ic_indicator_off);
-        AlarmService.enableAlarm(context, alarm.getId(), enabled);
+        controller.enableAlarm(alarm.getId(), enabled);
         if (enabled)
         {
             String toastText = AlarmUtil.formatToast(context, alarm.getAlarmTime());

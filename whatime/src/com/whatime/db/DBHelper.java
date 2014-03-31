@@ -13,10 +13,10 @@ import java.util.UUID;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.whatime.controller.alarm.AlarmCons;
-import com.whatime.controller.alarm.AdvanceCons;
-import com.whatime.controller.alarm.PlayDelayCons;
-import com.whatime.controller.alarm.RepeatCons;
+import com.whatime.controller.cons.AdvanceCons;
+import com.whatime.controller.cons.AlarmCons;
+import com.whatime.controller.cons.PlayDelayCons;
+import com.whatime.controller.cons.RepeatCons;
 import com.whatime.framework.application.MyApp;
 import com.whatime.framework.util.SysUtil;
 

@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.whatime.R;
-import com.whatime.controller.service.AlarmService;
+import com.whatime.controller.cons.AlarmServiceCons;
 import com.whatime.db.Alarm;
 import com.whatime.module.addcolock.AlarmAddActivity_;
 import com.whatime.module.schedule.adapter.OneBar;
@@ -142,8 +142,8 @@ public class HistoryExpandAdapter extends BaseExpandableListAdapter
             @Override
             public void onClick(View v)
             {
-                context.startActivity(new Intent(context, AlarmAddActivity_.class).putExtra(AlarmService.ALARM_ID,
-                    entity.getId()).putExtra(AlarmService.ALARM_TYPE, childPosition));
+                context.startActivity(new Intent(context, AlarmAddActivity_.class).putExtra(AlarmServiceCons.ALARM_ID,
+                    entity.getId()).putExtra(AlarmServiceCons.ALARM_TYPE, childPosition));
             }
         });
         View indicator = convertView.findViewById(R.id.indicator);
@@ -166,8 +166,8 @@ public class HistoryExpandAdapter extends BaseExpandableListAdapter
             @Override
             public void onClick(View v)
             {
-                context.startActivity(new Intent(context, AlarmAddActivity_.class).putExtra(AlarmService.ALARM_ID,
-                    entity.getId()).putExtra(AlarmService.ALARM_TYPE, childPosition));
+                context.startActivity(new Intent(context, AlarmAddActivity_.class).putExtra(AlarmServiceCons.ALARM_ID,
+                    entity.getId()).putExtra(AlarmServiceCons.ALARM_TYPE, childPosition));
             }
         });
         TextView labelView = (TextView)convertView.findViewById(R.id.alarm_title);

@@ -1,36 +1,37 @@
 package com.whatime.controller.center;
 
-import android.content.Context;
-
 import com.whatime.controller.service.AlarmService;
+import com.whatime.controller.service.impl.AlarmServiceImpl;
 import com.whatime.db.Alarm;
 
 public class AlarmController
 {
+    public AlarmService service = new AlarmServiceImpl();
+    
     /**
      * 设置下一个提醒
      * @param context
      */
-    public static void setNextAlert(final Context context)
+    public void setNextAlert()
     {
-        AlarmService.setNextAlert(context);
+        service.setNextAlert();
     }
     /**
      * 取消过期的闹钟
      * @param context
      */
-    public static void disableExpiredAlarms(final Context context)
+    public void disableExpiredAlarms()
     {
-        AlarmService.disableExpiredAlarms(context);
+        service.disableExpiredAlarms();
     }
     /**
      * 删除一个提醒
      * @param mContext
      * @param alarmId
      */
-    public static void deleteAlarm(Context mContext, long alarmId)
+    public void deleteAlarm(long alarmId)
     {
-        AlarmService.deleteAlarmById(mContext, alarmId);
+        service.deleteAlarmById(alarmId);
     }
     /**
      * 根据提醒ID获取提醒信息
@@ -38,9 +39,9 @@ public class AlarmController
      * @param alarmId
      * @return
      */
-    public static Alarm getAlarmById(Context mContext, long alarmId)
+    public Alarm getAlarmById(long alarmId)
     {
-        return AlarmService.getAlarmById(mContext, alarmId);
+        return service.getAlarmById(alarmId);
     }
     /**
      * 更新提醒
@@ -48,9 +49,9 @@ public class AlarmController
      * @param alarm
      * @return
      */
-    public static void uptAlarm(Context context, Alarm alarm)
+    public void uptAlarm(Alarm alarm)
     {
-        AlarmService.uptAlarm(context, alarm);
+        service.uptAlarm(alarm);
     }
     /**
      * 开启提醒
@@ -58,14 +59,31 @@ public class AlarmController
      * @param id
      * @param enabled
      */
-    public static void enableAlarm(final Context context, final long id, boolean enabled)
+    public void enableAlarm(final long id, boolean enabled)
     {
-        AlarmService.enableAlarm(context, id, enabled);
+        service.enableAlarm(id, enabled);
     }
-    public static void sync(Context context)
+    /**
+     * 同步
+     * @param context
+     */
+    public void sync()
     {
-        AlarmService.syncCategory(context);
-        AlarmService.syncAlarm(context);
+        service.syncCategory();
+        service.syncAlarm();
+    }
+    /**
+     * 获取下一个提醒
+     * @return
+     */
+    public Alarm getNextAlarm()
+    {
+        return service.getNextAlarm();
+    }
+    public void setNextAlarmAlert(Alarm alarm)
+    {
+        // TODO Auto-generated method stub
+        
     }
     
 }

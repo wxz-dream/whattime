@@ -40,6 +40,7 @@ import com.whatime.framework.util.SysUtil;
 
 public class RemoteApiImpl
 {
+    private AlarmController controller = new AlarmController();
     /**
      * 注册
      * @param c
@@ -199,7 +200,7 @@ public class RemoteApiImpl
                         DBHelper.getInstance().addUser(user);
                         MyApp.getInstance().setUser(user);
                         DBHelper.getInstance().setAlarmUserUuid(user.getUuid());
-                        AlarmController.sync(MyApp.getInstance().getApplicationContext());
+                        controller.sync();
                     }
                 }
                 catch (JSONException e)
@@ -647,7 +648,7 @@ public class RemoteApiImpl
                             {
                                 uptAlarms(response.getString("resInfo"));
                                 Context context = MyApp.getInstance().getApplicationContext();
-                                AlarmController.setNextAlert(context);
+                                controller.setNextAlert();
                                 Intent i = new Intent(context, MainActivity.class);
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 context.startActivity(i);
@@ -694,7 +695,7 @@ public class RemoteApiImpl
                             {
                                 uptAlarms(response.getString("resInfo"));
                                 Context context = MyApp.getInstance().getApplicationContext();
-                                AlarmController.setNextAlert(context);
+                                controller.setNextAlert();
                                 Intent i = new Intent(context, MainActivity.class);
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 context.startActivity(i);

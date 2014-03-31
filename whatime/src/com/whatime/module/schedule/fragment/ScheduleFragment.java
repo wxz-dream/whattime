@@ -40,6 +40,8 @@ public class ScheduleFragment extends ScheduleBaseFragment
     
     private ScheduleScrollingTabsAdapter mScrollingTabsAdapter;
     
+    private AlarmController controller = new AlarmController();
+    
     public ScheduleFragment()
     {
     }
@@ -78,7 +80,7 @@ public class ScheduleFragment extends ScheduleBaseFragment
     public void onResume()
     {
         super.onResume();
-        AlarmController.setNextAlert(mContext);
+        controller.setNextAlert();
         listViewPagerAdapter.notifyDataChange();
     }
     

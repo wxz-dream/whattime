@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.whatime.R;
 
-public class MarketFragment extends BaseFragment
+public class BaseMarketFragment extends BaseFragment
 {
     
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)

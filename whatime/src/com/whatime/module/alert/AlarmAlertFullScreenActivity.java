@@ -26,7 +26,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -40,9 +39,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whatime.R;
-import com.whatime.controller.alarm.AlarmCons;
 import com.whatime.controller.center.AlarmController;
-import com.whatime.controller.service.AlarmService;
+import com.whatime.controller.cons.AlarmCons;
+import com.whatime.controller.cons.AlarmServiceCons;
 import com.whatime.controller.service.AlarmUtil;
 import com.whatime.db.Alarm;
 import com.whatime.db.DBHelper;
@@ -76,6 +75,8 @@ public class AlarmAlertFullScreenActivity extends Activity
     
     private int mVolumeBehavior;
     
+    private AlarmController controller = new AlarmController();
+    
     // Receives the ALARM_KILLED action from the AlarmKlaxon,
     // and also ALARM_SNOOZE_ACTION / ALARM_DISMISS_ACTION from other applications
     private BroadcastReceiver mReceiver = new BroadcastReceiver()
@@ -84,18 +85,18 @@ public class AlarmAlertFullScreenActivity extends Activity
         public void onReceive(Context context, Intent intent)
         {
             String action = intent.getAction();
-            if (action.equals(AlarmService.ALARM_SNOOZE_ACTION))
+            if (action.equals(AlarmServiceCons.ALARM_SNOOZE_ACTION))
             {
                 snooze();
             }
-            else if (action.equals(AlarmService.ALARM_DISMISS_ACTION))
+            else if (action.equals(AlarmServiceCons.ALARM_DISMISS_ACTION))
             {
                 dismiss(false);
             }
             else
             {
                 Alarm alarm =
-                    DBHelper.getInstance().getAlarmById(intent.getLongExtra(AlarmService.ALARM_INTENT_EXTRA, -1));
+                    DBHelper.getInstance().getAlarmById(intent.getLongExtra(AlarmServiceCons.ALARM_INTENT_EXTRA, -1));
                 
                 if (alarm != null && mAlarm.getId() == alarm.getId())
                 {
@@ -110,7 +111,7 @@ public class AlarmAlertFullScreenActivity extends Activity
     {
         super.onCreate(icicle);
         
-        mAlarm = DBHelper.getInstance().getAlarmById(getIntent().getLongExtra(AlarmService.ALARM_INTENT_EXTRA, -1));
+        mAlarm = DBHelper.getInstance().getAlarmById(getIntent().getLongExtra(AlarmServiceCons.ALARM_INTENT_EXTRA, -1));
         // Get the volume/camera button behavior setting
         final String vol =
             PreferenceManager.getDefaultSharedPreferences(this).getString(KEY_VOLUME_BEHAVIOR, DEFAULT_VOLUME_BEHAVIOR);
@@ -134,9 +135,9 @@ public class AlarmAlertFullScreenActivity extends Activity
         updateLayout();
         
         // Register to get the alarm killed/snooze/dismiss intent.
-        IntentFilter filter = new IntentFilter(AlarmService.ALARM_KILLED);
-        filter.addAction(AlarmService.ALARM_SNOOZE_ACTION);
-        filter.addAction(AlarmService.ALARM_DISMISS_ACTION);
+        IntentFilter filter = new IntentFilter(AlarmServiceCons.ALARM_KILLED);
+        filter.addAction(AlarmServiceCons.ALARM_SNOOZE_ACTION);
+        filter.addAction(AlarmServiceCons.ALARM_DISMISS_ACTION);
         registerReceiver(mReceiver, filter);
     }
     
@@ -226,8 +227,8 @@ public class AlarmAlertFullScreenActivity extends Activity
         }
         // Notify the user that the alarm has been snoozed.
         Intent cancelSnooze = new Intent(this, AlarmReceiver.class);
-        cancelSnooze.setAction(AlarmService.CANCEL_SNOOZE);
-        cancelSnooze.putExtra(AlarmService.ALARM_ID, mAlarm.getId());
+        cancelSnooze.setAction(AlarmServiceCons.CANCEL_SNOOZE);
+        cancelSnooze.putExtra(AlarmServiceCons.ALARM_ID, mAlarm.getId());
         PendingIntent broadcast = PendingIntent.getBroadcast(this, 0, cancelSnooze, 0);
         NotificationManager nm = getNotificationManager();
         Notification n = new Notification(R.drawable.stat_notify_alarm, label, 0);
@@ -279,7 +280,7 @@ public class AlarmAlertFullScreenActivity extends Activity
         
         Log.v("wangxianming", "AlarmAlert.OnNewIntent()");
         
-        mAlarm = intent.getParcelableExtra(AlarmService.ALARM_INTENT_EXTRA);
+        mAlarm = intent.getParcelableExtra(AlarmServiceCons.ALARM_INTENT_EXTRA);
         
         setTitle();
     }
@@ -289,7 +290,7 @@ public class AlarmAlertFullScreenActivity extends Activity
     {
         super.onResume();
         // If the alarm was deleted at some point, disable snooze.
-        if (AlarmController.getAlarmById(this, mAlarm.getId()) == null)
+        if (controller.getAlarmById(mAlarm.getId()) == null)
         {
             Button snooze = (Button)findViewById(R.id.snooze);
             snooze.setEnabled(false);

@@ -1,4 +1,4 @@
-package com.whatime.module.market.recreation;
+package com.whatime.module.market;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,25 +15,25 @@ import com.whatime.R;
 import com.whatime.db.Category;
 import com.whatime.db.DBHelper;
 import com.whatime.framework.ui.adapter.MarketScrollingTabsAdapter;
-import com.whatime.framework.ui.fragment.MarketFragment;
+import com.whatime.framework.ui.fragment.BaseMarketFragment;
 import com.whatime.framework.ui.view.ScrollableTabView;
 
-public class RecreationFragment extends MarketFragment
+public class MarketFragment extends BaseMarketFragment
 {
     private long page;
     private Category cate;
     
     private List<Category> cates;
     
-    private RecreationPagerAdapter listViewPagerAdapter;
+    private MarketPagerAdapter listViewPagerAdapter;
     
     private MarketScrollingTabsAdapter mScrollingTabsAdapter;
     
-    public RecreationFragment()
+    public MarketFragment()
     {
     }
     
-    public RecreationFragment(Activity activity,int page)
+    public MarketFragment(Activity activity,int page)
     {
         this.mActivity = activity;
         this.page = page;
@@ -46,7 +46,7 @@ public class RecreationFragment extends MarketFragment
         mTopTitleView.setText(cate.getDes());
         mTopBackView.setBackgroundResource(R.drawable.biz_local_news_main_back_normal);
         cates = DBHelper.getInstance().getcateByParentId(page);
-        listViewPagerAdapter = new RecreationPagerAdapter(cates);
+        listViewPagerAdapter = new MarketPagerAdapter(cates);
         mPager.setAdapter(listViewPagerAdapter);
         
         pagerItemList = new ArrayList<Fragment>();

@@ -59,13 +59,13 @@ import cn.sharesdk.tencent.qzone.QZone;
 import cn.sharesdk.tencent.weibo.TencentWeibo;
 
 import com.whatime.R;
-import com.whatime.controller.alarm.AdvanceCons;
-import com.whatime.controller.alarm.AlarmCons;
-import com.whatime.controller.alarm.PlayDelayCons;
-import com.whatime.controller.alarm.RepeatCons;
-import com.whatime.controller.alarm.TaskCons;
 import com.whatime.controller.center.AlarmController;
-import com.whatime.controller.service.AlarmService;
+import com.whatime.controller.cons.AdvanceCons;
+import com.whatime.controller.cons.AlarmCons;
+import com.whatime.controller.cons.AlarmServiceCons;
+import com.whatime.controller.cons.PlayDelayCons;
+import com.whatime.controller.cons.RepeatCons;
+import com.whatime.controller.cons.TaskCons;
 import com.whatime.controller.service.AlarmUtil;
 import com.whatime.db.Alarm;
 import com.whatime.db.DBHelper;
@@ -168,6 +168,8 @@ public class AlarmAddActivity extends Activity
     private Calendar time = Calendar.getInstance(TimeZone.getDefault());
     
     private boolean isNew;
+    
+    private AlarmController controller = new AlarmController();
     
     private HashMap<String, String> pros;
     
@@ -285,7 +287,7 @@ public class AlarmAddActivity extends Activity
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
             {
-                startActivity(new Intent(AlarmAddActivity.this, TaskAddActivity_.class).putExtra(AlarmService.ALARM_ID,
+                startActivity(new Intent(AlarmAddActivity.this, TaskAddActivity_.class).putExtra(AlarmServiceCons.ALARM_ID,
                     mAlarm.getId()).putExtra(TaskCons.TASK_ID, mAlarm.getTasks().get(arg2).getId()));
             }
             
@@ -412,8 +414,8 @@ public class AlarmAddActivity extends Activity
     
     private void initAlarm()
     {
-        alarm_id = getIntent().getLongExtra(AlarmService.ALARM_ID, -1);
-        alarm_type = getIntent().getIntExtra(AlarmService.ALARM_TYPE, 0);
+        alarm_id = getIntent().getLongExtra(AlarmServiceCons.ALARM_ID, -1);
+        alarm_type = getIntent().getIntExtra(AlarmServiceCons.ALARM_TYPE, 0);
         if (alarm_id == -1)
         {
             isNew = true;
@@ -437,7 +439,7 @@ public class AlarmAddActivity extends Activity
         }
         else
         {
-            mAlarm = AlarmController.getAlarmById(context, alarm_id);
+            mAlarm = controller.getAlarmById(alarm_id);
             if (mAlarm.getEndTime() != null)
             {
                 time.setTimeInMillis(mAlarm.getEndTime());
@@ -539,7 +541,7 @@ public class AlarmAddActivity extends Activity
     @Click
     void add_common_add()
     {
-        startActivity(new Intent(AlarmAddActivity.this, TaskAddActivity_.class).putExtra(AlarmService.ALARM_ID,
+        startActivity(new Intent(AlarmAddActivity.this, TaskAddActivity_.class).putExtra(AlarmServiceCons.ALARM_ID,
             mAlarm.getId()).putExtra(TaskCons.TASK_ID, -1));
     }
     
@@ -568,50 +570,53 @@ public class AlarmAddActivity extends Activity
             
             mAlarm.setEndJoin(isend_bt.isChecked());
             Task currentTask = DBHelper.getInstance().getNextTaskByAlarmId(mAlarm.getId());
-            mAlarm.setTask(currentTask);
-            mAlarm.setTaskUuid(currentTask.getUuid());
-            mAlarm.setAlarmTime(currentTask.getAlarmTime());
-            DBHelper.getInstance().uptAlarm(mAlarm);
-            AlarmController.setNextAlert(context);
-            if (alarm_id == -1)
+            if(currentTask!=null)
             {
-                if (SysUtil.hasNetWorkConection(context))
+                mAlarm.setTask(currentTask);
+                mAlarm.setTaskUuid(currentTask.getUuid());
+                mAlarm.setAlarmTime(currentTask.getAlarmTime());
+                DBHelper.getInstance().uptAlarm(mAlarm);
+                controller.setNextAlert();
+                if (alarm_id == -1)
                 {
-                    User user = MyApp.getInstance().getUser();
-                    if (user != null)
+                    if (SysUtil.hasNetWorkConection(context))
                     {
+                        User user = MyApp.getInstance().getUser();
+                        if (user != null)
+                        {
+                            if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
+                            {
+                                mAlarm.setOwerUuid(mAlarm.getUuid());
+                                mAlarm.setOwerUserUuid(mAlarm.getUserUuid());
+                                new RemoteApiImpl().alarmShareAdd(user, mAlarm, myHandler);
+                            }
+                            else
+                            {
+                                new RemoteApiImpl().alarmLocalAdd(user, mAlarm, myHandler);
+                            }
+                        }
+                        //share
                         if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
                         {
-                            mAlarm.setOwerUuid(mAlarm.getUuid());
-                            mAlarm.setOwerUserUuid(mAlarm.getUserUuid());
-                            new RemoteApiImpl().alarmShareAdd(user, mAlarm, myHandler);
+                            ShareUtil.shareAll(mAlarm.getShare());
                         }
-                        else
-                        {
-                            new RemoteApiImpl().alarmLocalAdd(user, mAlarm, myHandler);
-                        }
-                    }
-                    //share
-                    if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
-                    {
-                        ShareUtil.shareAll(mAlarm.getShare());
                     }
                 }
-            }
-            else
-            {
-                if (SysUtil.hasNetWorkConection(context))
+                else
                 {
-                    User user = MyApp.getInstance().getUser();
-                    if (user != null)
+                    if (SysUtil.hasNetWorkConection(context))
                     {
-                        if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
+                        User user = MyApp.getInstance().getUser();
+                        if (user != null)
                         {
-                            new RemoteApiImpl().alarmShareEdit(user, mAlarm, myHandler);
-                        }
-                        else
-                        {
-                            new RemoteApiImpl().alarmLocalEdit(user, mAlarm, myHandler);
+                            if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
+                            {
+                                new RemoteApiImpl().alarmShareEdit(user, mAlarm, myHandler);
+                            }
+                            else
+                            {
+                                new RemoteApiImpl().alarmLocalEdit(user, mAlarm, myHandler);
+                            }
                         }
                     }
                 }

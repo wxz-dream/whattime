@@ -27,10 +27,10 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.whatime.R;
-import com.whatime.controller.alarm.AlarmCons;
 import com.whatime.controller.center.AlarmController;
+import com.whatime.controller.cons.AlarmCons;
+import com.whatime.controller.cons.AlarmServiceCons;
 import com.whatime.controller.service.AlarmAlertWakeLock;
-import com.whatime.controller.service.AlarmService;
 import com.whatime.db.Alarm;
 import com.whatime.db.DBHelper;
 import com.whatime.db.Task;
@@ -47,18 +47,19 @@ public class AlarmReceiver extends BroadcastReceiver {
     /** If the alarm is older than STALE_WINDOW, ignore.  It
         is probably the result of a time or timezone change */
     private final static int STALE_WINDOW = 30 * 60 * 1000;
+    private AlarmController controller = new AlarmController();
 
     @SuppressLint("NewApi")
     @Override
     public void onReceive(Context context, Intent intent) {
         
-        if (AlarmService.ALARM_KILLED.equals(intent.getAction())) {
-            Alarm alarm = DBHelper.getInstance().getAlarmById(intent.getLongExtra(AlarmService.ALARM_INTENT_EXTRA, -1));
+        if (AlarmServiceCons.ALARM_KILLED.equals(intent.getAction())) {
+            Alarm alarm = DBHelper.getInstance().getAlarmById(intent.getLongExtra(AlarmServiceCons.ALARM_INTENT_EXTRA, -1));
             // The alarm has been killed, update the notification
             updateNotification(context, alarm,
-                    intent.getIntExtra(AlarmService.ALARM_KILLED_TIMEOUT, -1));
+                    intent.getIntExtra(AlarmServiceCons.ALARM_KILLED_TIMEOUT, -1));
             return;
-        } else if (AlarmService.CANCEL_SNOOZE.equals(intent.getAction())) {
+        } else if (AlarmServiceCons.CANCEL_SNOOZE.equals(intent.getAction())) {
             return;
         } else if (!AlarmCons.ALARM_ALERT_ACTION.equals(intent.getAction())) {
             // Unknown intent, bail.
@@ -69,15 +70,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (alarm == null||alarm.getDel()||alarm.getAlarmTime()>System.currentTimeMillis()) {
             Log.v("wangxianming", "Failed to parse the alarm from the intent");
             // Make sure we set the next alert if needed.
-            AlarmController.setNextAlert(context);
+            controller.setNextAlert();
             return;
         }
         // Disable this alarm if it does not repeat.
         long alertTime = alarm.getAlarmTime();
         Log.e("xpf", "1="+alertTime);
-        
-        AlarmService.setNextAlarmAlert(alarm);
-        AlarmController.setNextAlert(context);
+        controller.setNextAlert();
         
         // Intentionally verbose: always log the alarm time to provide useful
         // information in bug reports.
@@ -108,14 +107,14 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         // Play the alarm alert and vibrate the device.
         Intent playAlarm = new Intent(AlarmCons.ALARM_ALERT_ACTION);
-        playAlarm.putExtra(AlarmService.ALARM_INTENT_EXTRA, alarm.getId());
+        playAlarm.putExtra(AlarmServiceCons.ALARM_INTENT_EXTRA, alarm.getId());
         context.startService(playAlarm);
 
         // Trigger a notification that, when clicked, will show the alarm alert
         // dialog. No need to check for fullscreen since this will always be
         // launched from a user action.
         Intent notify = new Intent(context, AlarmAlertActivity.class);
-        notify.putExtra(AlarmService.ALARM_INTENT_EXTRA, alarm.getId());
+        notify.putExtra(AlarmServiceCons.ALARM_INTENT_EXTRA, alarm.getId());
         PendingIntent pendingNotify = PendingIntent.getActivity(context,
             alarm.getId().intValue(), notify, 0);
 
@@ -139,7 +138,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         // NEW: Embed the full-screen UI here. The notification manager will
         // take care of displaying it if it's OK to do so.
         Intent alarmAlert = new Intent(context, c);
-        alarmAlert.putExtra(AlarmService.ALARM_INTENT_EXTRA, alarm.getId());
+        alarmAlert.putExtra(AlarmServiceCons.ALARM_INTENT_EXTRA, alarm.getId());
         alarmAlert.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
         n.fullScreenIntent = PendingIntent.getActivity(context, alarm.getId().intValue(), alarmAlert, 0);
@@ -168,7 +167,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         // Launch SetAlarm when clicked.
         Intent viewAlarm = new Intent(context, QuickAddActivity.class);
-        viewAlarm.putExtra(AlarmService.ALARM_ID, alarm.getId());
+        viewAlarm.putExtra(AlarmServiceCons.ALARM_ID, alarm.getId());
         PendingIntent intent =
                 PendingIntent.getActivity(context, 0, viewAlarm, 0);
 

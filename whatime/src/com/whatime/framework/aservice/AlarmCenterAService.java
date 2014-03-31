@@ -47,8 +47,8 @@ import android.util.Log;
 
 import com.whatime.R;
 import com.whatime.controller.center.AlarmController;
+import com.whatime.controller.cons.AlarmServiceCons;
 import com.whatime.controller.service.AlarmAlertWakeLock;
-import com.whatime.controller.service.AlarmService;
 import com.whatime.controller.service.AlarmUtil;
 import com.whatime.db.Alarm;
 import com.whatime.db.Task;
@@ -106,6 +106,8 @@ public class AlarmCenterAService extends Service
     private AudioManager mAudioManager = null;
     
     private boolean mCurrentStates = true;
+    
+    private AlarmController controller = new AlarmController();
     
     // Internal messages
     private static final int KILLER = 1;
@@ -208,9 +210,9 @@ public class AlarmCenterAService extends Service
         mTelephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
         mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         AlarmAlertWakeLock.acquireCpuWakeLock(this);
-        AlarmController.disableExpiredAlarms(this);
-        AlarmController.setNextAlert(this);
-        AlarmController.sync(this);
+        controller.disableExpiredAlarms();
+        controller.setNextAlert();
+        controller.sync();
         uptNot();
         
     }
@@ -224,7 +226,7 @@ public class AlarmCenterAService extends Service
         notification.when = System.currentTimeMillis();
         String title = "天天有约";
         String time = "详情";
-        Alarm a = AlarmService.getNextAlarm(this);
+        Alarm a = controller.getNextAlarm();
         if (a != null)
         {
             title = a.getTask().getTitle();
@@ -368,8 +370,7 @@ public class AlarmCenterAService extends Service
         }
         if ("com.whatime.ALARM_ALERT".equals(intent.getAction()))
         {
-            final Alarm alarm =
-                AlarmController.getAlarmById(this, intent.getLongExtra(AlarmService.ALARM_INTENT_EXTRA, -1));
+            final Alarm alarm = controller.getAlarmById(intent.getLongExtra(AlarmServiceCons.ALARM_INTENT_EXTRA, -1));
             
             if (alarm == null)
             {
@@ -390,7 +391,7 @@ public class AlarmCenterAService extends Service
             mInitialCallState = mTelephonyManager.getCallState();
             uptNot();
         }
-        else if(AlarmService.UPT_NOTIFICATION.equals(intent.getAction()))
+        else if (AlarmServiceCons.UPT_NOTIFICATION.equals(intent.getAction()))
         {
             uptNot();
         }
@@ -401,9 +402,9 @@ public class AlarmCenterAService extends Service
     {
         long millis = System.currentTimeMillis() - mStartTime;
         int minutes = (int)Math.round(millis / 60000.0);
-        Intent alarmKilled = new Intent(AlarmService.ALARM_KILLED);
-        alarmKilled.putExtra(AlarmService.ALARM_INTENT_EXTRA, alarm.getId());
-        alarmKilled.putExtra(AlarmService.ALARM_KILLED_TIMEOUT, minutes);
+        Intent alarmKilled = new Intent(AlarmServiceCons.ALARM_KILLED);
+        alarmKilled.putExtra(AlarmServiceCons.ALARM_INTENT_EXTRA, alarm.getId());
+        alarmKilled.putExtra(AlarmServiceCons.ALARM_KILLED_TIMEOUT, minutes);
         sendBroadcast(alarmKilled);
     }
     
@@ -566,7 +567,7 @@ public class AlarmCenterAService extends Service
         {
             mPlaying = false;
             
-            Intent alarmDone = new Intent(AlarmService.ALARM_DONE_ACTION);
+            Intent alarmDone = new Intent(AlarmServiceCons.ALARM_DONE_ACTION);
             sendBroadcast(alarmDone);
             
             // Stop audio playing

@@ -77,6 +77,8 @@ public class SchedulePagerAdapter extends PagerAdapter
     
     private List<SortModel> SourceDateList;
     
+    private AlarmController controller = new AlarmController();
+    
     /**
      * 根据拼音来排列ListView里面的数据类
      */
@@ -188,7 +190,7 @@ public class SchedulePagerAdapter extends PagerAdapter
                 {
                     getBars();
                     handler.sendEmptyMessage(0x001);
-                    AlarmController.setNextAlert(context);
+                    controller.setNextAlert();
                     
                 }
             }.start();
@@ -203,7 +205,7 @@ public class SchedulePagerAdapter extends PagerAdapter
         todayStart.setTimeInMillis(System.currentTimeMillis());
         Calendar todayEnd = Calendar.getInstance(TimeZone.getDefault());
         todayEnd.setTimeInMillis(System.currentTimeMillis());
-        todayEnd.set(Calendar.DAY_OF_MONTH, todayStart.get(Calendar.DAY_OF_MONTH) + 1);
+        todayEnd.set(Calendar.DAY_OF_YEAR, todayStart.get(Calendar.DAY_OF_YEAR) + 1);
         todayEnd.set(Calendar.HOUR_OF_DAY, 0);
         todayEnd.set(Calendar.MINUTE, 0);
         todayEnd.set(Calendar.SECOND, 0);
@@ -227,7 +229,7 @@ public class SchedulePagerAdapter extends PagerAdapter
         //明天
         Calendar tomorrowEnd = Calendar.getInstance(TimeZone.getDefault());
         tomorrowEnd.setTimeInMillis(System.currentTimeMillis());
-        tomorrowEnd.set(Calendar.DAY_OF_MONTH, todayEnd.get(Calendar.DAY_OF_MONTH) + 1);
+        tomorrowEnd.set(Calendar.DAY_OF_YEAR, todayEnd.get(Calendar.DAY_OF_YEAR) + 1);
         tomorrowEnd.set(Calendar.HOUR_OF_DAY, 0);
         tomorrowEnd.set(Calendar.MINUTE, 0);
         tomorrowEnd.set(Calendar.SECOND, 0);
@@ -252,7 +254,7 @@ public class SchedulePagerAdapter extends PagerAdapter
         Calendar week = Calendar.getInstance(TimeZone.getDefault());
         week.setTimeInMillis(System.currentTimeMillis());
         int less = 7 - week.get(Calendar.DAY_OF_WEEK);
-        week.set(Calendar.DAY_OF_MONTH, tomorrowEnd.get(Calendar.DAY_OF_MONTH) + less);
+        week.set(Calendar.DAY_OF_YEAR, tomorrowEnd.get(Calendar.DAY_OF_YEAR) + less);
         week.set(Calendar.HOUR_OF_DAY, 0);
         week.set(Calendar.MINUTE, 0);
         week.set(Calendar.SECOND, 0);
@@ -300,6 +302,10 @@ public class SchedulePagerAdapter extends PagerAdapter
             bars.add(new OneBar(month2_title, monthAlarms));
         }
         //本年
+        if(month.getTimeInMillis()<week.getTimeInMillis())
+        {
+            month = week;
+        }
         Calendar year = Calendar.getInstance(TimeZone.getDefault());
         year.setTimeInMillis(System.currentTimeMillis());
         year.set(Calendar.YEAR, month.get(Calendar.YEAR) + 1);

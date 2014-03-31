@@ -32,13 +32,7 @@ import com.whatime.framework.ui.fragment.IChangeFragment;
 import com.whatime.framework.ui.fragment.LeftFragment;
 import com.whatime.framework.ui.fragment.RightFragment;
 import com.whatime.framework.ui.view.SlidingMenu;
-import com.whatime.module.market.game.GameFragment;
-import com.whatime.module.market.health.HealthLiftFragment;
-import com.whatime.module.market.movies.MoviesFragment;
-import com.whatime.module.market.other.OtherFragment;
-import com.whatime.module.market.recreation.RecreationFragment;
-import com.whatime.module.market.school.SchoolFragment;
-import com.whatime.module.market.travel.TravelFragment;
+import com.whatime.module.market.MarketFragment;
 import com.whatime.module.schedule.fragment.ScheduleFragment;
 
 /**
@@ -59,6 +53,8 @@ public class MainActivity extends FragmentActivity implements IChangeFragment
     
     ScheduleFragment newsFragment;
     
+    private AlarmController controller = new AlarmController();
+    
     @Override
     protected void onCreate(Bundle arg0)
     {
@@ -68,7 +64,7 @@ public class MainActivity extends FragmentActivity implements IChangeFragment
         init();
         initListener(newsFragment);
         startService(new Intent(MainActivity.this,AlarmCenterAService.class));
-        AlarmController.sync(this);
+        controller.sync();
     }
     
     private void init()
@@ -143,25 +139,25 @@ public class MainActivity extends FragmentActivity implements IChangeFragment
                 fragment = new ScheduleFragment(this);
                 break;
             case 1:
-                fragment = new HealthLiftFragment(this,1);
+                fragment = new MarketFragment(this,1);
                 break;
             case 2:
-                fragment = new RecreationFragment(this,2);
+                fragment = new MarketFragment(this,2);
                 break;
             case 3:
-                fragment = new TravelFragment(this,3);
+                fragment = new MarketFragment(this,3);
                 break;
             case 4:
-                fragment = new MoviesFragment(this,4);
+                fragment = new MarketFragment(this,4);
                 break;
             case 5:
-                fragment = new GameFragment(this,5);
+                fragment = new MarketFragment(this,5);
                 break;
             case 6:
-                fragment = new SchoolFragment(this,6);
+                fragment = new MarketFragment(this,6);
                 break;
             case 7:
-                fragment = new OtherFragment(this,7);
+                fragment = new MarketFragment(this,7);
                 break;
             default:
                 break;

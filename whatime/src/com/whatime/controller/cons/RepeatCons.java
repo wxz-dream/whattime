@@ -1,4 +1,4 @@
-package com.whatime.controller.alarm;
+package com.whatime.controller.cons;
 
 public class RepeatCons
 {
