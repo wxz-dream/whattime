@@ -17,10 +17,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.whatime.R;
 import com.whatime.framework.util.SysUtil;
 import com.whatime.module.addcolock.QuickAddActivity;
@@ -186,43 +184,5 @@ public class ScheduleBaseFragment extends BaseFragment
             return "";
         }
         
-    }
-    
-    @Override
-    public void onRefresh(PullToRefreshBase<ListView> refreshView)
-    {
-        new GetDataTask(refreshView).execute();
-    }
-    
-    private static class GetDataTask extends AsyncTask<Void, Void, Void>
-    {
-        
-        PullToRefreshBase<?> mRefreshedView;
-        
-        public GetDataTask(PullToRefreshBase<?> refreshedView)
-        {
-            mRefreshedView = refreshedView;
-        }
-        
-        @Override
-        protected Void doInBackground(Void... params)
-        {
-            // Simulates a background job.
-            try
-            {
-                Thread.sleep(4000);
-            }
-            catch (InterruptedException e)
-            {
-            }
-            return null;
-        }
-        
-        @Override
-        protected void onPostExecute(Void result)
-        {
-            mRefreshedView.onRefreshComplete();
-            super.onPostExecute(result);
-        }
     }
 }

@@ -10,31 +10,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.whatime.R;
 import com.whatime.db.Alarm;
 import com.whatime.db.Category;
 import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.adapter.MyListAdapter;
+import com.whatime.framework.ui.pull.XListView;
+import com.whatime.framework.ui.pull.XListView.IXListViewListener;
 import com.whatime.framework.ui.view.ToastMaster;
 
-public class RecreationPagerAdapter extends PagerAdapter
+public class RecreationPagerAdapter extends PagerAdapter implements IXListViewListener
 {
     
     private List<Category> cates;
-    
-    private OnRefreshListener<ListView> listener;
     
     private Context context;
     
     private List<Alarm> alarms = new ArrayList<Alarm>();
     
+    private XListView plv;
+    
     private MyListAdapter listAdapter;
+    
+    private int position;
+    
+    private String scope;
+    
+    private String cateId;
+    
+    private long startTime;
+    
+    private long endTime;
     
     private Handler handler = new Handler()
     {
@@ -64,9 +73,8 @@ public class RecreationPagerAdapter extends PagerAdapter
         };
     };
     
-    public RecreationPagerAdapter(OnRefreshListener<ListView> listener, List<Category> cates)
+    public RecreationPagerAdapter(List<Category> cates)
     {
-        this.listener = listener;
         this.cates = cates;
     }
     
@@ -78,20 +86,18 @@ public class RecreationPagerAdapter extends PagerAdapter
         switch (position)
         {
             default:
-                PullToRefreshListView plv =
-                    (PullToRefreshListView)LayoutInflater.from(context).inflate(R.layout.layout_listview_in_viewpager,
+                plv =
+                    (XListView)LayoutInflater.from(context).inflate(R.layout.layout_listview_in_viewpager,
                         container,
                         false);
-                // Now just add ListView to ViewPager and return it
                 container.addView(plv, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-                long startTime = System.currentTimeMillis();
-                
-                long endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
+                startTime = System.currentTimeMillis();
+                endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
                 
                 new RemoteApiImpl().getMarketAlarm(handler, cates.get(position).getId(), "", startTime, endTime, 0);
                 listAdapter = new MyListAdapter(context, alarms);
                 plv.setAdapter(listAdapter);
-                plv.setOnRefreshListener(listener);
+                plv.setXListViewListener(this);
                 obj = plv;
                 break;
         }
@@ -116,6 +122,50 @@ public class RecreationPagerAdapter extends PagerAdapter
     public int getCount()
     {
         return cates.size();
+    }
+    
+    @Override
+    public void onRefresh()
+    {
+        
+        handler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                alarms.clear();
+                startTime = System.currentTimeMillis();
+                endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
+                new RemoteApiImpl().getMarketAlarm(handler, cates.get(position).getId(), "", startTime, endTime, 0);
+                listAdapter.notifyDataSetChanged();
+                onLoad();
+            }
+        }, 2000);
+    }
+    
+    @Override
+    public void onLoadMore()
+    {
+        handler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                startTime = System.currentTimeMillis();
+                endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
+                new RemoteApiImpl().getMarketAlarm(handler, cates.get(position).getId(), "", startTime, endTime, 0);
+                listAdapter.notifyDataSetChanged();
+                onLoad();
+            }
+        }, 2000);
+        
+    }
+    
+    private void onLoad()
+    {
+        plv.stopRefresh();
+        plv.stopLoadMore();
+        plv.setRefreshTime("刚刚");
     }
     
 }

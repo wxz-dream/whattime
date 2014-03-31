@@ -1,7 +1,6 @@
 package com.whatime.module.schedule.adapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -18,16 +17,12 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.whatime.R;
 import com.whatime.controller.center.AlarmController;
 import com.whatime.db.Alarm;
@@ -45,12 +40,6 @@ import com.whatime.module.books.hander.SideBar.OnTouchingLetterChangedListener;
 public class SchedulePagerAdapter extends PagerAdapter
 {
     
-    private static final String[] STRINGS = {"Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance",
-        "Ackawi", "Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
-        "Allgauer Emmentaler", "Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",
-        "Acorn", "Adelost", "Affidelice au Chablis", "Afuega'l Pitu", "Airag", "Airedale", "Aisy Cendre",
-        "Allgauer Emmentaler"};
-    
     public static final String PREFERENCES = "AlarmClock";
     
     /** This must be false for production.  If true, turns on logging,
@@ -64,8 +53,6 @@ public class SchedulePagerAdapter extends PagerAdapter
     private List<OneBar> bars = new ArrayList<OneBar>();
     
     private StatusExpandAdapter statusAdapter;
-    
-    private OnRefreshListener<ListView> listener;
     
     private Context context;
     
@@ -115,9 +102,8 @@ public class SchedulePagerAdapter extends PagerAdapter
         };
     };
     
-    public SchedulePagerAdapter(OnRefreshListener<ListView> listener, int itemCount)
+    public SchedulePagerAdapter(int itemCount)
     {
-        this.listener = listener;
         this.itemCount = itemCount;
     }
     
@@ -166,17 +152,6 @@ public class SchedulePagerAdapter extends PagerAdapter
                 break;
             case 1:
             default:
-                PullToRefreshListView plv =
-                    (PullToRefreshListView)LayoutInflater.from(context).inflate(R.layout.layout_listview_in_viewpager,
-                        container,
-                        false);
-                // Now just add ListView to ViewPager and return it
-                container.addView(plv, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-                ListAdapter listAdapter =
-                    new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, Arrays.asList(STRINGS));
-                plv.setAdapter(listAdapter);
-                plv.setOnRefreshListener(listener);
-                obj = plv;
                 break;
         }
         

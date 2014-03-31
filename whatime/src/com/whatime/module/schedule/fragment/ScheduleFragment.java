@@ -54,7 +54,7 @@ public class ScheduleFragment extends ScheduleBaseFragment
         View mView = super.onCreateView(inflater, container, savedInstanceState);
         tabs = getResources().getStringArray(R.array.tab_my_schedule);
         //展示可下拉刷新列表
-        listViewPagerAdapter = new SchedulePagerAdapter(this,tabs.length);
+        listViewPagerAdapter = new SchedulePagerAdapter(tabs.length);
         mPager.setAdapter(listViewPagerAdapter);
         
         pagerItemList = new ArrayList<Fragment>();

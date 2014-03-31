@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,13 +15,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.whatime.framework.ui.activity.MainActivity;
 import com.whatime.framework.ui.view.ScrollableTabView;
-import com.whatime.module.addcolock.QuickAddActivity;
 
-public class BaseFragment extends Fragment implements OnRefreshListener<ListView>, ViewPager.OnPageChangeListener
+public class BaseFragment extends Fragment implements ViewPager.OnPageChangeListener
 {
     
     protected View showLeft;
@@ -138,11 +134,6 @@ public class BaseFragment extends Fragment implements OnRefreshListener<ListView
     public interface MyPageChangeListener
     {
         public void onPageSelected(int position);
-    }
-    
-    @Override
-    public void onRefresh(PullToRefreshBase<ListView> refreshView)
-    {
     }
     
     @Override
