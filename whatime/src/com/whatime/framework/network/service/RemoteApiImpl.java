@@ -305,6 +305,7 @@ public class RemoteApiImpl
                                 t.setSyncTime(resAlarm.getSyncTime());
                                 t.setUptTime(resAlarm.getUptTime());
                             }
+                            alarm.setSyncTime(resAlarm.getSyncTime());
                             DBHelper.getInstance().uptAlarm(alarm);
                         }
                     }
@@ -359,6 +360,7 @@ public class RemoteApiImpl
                                 t.setSyncTime(resAlarm.getSyncTime());
                                 t.setUptTime(resAlarm.getUptTime());
                             }
+                            alarm.setSyncTime(resAlarm.getSyncTime());
                             DBHelper.getInstance().uptAlarm(alarm);
                         }
                     }
@@ -413,6 +415,7 @@ public class RemoteApiImpl
                                 t.setSyncTime(resAlarm.getSyncTime());
                                 t.setUptTime(resAlarm.getUptTime());
                             }
+                            alarm.setSyncTime(resAlarm.getSyncTime());
                             DBHelper.getInstance().uptAlarm(alarm);
                         }
                     }
@@ -467,6 +470,7 @@ public class RemoteApiImpl
                                 t.setSyncTime(resAlarm.getSyncTime());
                                 t.setUptTime(resAlarm.getUptTime());
                             }
+                            alarm.setSyncTime(resAlarm.getSyncTime());
                             DBHelper.getInstance().uptAlarm(alarm);
                         }
                     }
@@ -503,11 +507,11 @@ public class RemoteApiImpl
                     try
                     {
                         int state = response.getInt("state");
-                        String resInfo = response.getString("resInfo");
                         if (state == ResponseCons.STATE_SUCCESS)
                         {
                             if (response.has("resInfo"))
                             {
+                                String resInfo = response.getString("resInfo");
                                 com.alibaba.fastjson.JSONObject obj = JSON.parseObject(resInfo);
                                 long shareSyncTime = obj.getLongValue("syncTime");
                                 long localSyncTime = DBHelper.getInstance().getAlarmMaxSyncTime();
@@ -577,11 +581,11 @@ public class RemoteApiImpl
                     try
                     {
                         int state = response.getInt("state");
-                        String resInfo = response.getString("resInfo");
                         if (state == ResponseCons.STATE_SUCCESS)
                         {
                             if (response.has("resInfo"))
                             {
+                                String resInfo = response.getString("resInfo");
                                 com.alibaba.fastjson.JSONObject obj = JSON.parseObject(resInfo);
                                 long shareSyncTime = obj.getLongValue("syncTime");
                                 long localSyncTime = DBHelper.getInstance().getAlarmMaxSyncTime();

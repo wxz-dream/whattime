@@ -110,7 +110,7 @@ public class AlarmServiceImpl implements AlarmService
         if (SysUtil.hasNetWorkConection(context))
         {
             User user = MyApp.getInstance().getUser();
-            if (user != null)
+            if (user == null)
             {
                 user = new User();
                 user.setUuid("");

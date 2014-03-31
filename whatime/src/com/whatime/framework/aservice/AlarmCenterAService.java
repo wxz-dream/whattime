@@ -230,6 +230,10 @@ public class AlarmCenterAService extends Service
         if (a != null)
         {
             title = a.getTask().getTitle();
+            if(title.length()==0)
+            {
+                title = a.getTitle();
+            }
             time = AlarmUtil.getShowTime(this, a.getAlarmTime());
             
         }

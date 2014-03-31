@@ -46,7 +46,7 @@ public class MarketFragment extends BaseMarketFragment
         mTopTitleView.setText(cate.getDes());
         mTopBackView.setBackgroundResource(R.drawable.biz_local_news_main_back_normal);
         cates = DBHelper.getInstance().getcateByParentId(page);
-        listViewPagerAdapter = new MarketPagerAdapter(cates);
+        listViewPagerAdapter = new MarketPagerAdapter(cates,mPager);
         mPager.setAdapter(listViewPagerAdapter);
         
         pagerItemList = new ArrayList<Fragment>();

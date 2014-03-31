@@ -6,11 +6,11 @@ import java.util.List;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Toast;
 
 import com.whatime.R;
 import com.whatime.db.Alarm;
@@ -27,6 +27,10 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     
     private List<Category> cates;
     
+    private ViewPager mPager;
+    
+    private ViewGroup container;
+    
     private Context context;
     
     private List<Alarm> alarms = new ArrayList<Alarm>();
@@ -34,8 +38,6 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     private XListView plv;
     
     private MyListAdapter listAdapter;
-    
-    private int position;
     
     private String scope;
     
@@ -58,29 +60,28 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
                         ArrayList list = msg.getData().getParcelableArrayList(ResponseCons.RESINFO);
                         alarms = (List<Alarm>)list.get(0);
                         listAdapter.notifyDataSetChanged();
-                        Toast toast = Toast.makeText(context, "加载成功", 1000);
-                        ToastMaster.setToast(toast);
-                        toast.show();
                     }
                     else
                     {
-                        Toast toast = Toast.makeText(context, "加载失败", 1000);
-                        ToastMaster.setToast(toast);
-                        toast.show();
+                        
                     }
+                    onLoad();
                     break;
             }
         };
     };
     
-    public MarketPagerAdapter(List<Category> cates)
+    
+    public MarketPagerAdapter(List<Category> cates, ViewPager mPager)
     {
         this.cates = cates;
+        this.mPager = mPager;
     }
-    
+
     @Override
     public Object instantiateItem(ViewGroup container, int position)
     {
+        this.container = container;
         context = container.getContext();
         Object obj = new Object();
         switch (position)
@@ -90,10 +91,10 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
                     (XListView)LayoutInflater.from(context).inflate(R.layout.layout_listview_in_viewpager,
                         container,
                         false);
-                container.addView(plv, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+                LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+                container.addView(plv, position, params);
                 startTime = System.currentTimeMillis();
                 endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
-                
                 new RemoteApiImpl().getMarketAlarm(handler, cates.get(position).getId(), "", startTime, endTime, 0);
                 listAdapter = new MyListAdapter(context, alarms);
                 plv.setAdapter(listAdapter);
@@ -108,7 +109,8 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     @Override
     public void destroyItem(ViewGroup container, int position, Object object)
     {
-        container.removeView((View)object);
+        //取消remove，不然页面无法计算
+        //container.removeViewAt(position);
         ToastMaster.cancelToast();
     }
     
@@ -127,45 +129,46 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     @Override
     public void onRefresh()
     {
-        
+        alarms.clear();
+        startTime = System.currentTimeMillis();
+        endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
+        new RemoteApiImpl().getMarketAlarm(handler, cates.get(mPager.getCurrentItem()).getId(), "", startTime, endTime, 0);
         handler.postDelayed(new Runnable()
         {
             @Override
             public void run()
             {
-                alarms.clear();
-                startTime = System.currentTimeMillis();
-                endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
-                new RemoteApiImpl().getMarketAlarm(handler, cates.get(position).getId(), "", startTime, endTime, 0);
-                listAdapter.notifyDataSetChanged();
                 onLoad();
             }
-        }, 2000);
+        }, 4000);
     }
     
     @Override
     public void onLoadMore()
     {
+        startTime = System.currentTimeMillis();
+        endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
+        new RemoteApiImpl().getMarketAlarm(handler, cates.get(mPager.getCurrentItem()).getId(), "", startTime, endTime, 0);
         handler.postDelayed(new Runnable()
         {
             @Override
             public void run()
             {
-                startTime = System.currentTimeMillis();
-                endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
-                new RemoteApiImpl().getMarketAlarm(handler, cates.get(position).getId(), "", startTime, endTime, 0);
-                listAdapter.notifyDataSetChanged();
                 onLoad();
             }
-        }, 2000);
+        }, 4000);
         
     }
     
     private void onLoad()
     {
-        plv.stopRefresh();
-        plv.stopLoadMore();
-        plv.setRefreshTime("刚刚");
+        plv = (XListView)container.getChildAt(mPager.getCurrentItem());
+        if(null!=plv)
+        {
+            plv.stopRefresh();
+            plv.stopLoadMore();
+            plv.setRefreshTime("刚刚");
+        }
     }
     
 }
