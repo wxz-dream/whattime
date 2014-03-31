@@ -36,8 +36,8 @@ public class ExampleDaoGenerator {
         addUser(schema);
         addHoliday(schema);
         addAlarm(schema);
-
-        new DaoGenerator().generateAll(schema, "../DaoExample/src-gen");
+        //../DaoGenerator
+        new DaoGenerator().generateAll(schema, "./src-gen");
     }
 
     private static void addHoliday(Schema schema) {
@@ -87,14 +87,12 @@ public class ExampleDaoGenerator {
         Property cateUuid = alarm.addLongProperty("cateId").getProperty();
         Entity cate = schema.addEntity("Category");
         cate.addIdProperty();
-        cate.addStringProperty("uuid");
         cate.addStringProperty("name");
-        cate.addStringProperty("desc");
+        cate.addStringProperty("des");
         cate.addLongProperty("parentId");
-        cate.addStringProperty("parentUuid");
         cate.addStringProperty("imgUri");
+        cate.addBooleanProperty("del");
         alarm.addToOne(cate, cateUuid);
-        alarm.addStringProperty("cateUuid");
         alarm.addLongProperty("createTime");
         alarm.addStringProperty("des");
         alarm.addLongProperty("endTime");
@@ -114,6 +112,9 @@ public class ExampleDaoGenerator {
         alarm.addIntProperty("type");
         alarm.addLongProperty("uptTime");
         alarm.addStringProperty("userUuid");
+        alarm.addBooleanProperty("allowChange");
+        alarm.addStringProperty("owerUuid");
+        alarm.addStringProperty("owerUserUuid");
         Entity task = schema.addEntity("Task");
         task.addIdProperty();
         task.addStringProperty("uuid");
