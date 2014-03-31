@@ -109,7 +109,7 @@ public class DBHelper
     {
         long time = System.currentTimeMillis();
         //同步到服务器后，将更新时间修改为同步时间
-        if (alarm.getSyncTime() != null && (time - alarm.getSyncTime() < 10000))
+        if (alarm.getSyncTime() != null && (time - alarm.getSyncTime() < 60 * 1000))
         {
             alarm.setUptTime(alarm.getSyncTime());
         }
@@ -117,7 +117,6 @@ public class DBHelper
         {
             alarm.setUptTime(time);
         }
-        
         alarmDao.update(alarm);
     }
     
@@ -293,7 +292,8 @@ public class DBHelper
             + AlarmCons.TYPE_GETUP
             + ",'起床闹钟','懒虫起床啦',1,"
             + cal.getTimeInMillis()
-            + ",0,0," + AlarmCons.FROMS_ANDROID + ",1,'" + taskUuid + "',0)");
+            + ",0,0,"
+            + AlarmCons.FROMS_ANDROID + ",1,'" + taskUuid + "',0)");
         db.execSQL("INSERT INTO CATEGORY (_id,NAME,DES) values (0,'根分类','it is gen')");
         db.execSQL("INSERT INTO CATEGORY (NAME,DES,PARENT_ID) values ('健康生活','生活',0)");
         db.execSQL("INSERT INTO CATEGORY (NAME,DES,PARENT_ID) values ('娱乐活动','娱乐',0)");
@@ -398,11 +398,11 @@ public class DBHelper
     {
         QueryBuilder<Alarm> qb = alarmDao.queryBuilder();
         qb.where(com.whatime.db.AlarmDao.Properties.SyncTime.isNotNull())
-        .orderAsc(com.whatime.db.AlarmDao.Properties.SyncTime);
+            .orderAsc(com.whatime.db.AlarmDao.Properties.SyncTime);
         if (qb.buildCount().count() > 0)
         {
             Long syncTime = qb.list().get(0).getSyncTime();
-            if(null!=syncTime)
+            if (null != syncTime)
             {
                 return syncTime;
             }
@@ -419,7 +419,7 @@ public class DBHelper
     {
         QueryBuilder<Task> qb = taskDao.queryBuilder();
         qb.where(com.whatime.db.AlarmDao.Properties.UptTime.isNotNull())
-        .orderAsc(com.whatime.db.TaskDao.Properties.UptTime);
+            .orderAsc(com.whatime.db.TaskDao.Properties.UptTime);
         if (qb.buildCount().count() > 0)
         {
             Long uptTime = qb.list().get(0).getUptTime();
@@ -528,7 +528,7 @@ public class DBHelper
     public List<Alarm> getNoUptLocalAlarms()
     {
         QueryBuilder<Alarm> qb = alarmDao.queryBuilder();
-        qb.where(com.whatime.db.AlarmDao.Properties.SyncTime.lt(com.whatime.db.AlarmDao.Properties.UptTime),
+        qb.where(new StringCondition("SYNC_TIME < UPT_TIME "),
             com.whatime.db.AlarmDao.Properties.Share.isNull()).orderAsc(com.whatime.db.AlarmDao.Properties.AlarmTime);
         return qb.list();
     }
@@ -536,8 +536,9 @@ public class DBHelper
     public List<Alarm> getNoUptShareAlarms()
     {
         QueryBuilder<Alarm> qb = alarmDao.queryBuilder();
-        qb.where(com.whatime.db.AlarmDao.Properties.SyncTime.lt(com.whatime.db.AlarmDao.Properties.UptTime),
-            com.whatime.db.AlarmDao.Properties.Share.isNotNull()).orderAsc(com.whatime.db.AlarmDao.Properties.AlarmTime);
+        qb.where(new StringCondition("SYNC_TIME < UPT_TIME "),
+            com.whatime.db.AlarmDao.Properties.Share.isNotNull())
+            .orderAsc(com.whatime.db.AlarmDao.Properties.AlarmTime);
         return qb.list();
     }
     

@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -212,7 +213,7 @@ public class AlarmAlertFullScreenActivity extends Activity
         Task currentTask = DBHelper.getInstance().getNextTaskByAlarmId(mAlarm.getId());
         mAlarm.setTask(currentTask);
         mAlarm.setAlarmTime(currentTask.getAlarmTime());
-        DBHelper.getInstance().uptAlarm(mAlarm);
+        controller.uptAlarm(mAlarm,new Handler());
         
         // Get the display time for the snooze and update the notification.
         final Calendar c = Calendar.getInstance();

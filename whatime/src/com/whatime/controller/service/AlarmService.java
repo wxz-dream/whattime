@@ -1,5 +1,7 @@
 package com.whatime.controller.service;
 
+import android.os.Handler;
+
 import com.whatime.db.Alarm;
 
 public interface AlarmService
@@ -14,11 +16,13 @@ public interface AlarmService
     
     public Alarm getAlarmById(long alarmId);
     
-    public void uptAlarm(Alarm alarm);
+    public void uptAlarm(Alarm alarm,Handler myHandler);
     
     public void enableAlarm(final long id, boolean enabled);
     
     public void syncCategory();
     
     public void syncAlarm();
+
+    public void addAlarm(Alarm alarm,Handler myHandler);
 }

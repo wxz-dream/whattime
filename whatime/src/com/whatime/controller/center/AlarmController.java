@@ -1,5 +1,7 @@
 package com.whatime.controller.center;
 
+import android.os.Handler;
+
 import com.whatime.controller.service.AlarmService;
 import com.whatime.controller.service.impl.AlarmServiceImpl;
 import com.whatime.db.Alarm;
@@ -16,6 +18,7 @@ public class AlarmController
     {
         service.setNextAlert();
     }
+    
     /**
      * 取消过期的闹钟
      * @param context
@@ -24,6 +27,7 @@ public class AlarmController
     {
         service.disableExpiredAlarms();
     }
+    
     /**
      * 删除一个提醒
      * @param mContext
@@ -33,6 +37,7 @@ public class AlarmController
     {
         service.deleteAlarmById(alarmId);
     }
+    
     /**
      * 根据提醒ID获取提醒信息
      * @param mContext
@@ -43,16 +48,29 @@ public class AlarmController
     {
         return service.getAlarmById(alarmId);
     }
+    
+    /**
+     * 添加提醒
+     * @param context
+     * @param alarm
+     * @return
+     */
+    public void addAlarm(Alarm alarm, Handler myHandler)
+    {
+        service.addAlarm(alarm, myHandler);
+    }
+    
     /**
      * 更新提醒
      * @param context
      * @param alarm
      * @return
      */
-    public void uptAlarm(Alarm alarm)
+    public void uptAlarm(Alarm alarm,Handler myHandler)
     {
-        service.uptAlarm(alarm);
+        service.uptAlarm(alarm,myHandler);
     }
+    
     /**
      * 开启提醒
      * @param context
@@ -63,6 +81,7 @@ public class AlarmController
     {
         service.enableAlarm(id, enabled);
     }
+    
     /**
      * 同步
      * @param context
@@ -72,6 +91,7 @@ public class AlarmController
         service.syncCategory();
         service.syncAlarm();
     }
+    
     /**
      * 获取下一个提醒
      * @return
@@ -79,11 +99,6 @@ public class AlarmController
     public Alarm getNextAlarm()
     {
         return service.getNextAlarm();
-    }
-    public void setNextAlarmAlert(Alarm alarm)
-    {
-        // TODO Auto-generated method stub
-        
     }
     
 }

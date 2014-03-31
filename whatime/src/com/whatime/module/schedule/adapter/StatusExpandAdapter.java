@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -181,7 +182,7 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
                             }
                             entity.setDel(true);
                             entity.setOpen(false);
-                            DBHelper.getInstance().uptAlarm(entity);
+                            controller.uptAlarm(entity,new Handler());
                             schedulePagerAdapter.notifyDataChange();
                         }
                     })
@@ -248,7 +249,7 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
                             }
                             entity.setDel(true);
                             entity.setOpen(false);
-                            DBHelper.getInstance().uptAlarm(entity);
+                            controller.uptAlarm(entity,new Handler());
                             schedulePagerAdapter.notifyDataChange();
                         }
                     })

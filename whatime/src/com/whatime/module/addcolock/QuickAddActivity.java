@@ -274,14 +274,7 @@ public class QuickAddActivity extends Activity
                     alarm.setTask(currentTask);
                     alarm.setTaskUuid(currentTask.getUuid());
                     DBHelper.getInstance().uptAlarm(alarm);
-                    controller.setNextAlert();
-                    if (SysUtil.hasNetWorkConection(context))
-                    {
-                        if (user != null)
-                        {
-                          new RemoteApiImpl().alarmLocalAdd(user, alarm, myHandler);
-                        }
-                    }
+                    controller.addAlarm(alarm, myHandler);
                     QuickAddActivity.this.finish();
                     break;
             }

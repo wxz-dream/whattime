@@ -11,6 +11,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.util.Log;
 
 import com.whatime.controller.cons.AdvanceCons;
@@ -25,6 +26,7 @@ import com.whatime.db.Task;
 import com.whatime.db.User;
 import com.whatime.framework.application.MyApp;
 import com.whatime.framework.network.service.RemoteApiImpl;
+import com.whatime.framework.util.ShareUtil;
 import com.whatime.framework.util.SysUtil;
 
 public class AlarmServiceImpl implements AlarmService
@@ -77,9 +79,24 @@ public class AlarmServiceImpl implements AlarmService
     }
     
     @Override
-    public void uptAlarm(Alarm alarm)
+    public void uptAlarm(Alarm alarm ,Handler myHandler)
     {
         DBHelper.getInstance().uptAlarm(alarm);
+        if (SysUtil.hasNetWorkConection(context))
+        {
+            User user = MyApp.getInstance().getUser();
+            if (user != null)
+            {
+                if (alarm.getShare() != null && alarm.getShare().length() > 0)
+                {
+                    new RemoteApiImpl().alarmShareEdit(user, alarm, myHandler);
+                }
+                else
+                {
+                    new RemoteApiImpl().alarmLocalEdit(user, alarm, myHandler);
+                }
+            }
+        }
         setNextAlert();
     }
     
@@ -349,6 +366,34 @@ public class AlarmServiceImpl implements AlarmService
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         
         am.set(AlarmManager.RTC_WAKEUP, time, sender);
+    }
+
+    @Override
+    public void addAlarm(Alarm alarm,Handler myHandler)
+    {
+        if (SysUtil.hasNetWorkConection(context))
+        {
+            User user = MyApp.getInstance().getUser();
+            if (user != null)
+            {
+                if (alarm.getShare() != null && alarm.getShare().length() > 0)
+                {
+                    alarm.setOwerUuid(alarm.getUuid());
+                    alarm.setOwerUserUuid(alarm.getUserUuid());
+                    new RemoteApiImpl().alarmShareAdd(user, alarm, myHandler);
+                }
+                else
+                {
+                    new RemoteApiImpl().alarmLocalAdd(user, alarm, myHandler);
+                }
+            }
+            //share
+            if (alarm.getShare() != null && alarm.getShare().length() > 0)
+            {
+                ShareUtil.shareAll(alarm.getShare());
+            }
+        }
+        setNextAlert();
     }
 
     

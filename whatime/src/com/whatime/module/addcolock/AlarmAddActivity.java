@@ -68,6 +68,7 @@ import com.whatime.controller.cons.RepeatCons;
 import com.whatime.controller.cons.TaskCons;
 import com.whatime.controller.service.AlarmUtil;
 import com.whatime.db.Alarm;
+import com.whatime.db.Category;
 import com.whatime.db.DBHelper;
 import com.whatime.db.Task;
 import com.whatime.db.User;
@@ -134,6 +135,9 @@ public class AlarmAddActivity extends Activity
     TextView alarm_scope_label;
     
     @ViewById
+    TextView alarm_cate_label;
+    
+    @ViewById
     MyListView add_common_lv;
     
     @ViewById
@@ -142,6 +146,10 @@ public class AlarmAddActivity extends Activity
     private Spinner province_spinner;
     
     private Spinner city_spinner;
+    
+    private Spinner parent_spinner;
+    
+    private Spinner child_spinner;
     
     private CheckBox no_scope;
     
@@ -178,6 +186,14 @@ public class AlarmAddActivity extends Activity
     private HashMap<String, String> cts;
     
     private List<String> citys;
+    
+    private List<Category> parentCates;
+    
+    private List<String> parentCatesNames;
+    
+    private List<Category> childCates;
+    
+    private List<String> childCatesNames;
     
     private ArrayList<String> repeatLabels = new ArrayList<String>();
     
@@ -288,7 +304,8 @@ public class AlarmAddActivity extends Activity
             public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
             {
                 startActivity(new Intent(AlarmAddActivity.this, TaskAddActivity_.class).putExtra(AlarmServiceCons.ALARM_ID,
-                    mAlarm.getId()).putExtra(TaskCons.TASK_ID, mAlarm.getTasks().get(arg2).getId()));
+                    mAlarm.getId())
+                    .putExtra(TaskCons.TASK_ID, mAlarm.getTasks().get(arg2).getId()));
             }
             
         });
@@ -296,7 +313,7 @@ public class AlarmAddActivity extends Activity
         {
             
             @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,final int arg2, long arg3)
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1, final int arg2, long arg3)
             {
                 new AlertDialog.Builder(context).setTitle("删除子活动")
                     .setMessage("确认删除此子活动？")
@@ -370,6 +387,14 @@ public class AlarmAddActivity extends Activity
         else
         {
             alarm_scope_label.setText(mAlarm.getScope());
+        }
+        if(mAlarm.getCategory()==null)
+        {
+            alarm_cate_label.setText("未选择");
+        }
+        else
+        {
+            alarm_cate_label.setText(mAlarm.getCategory().getName());
         }
         if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
         {
@@ -570,7 +595,7 @@ public class AlarmAddActivity extends Activity
             
             mAlarm.setEndJoin(isend_bt.isChecked());
             Task currentTask = DBHelper.getInstance().getNextTaskByAlarmId(mAlarm.getId());
-            if(currentTask!=null)
+            if (currentTask != null)
             {
                 mAlarm.setTask(currentTask);
                 mAlarm.setTaskUuid(currentTask.getUuid());
@@ -579,46 +604,11 @@ public class AlarmAddActivity extends Activity
                 controller.setNextAlert();
                 if (alarm_id == -1)
                 {
-                    if (SysUtil.hasNetWorkConection(context))
-                    {
-                        User user = MyApp.getInstance().getUser();
-                        if (user != null)
-                        {
-                            if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
-                            {
-                                mAlarm.setOwerUuid(mAlarm.getUuid());
-                                mAlarm.setOwerUserUuid(mAlarm.getUserUuid());
-                                new RemoteApiImpl().alarmShareAdd(user, mAlarm, myHandler);
-                            }
-                            else
-                            {
-                                new RemoteApiImpl().alarmLocalAdd(user, mAlarm, myHandler);
-                            }
-                        }
-                        //share
-                        if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
-                        {
-                            ShareUtil.shareAll(mAlarm.getShare());
-                        }
-                    }
+                    controller.addAlarm(mAlarm, myHandler);
                 }
                 else
                 {
-                    if (SysUtil.hasNetWorkConection(context))
-                    {
-                        User user = MyApp.getInstance().getUser();
-                        if (user != null)
-                        {
-                            if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
-                            {
-                                new RemoteApiImpl().alarmShareEdit(user, mAlarm, myHandler);
-                            }
-                            else
-                            {
-                                new RemoteApiImpl().alarmLocalEdit(user, mAlarm, myHandler);
-                            }
-                        }
-                    }
+                    controller.uptAlarm(mAlarm, myHandler);
                 }
             }
             this.finish();
@@ -788,6 +778,72 @@ public class AlarmAddActivity extends Activity
         }
         
         dialog.show();
+    }
+    
+    @Click
+    void alarm_cate()
+    {
+        final View view = LayoutInflater.from(this).inflate(R.layout.alarm_cate, null);
+        parent_spinner = (Spinner)view.findViewById(R.id.parent_cate_spinner);
+        child_spinner = (Spinner)view.findViewById(R.id.child_cate_spinner);
+        parentCates = DBHelper.getInstance().getcateByParentId(0);
+        parentCatesNames = new ArrayList<String>();
+        for (Category cate : parentCates)
+        {
+            parentCatesNames.add(cate.getName());
+        }
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, parentCatesNames);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        parent_spinner.setAdapter(adapter);
+        parent_spinner.setOnItemSelectedListener(new OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterview, View view, int i, long l)
+            {
+                childCates = DBHelper.getInstance().getcateByParentId(i+1);
+                childCatesNames = new ArrayList<String>();
+                for (Category cate : childCates)
+                {
+                    childCatesNames.add(cate.getName());
+                }
+                ArrayAdapter adapter1 =
+                    new ArrayAdapter(context, android.R.layout.simple_spinner_item, childCatesNames);
+                adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                child_spinner.setAdapter(adapter1);
+                
+            }
+            
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterview)
+            {
+            }
+        });
+        // 选择分类对话框
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("请选择所属分类");
+        dialog.setView(view);
+        dialog.setPositiveButton("确定", new DialogInterface.OnClickListener()
+        {
+            
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                mAlarm.setCategory(childCates.get(child_spinner.getSelectedItemPosition()));
+                uptUi();
+            }
+        });
+        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener()
+        {
+            
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                dialog.dismiss();
+                
+            }
+        });
+        dialog.show();
+        
     }
     
     @Override

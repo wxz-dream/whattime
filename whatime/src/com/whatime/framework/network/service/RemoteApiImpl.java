@@ -724,6 +724,7 @@ public class RemoteApiImpl
             Alarm alarm = DBHelper.getInstance().getAlarmByUuidd(ps.getUuid());
             if (alarm != null)
             {
+                ps.setId(alarm.getId());
                 if (ps.getShare() != null || (ps.getShare() != null && !ps.getAllowChange()))
                 {
                     DBHelper.getInstance().uptAlarm(ps);
