@@ -551,10 +551,49 @@ public class RemoteApiImpl
      * @param userUuid
      * @return
      */
-    public User getUserByUuid(String userUuid)
+    public void getUserByUuid(String userUuid,final Handler myHandler)
     {
         
-        return null;
+        final Message msg = new Message();
+        final Bundle data = new Bundle();
+        msg.what = 0x001;
+        RequestParams params = new RequestParams();
+        params.put("userUuid", userUuid);
+        HttpSycnUtil.post(HttpSycnUtil.getUrl(Constants.GET_USER_POST_URL),
+            params,
+            new MyJsonHttpResponseHandler(msg, data, myHandler)
+            {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response)
+                {
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    try
+                    {
+                        int state = response.getInt("state");
+                        String stateInfo = response.getString("stateInfo");
+                        data.putInt(ResponseCons.STATE, state);
+                        data.putString(ResponseCons.STATEINFO, stateInfo);
+                        if (state == ResponseCons.STATE_SUCCESS)
+                        {
+                            if (response.has("resInfo"))
+                            {
+                                User user = JSON.parseObject(response.getString("resInfo"), User.class);
+                                data.putSerializable(ResponseCons.RESINFO, user);
+                            }
+                        }
+                    }
+                    catch (JSONException e)
+                    {
+                        data.putInt(ResponseCons.STATE, ResponseCons.STATE_EXCEPTION);
+                        data.putString(ResponseCons.STATEINFO, e.getMessage());
+                    }
+                    msg.setData(data);
+                    myHandler.sendMessage(msg);
+                }
+            });
     }
     
     /**
