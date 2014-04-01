@@ -25,6 +25,8 @@ public class Constants
     
     public static final String MODIFY_USER_POST_URL = "user/uptUserInfo";
     
+    public static final String GET_USER_POST_URL = "user/getUser";
+    
     public static final String ALARM_LOCAL_ADD_POST_URL = "userLocalAlarm/alarmLocalAdd";
     
     public static final String ALARM_SHARE_ADD_POST_URL = "userShareAlarm/alarmShareAdd";
