@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.whatime.R;
 import com.whatime.controller.cons.AlarmServiceCons;
 import com.whatime.db.Alarm;
+import com.whatime.db.Task;
 import com.whatime.module.addcolock.AlarmAddActivity_;
 import com.whatime.module.schedule.adapter.OneBar;
 import com.whatime.module.schedule.view.DigitalClock;
@@ -173,35 +174,39 @@ public class HistoryExpandAdapter extends BaseExpandableListAdapter
         TextView labelView = (TextView)convertView.findViewById(R.id.alarm_title);
         StringBuilder oneLine = new StringBuilder();
         String alarmTitle = entity.getTitle();
-        String taskTitle = entity.getTask().getTitle();
-        
-        if (alarmTitle != null || taskTitle != null)
+        Task t = entity.getTask();
+        if(t!=null)
         {
-            labelView.setVisibility(View.VISIBLE);
-            if (alarmTitle != null && alarmTitle.length() > 0)
+            String taskTitle = t.getTitle();
+            
+            if (alarmTitle != null || taskTitle != null)
             {
-                oneLine.append("[").append(alarmTitle).append("]  ");
+                labelView.setVisibility(View.VISIBLE);
+                if (alarmTitle != null && alarmTitle.length() > 0)
+                {
+                    oneLine.append("[").append(alarmTitle).append("]  ");
+                }
+                if (taskTitle != null && taskTitle.length() > 0)
+                {
+                    oneLine.append("★").append(taskTitle);
+                }
+                labelView.setText(oneLine);
             }
-            if (taskTitle != null && taskTitle.length() > 0)
+            else
             {
-                oneLine.append("★").append(taskTitle);
+                labelView.setVisibility(View.GONE);
             }
-            labelView.setText(oneLine);
-        }
-        else
-        {
-            labelView.setVisibility(View.GONE);
-        }
-        TextView taskDes = (TextView)convertView.findViewById(R.id.task_des);
-        String task_des = entity.getTask().getDes();
-        if (task_des != null && task_des.length() != 0)
-        {
-            taskDes.setText("☆" + task_des);
-            taskDes.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            taskDes.setVisibility(View.GONE);
+            TextView taskDes = (TextView)convertView.findViewById(R.id.task_des);
+            String task_des = entity.getTask().getDes();
+            if (task_des != null && task_des.length() != 0)
+            {
+                taskDes.setText("☆" + task_des);
+                taskDes.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                taskDes.setVisibility(View.GONE);
+            }
         }
         
         return convertView;

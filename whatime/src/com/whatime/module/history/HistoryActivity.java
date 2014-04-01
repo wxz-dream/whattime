@@ -8,13 +8,11 @@ import java.util.TimeZone;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
 
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
 
@@ -84,7 +82,7 @@ public class HistoryActivity extends Activity
         todayNow.setTimeInMillis(System.currentTimeMillis());
         Calendar todayStart = Calendar.getInstance(TimeZone.getDefault());
         todayStart.setTimeInMillis(System.currentTimeMillis());
-        todayStart.set(Calendar.DAY_OF_MONTH, todayNow.get(Calendar.DAY_OF_MONTH) - 1);
+        todayStart.set(Calendar.DAY_OF_YEAR, todayNow.get(Calendar.DAY_OF_YEAR));
         todayStart.set(Calendar.HOUR_OF_DAY, 0);
         todayStart.set(Calendar.MINUTE, 0);
         todayStart.set(Calendar.SECOND, 0);
@@ -108,7 +106,7 @@ public class HistoryActivity extends Activity
         //昨天
         Calendar yestodayStart = Calendar.getInstance(TimeZone.getDefault());
         yestodayStart.setTimeInMillis(System.currentTimeMillis());
-        yestodayStart.set(Calendar.DAY_OF_MONTH, todayStart.get(Calendar.DAY_OF_MONTH) - 1);
+        yestodayStart.set(Calendar.DAY_OF_YEAR, todayStart.get(Calendar.DAY_OF_YEAR) - 1);
         yestodayStart.set(Calendar.HOUR_OF_DAY, 0);
         yestodayStart.set(Calendar.MINUTE, 0);
         yestodayStart.set(Calendar.SECOND, 0);
@@ -133,7 +131,7 @@ public class HistoryActivity extends Activity
         Calendar week = Calendar.getInstance(TimeZone.getDefault());
         week.setTimeInMillis(System.currentTimeMillis());
         int less = week.get(Calendar.DAY_OF_WEEK);
-        week.set(Calendar.DAY_OF_MONTH, yestodayStart.get(Calendar.DAY_OF_MONTH) - less);
+        week.set(Calendar.DAY_OF_YEAR, yestodayStart.get(Calendar.DAY_OF_YEAR) - less);
         week.set(Calendar.HOUR_OF_DAY, 0);
         week.set(Calendar.MINUTE, 0);
         week.set(Calendar.SECOND, 0);

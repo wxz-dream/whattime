@@ -28,7 +28,7 @@ public class MyApp extends Application {
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
-		CrashHandler.getInstance().init(this);
+		//CrashHandler.getInstance().init(this);
 		new Thread(){
 		    public void run() {
 		        getCitys();
