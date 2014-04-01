@@ -29,11 +29,9 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     
     private ViewPager mPager;
     
-    private ViewGroup container;
-    
     private Context context;
     
-    private List<Alarm> alarms = new ArrayList<Alarm>();
+    private List<List<Alarm>> alarms = new ArrayList<List<Alarm>>();
     
     private XListView plv;
     
@@ -47,6 +45,8 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     
     private long endTime;
     
+    private List<View> views = new ArrayList<View>();
+    
     private Handler handler = new Handler()
     {
         public void handleMessage(android.os.Message msg)
@@ -58,8 +58,13 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
                     if (state == ResponseCons.STATE_SUCCESS)
                     {
                         ArrayList list = msg.getData().getParcelableArrayList(ResponseCons.RESINFO);
-                        alarms = (List<Alarm>)list.get(0);
-                        listAdapter.notifyDataSetChanged();
+                        alarms.add(mPager.getCurrentItem(),(List<Alarm>)list.get(0));
+                        if (alarms.size() > 0)
+                        {
+                            listAdapter = new MyListAdapter(context, alarms.get(mPager.getCurrentItem()));
+                            plv = (XListView)views.get(mPager.getCurrentItem());
+                            plv.setAdapter(listAdapter);
+                        }
                     }
                     else
                     {
@@ -71,46 +76,43 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
         };
     };
     
-    
     public MarketPagerAdapter(List<Category> cates, ViewPager mPager)
     {
         this.cates = cates;
         this.mPager = mPager;
     }
-
+    
     @Override
     public Object instantiateItem(ViewGroup container, int position)
     {
-        this.container = container;
-        context = container.getContext();
-        Object obj = new Object();
-        switch (position)
+        if (position >= views.size())
         {
-            default:
-                plv =
-                    (XListView)LayoutInflater.from(context).inflate(R.layout.layout_listview_in_viewpager,
-                        container,
-                        false);
-                LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-                container.addView(plv, position, params);
-                startTime = System.currentTimeMillis();
-                endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
-                new RemoteApiImpl().getMarketAlarm(handler, cates.get(position).getId(), "", startTime, endTime, 0);
-                listAdapter = new MyListAdapter(context, alarms);
-                plv.setAdapter(listAdapter);
-                plv.setXListViewListener(this);
-                obj = plv;
-                break;
+            container.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+            context = container.getContext();
+            plv =
+                (XListView)LayoutInflater.from(context)
+                    .inflate(R.layout.layout_listview_in_viewpager, container, false);
+            startTime = System.currentTimeMillis();
+            endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
+            alarms.add(position,new ArrayList<Alarm>());
+            listAdapter = new MyListAdapter(context, alarms.get(position));
+            plv.setAdapter(listAdapter);
+            plv.setXListViewListener(this);
+            views.add(position, plv);
         }
-        
-        return obj;
+        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        container.addView(views.get(position), 0, params);
+        onRefresh();
+        return views.get(position);
     }
     
     @Override
     public void destroyItem(ViewGroup container, int position, Object object)
     {
-        //取消remove，不然页面无法计算
-        //container.removeViewAt(position);
+        if (views != null && views.size() > 0)
+        {
+            container.removeView(views.get(position));
+        }
         ToastMaster.cancelToast();
     }
     
@@ -127,12 +129,24 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     }
     
     @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object)
+    {
+        super.setPrimaryItem(container, position, object);
+        
+    }
+    
+    
+    @Override
     public void onRefresh()
     {
-        alarms.clear();
         startTime = System.currentTimeMillis();
         endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
-        new RemoteApiImpl().getMarketAlarm(handler, cates.get(mPager.getCurrentItem()).getId(), "", startTime, endTime, 0);
+        new RemoteApiImpl().getMarketAlarm(handler,
+            cates.get(mPager.getCurrentItem()).getId(),
+            "",
+            startTime,
+            endTime,
+            0);
         handler.postDelayed(new Runnable()
         {
             @Override
@@ -148,7 +162,12 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     {
         startTime = System.currentTimeMillis();
         endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
-        new RemoteApiImpl().getMarketAlarm(handler, cates.get(mPager.getCurrentItem()).getId(), "", startTime, endTime, 0);
+        new RemoteApiImpl().getMarketAlarm(handler,
+            cates.get(mPager.getCurrentItem()).getId(),
+            "",
+            startTime,
+            endTime,
+            0);
         handler.postDelayed(new Runnable()
         {
             @Override
@@ -162,13 +181,11 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     
     private void onLoad()
     {
-        plv = (XListView)container.getChildAt(mPager.getCurrentItem());
-        if(null!=plv)
-        {
-            plv.stopRefresh();
-            plv.stopLoadMore();
-            plv.setRefreshTime("刚刚");
-        }
+        plv = (XListView)views.get(mPager.getCurrentItem());
+        plv.stopRefresh();
+        plv.stopLoadMore();
+        plv.setRefreshTime("刚刚");
+        
     }
     
 }
