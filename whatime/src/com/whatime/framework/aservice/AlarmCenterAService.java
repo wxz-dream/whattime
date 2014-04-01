@@ -229,7 +229,12 @@ public class AlarmCenterAService extends Service
         Alarm a = controller.getNextAlarm();
         if (a != null)
         {
-            title = a.getTask().getTitle();
+            Task t = a.getTask();
+            if(t==null)
+            {
+                return;
+            }
+            title = t.getTitle();
             if(title.length()==0)
             {
                 title = a.getTitle();
