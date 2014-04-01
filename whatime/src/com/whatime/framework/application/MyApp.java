@@ -3,7 +3,7 @@ package com.whatime.framework.application;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import roboguice.application.RoboApplication;
+import android.app.Application;
 import android.content.Context;
 
 import com.whatime.db.DBHelper;
@@ -13,7 +13,7 @@ import com.whatime.db.DaoSession;
 import com.whatime.db.User;
 import com.whatime.module.weather.util.WebServiceUtil;
 
-public class MyApp extends RoboApplication {
+public class MyApp extends Application {
     public static final String DB_NAME = "wtx.db";
 	private static MyApp instance;
 	private static User user = null;
@@ -28,7 +28,7 @@ public class MyApp extends RoboApplication {
 	public void onCreate() {
 		super.onCreate();
 		instance = this;
-		//CrashHandler.getInstance().init(this);
+		CrashHandler.getInstance().init(this);
 		new Thread(){
 		    public void run() {
 		        getCitys();
