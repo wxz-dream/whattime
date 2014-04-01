@@ -6,6 +6,7 @@ import java.util.TimeZone;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.whatime.R;
 import com.whatime.db.Alarm;
 import com.whatime.db.User;
+import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.util.SysUtil;
 
@@ -24,6 +26,23 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
 {
     private Context context;
     private List<Alarm> alarms;
+    private User user = null;
+    private Handler handler = new Handler()
+    {
+        public void handleMessage(android.os.Message msg)
+        {
+            switch (msg.what)
+            {
+                case 0x001:
+                    int state = msg.getData().getInt(ResponseCons.STATE);
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        user = (User)msg.getData().getSerializable(ResponseCons.RESINFO);
+                    }
+                    break;
+            }
+        };
+    };
     
     public MyListAdapter(Context context,List<Alarm> alarms)
     {
@@ -34,7 +53,7 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
     public View getView(int i, View view, ViewGroup viewgroup)
     {
         Alarm alarm = alarms.get(i);
-        User user = new RemoteApiImpl().getUserByUuid(alarm.getUserUuid());
+        new RemoteApiImpl().getUserByUuid(alarm.getUserUuid(),handler);
         View v = LayoutInflater.from(context).inflate(R.layout.market_item, null);
         ImageView userPhoto = (ImageView)v.findViewById(R.id.item_user_photo);
         
