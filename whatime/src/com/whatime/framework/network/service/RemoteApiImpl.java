@@ -485,13 +485,12 @@ public class RemoteApiImpl
      */
     public User getUserByUuid(String userUuid)
     {
-        
         final Message msg = new Message();
         final Bundle data = new Bundle();
         msg.what = 0x001;
         RequestParams params = new RequestParams();
         params.addBodyParameter("userUuid", userUuid);
-        String json = HttpSycnUtil.post(HttpSycnUtil.getUrl(Constants.GET_USER_POST_URL), params);
+        String json = HttpSycnUtil.post(HttpSycnUtil.getUrl(Constants.GET_USER_BY_UUID_POST_URL), params);
         User user = null;
         JSONObject response = JSON.parseObject(json);
         if (response == null)
@@ -741,7 +740,6 @@ public class RemoteApiImpl
         final Bundle data = new Bundle();
         msg.what = 0x001;
         final User user = MyApp.getInstance().getUser();
-        
         RequestParams params = new RequestParams();
         if (user != null)
         {
@@ -778,6 +776,49 @@ public class RemoteApiImpl
                             List<Alarm> alarms = JSONArray.parseArray(resInfo, Alarm.class);
                             list.add(alarms);
                             data.putParcelableArrayList(ResponseCons.RESINFO, list);
+                        }
+                    }
+                    msg.setData(data);
+                    handler.sendMessage(msg);
+                }
+            });
+    }
+    
+    public void getUserByUserName(String userName, final Handler handler)
+    {
+        final Message msg = new Message();
+        final Bundle data = new Bundle();
+        msg.what = 0x001;
+        final User user = MyApp.getInstance().getUser();
+        RequestParams params = new RequestParams();
+        if (user != null)
+        {
+            params.addBodyParameter("userUuid", user.getUuid());
+            params.addBodyParameter("mime", user.getMime());
+        }
+        params.addBodyParameter("userName", userName);
+        HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.GET_USER_BY_USERNAME_POST_URL),
+            params,
+            new MyRequestCallBack(msg, data, handler)
+            {
+                @Override
+                public void onSuccess(ResponseInfo<String> json)
+                {
+                    JSONObject response = JSON.parseObject(json.result);
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    int state = response.getInteger("state");
+                    String stateInfo = response.getString("stateInfo");
+                    data.putInt(ResponseCons.STATE, state);
+                    data.putString(ResponseCons.STATEINFO, stateInfo);
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        if (response.containsKey("resInfo"))
+                        {
+                            data.putSerializable(ResponseCons.RESINFO,
+                                JSON.parseObject(response.getString("resInfo"), User.class));
                         }
                     }
                     msg.setData(data);

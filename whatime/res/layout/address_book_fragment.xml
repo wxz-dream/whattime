@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-    
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/add"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true" >
+
+        <TextView
+            android:id="@+id/friendAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="45sp"
+            android:layout_weight="1"
+            android:background="@drawable/login_editbox"
+            android:gravity="center"
+            android:text="添加好友"
+            android:textSize="18sp" />
+    </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_below="@id/add" >
 
         <ListView
             android:id="@+id/country_lvcountry"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center"
-            android:paddingLeft="15dip"
-            android:paddingRight="25dip"
             android:cacheColorHint="#00000000"
+            android:paddingLeft="15dip"
+            android:paddingRight="15dip"
             android:scrollbars="none" />
 
         <TextView

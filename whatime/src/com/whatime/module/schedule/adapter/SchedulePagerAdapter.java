@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
@@ -14,6 +15,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -29,6 +31,7 @@ import com.whatime.db.Alarm;
 import com.whatime.db.DBHelper;
 import com.whatime.framework.ui.view.ToastMaster;
 import com.whatime.framework.util.SysUtil;
+import com.whatime.module.books.FriendAdd_;
 import com.whatime.module.books.SortAdapter;
 import com.whatime.module.books.SortModel;
 import com.whatime.module.books.hander.CharacterParser;
@@ -148,6 +151,15 @@ public class SchedulePagerAdapter extends PagerAdapter
             
             case 2:
                 view = LayoutInflater.from(context).inflate(R.layout.address_book_fragment, null);
+                TextView friendAdd = (TextView)view.findViewById(R.id.friendAdd);
+                friendAdd.setOnClickListener(new OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        context.startActivity(new Intent(context, FriendAdd_.class));
+                    }
+                });
                 container.addView(view, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 initViews();
                 obj = view;
