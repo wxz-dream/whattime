@@ -12,7 +12,7 @@ public class HttpSycnUtil
     
     public static String post(String urlString, RequestParams params)
     {
-        http.configCurrentHttpCacheExpiry(1000 * 10);
+        http.configCurrentHttpCacheExpiry(1000 * 20);
         try
         {
             ResponseStream responseStream =

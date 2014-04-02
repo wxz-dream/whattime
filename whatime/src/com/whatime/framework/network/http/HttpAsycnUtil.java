@@ -12,7 +12,7 @@ public class HttpAsycnUtil
     
     public static void post(String urlString, RequestParams params, RequestCallBack<String> callBack)
     {
-        http.configCurrentHttpCacheExpiry(1000 * 10);
+        http.configCurrentHttpCacheExpiry(1000 * 20);
         http.send(HttpRequest.HttpMethod.POST, urlString, params, callBack);
     }
     

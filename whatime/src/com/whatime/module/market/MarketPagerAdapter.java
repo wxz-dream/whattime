@@ -1,7 +1,9 @@
 package com.whatime.module.market;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import android.content.Context;
 import android.os.Handler;
@@ -39,11 +41,11 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     
     private String scope;
     
-    private String cateId;
-    
     private long startTime;
     
     private long endTime;
+    
+    private int mPage;
     
     private List<View> views = new ArrayList<View>();
     
@@ -58,17 +60,13 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
                     if (state == ResponseCons.STATE_SUCCESS)
                     {
                         ArrayList list = msg.getData().getParcelableArrayList(ResponseCons.RESINFO);
-                        alarms.add(mPager.getCurrentItem(),(List<Alarm>)list.get(0));
+                        alarms.add(mPager.getCurrentItem(), (List<Alarm>)list.get(0));
                         if (alarms.size() > 0)
                         {
                             listAdapter = new MyListAdapter(context, alarms.get(mPager.getCurrentItem()));
                             plv = (XListView)views.get(mPager.getCurrentItem());
                             plv.setAdapter(listAdapter);
                         }
-                    }
-                    else
-                    {
-                        
                     }
                     onLoad();
                     break;
@@ -92,14 +90,13 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
             plv =
                 (XListView)LayoutInflater.from(context)
                     .inflate(R.layout.layout_listview_in_viewpager, container, false);
-            startTime = System.currentTimeMillis();
-            endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
-            alarms.add(position,new ArrayList<Alarm>());
+            alarms.add(position, new ArrayList<Alarm>());
             listAdapter = new MyListAdapter(context, alarms.get(position));
             plv.setAdapter(listAdapter);
             plv.setXListViewListener(this);
             views.add(position, plv);
         }
+        mPage = 0;
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         container.addView(views.get(position), 0, params);
         onRefresh();
@@ -135,12 +132,35 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
         
     }
     
-    
     @Override
     public void onRefresh()
     {
-        startTime = System.currentTimeMillis();
-        endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
+        if (cates.size() == 0)
+        {
+            return;
+        }
+        Calendar startC = Calendar.getInstance(TimeZone.getDefault());
+        if (startC.getTimeInMillis() < startTime)
+        {
+            startC.setTimeInMillis(startTime);
+        }
+        Calendar endC = Calendar.getInstance(TimeZone.getDefault());
+        if (endC.getTimeInMillis() < endTime)
+        {
+            endC.setTimeInMillis(endTime);
+        }else
+        {
+            endC.setTimeInMillis(startC.getTimeInMillis());
+        }
+        if (endC.getTimeInMillis() <= startC.getTimeInMillis())
+        {
+            endC.set(Calendar.DAY_OF_YEAR, endC.get(Calendar.DAY_OF_YEAR) + 1);
+            endC.set(Calendar.HOUR_OF_DAY, 0);
+            endC.set(Calendar.MINUTE, 0);
+            endC.set(Calendar.SECOND, 0);
+        }
+        startTime = startC.getTimeInMillis();
+        endTime = endC.getTimeInMillis();
         new RemoteApiImpl().getMarketAlarm(handler,
             cates.get(mPager.getCurrentItem()).getId(),
             "",
@@ -160,14 +180,16 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     @Override
     public void onLoadMore()
     {
-        startTime = System.currentTimeMillis();
-        endTime = System.currentTimeMillis() + 1000 * 60 * 1000;
+        if (cates.size() == 0)
+        {
+            return;
+        }
         new RemoteApiImpl().getMarketAlarm(handler,
             cates.get(mPager.getCurrentItem()).getId(),
             "",
             startTime,
             endTime,
-            0);
+            mPage++);
         handler.postDelayed(new Runnable()
         {
             @Override
@@ -188,4 +210,33 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
         
     }
     
+    public String getScope()
+    {
+        return scope;
+    }
+    
+    public void setScope(String scope)
+    {
+        this.scope = scope;
+    }
+    
+    public long getStartTime()
+    {
+        return startTime;
+    }
+    
+    public void setStartTime(long startTime)
+    {
+        this.startTime = startTime;
+    }
+    
+    public long getEndTime()
+    {
+        return endTime;
+    }
+    
+    public void setEndTime(long endTime)
+    {
+        this.endTime = endTime;
+    }
 }

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+
+        <CheckBox
+            android:id="@+id/no_scope"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/white"
+            android:text="不限" />
+        <CheckBox
+            android:id="@+id/pro"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_weight="1"
+            android:text="省" />
+        <CheckBox
+            android:id="@+id/ct"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_weight="1"
+            android:text="市" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <Spinner
+            android:id="@+id/province_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dip"
+            android:visibility="gone"
+            android:layout_weight="1" >
+        </Spinner>
+
+        <Spinner
+            android:id="@+id/city_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dip"
+            android:visibility="gone"
+            android:layout_weight="1" >
+        </Spinner>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1.0px"
+        android:background="@drawable/shape_line" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dip"
+         >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50sp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="开始时间:"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/select_startTime"
+            android:layout_width="wrap_content"
+            android:layout_height="50sp"
+            android:layout_weight="2"
+            android:background="@drawable/login_editbox"
+            android:gravity="center"
+            android:text="2014-5-5"
+            android:textSize="20sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dip"
+         >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50sp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="结束时间:"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/select_endTime"
+            android:layout_width="wrap_content"
+            android:layout_height="50sp"
+            android:layout_weight="2"
+            android:background="@drawable/login_editbox"
+            android:gravity="center"
+            android:text="2014-5-5"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</LinearLayout>

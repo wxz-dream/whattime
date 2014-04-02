@@ -23,13 +23,17 @@ import com.whatime.framework.util.SysUtil;
 public class MyListAdapter extends BaseAdapter implements ListAdapter
 {
     private Context context;
+    
     private List<Alarm> alarms;
+    
     private User user = null;
-    public MyListAdapter(Context context,List<Alarm> alarms)
+    
+    public MyListAdapter(Context context, List<Alarm> alarms)
     {
         this.context = context;
         this.alarms = alarms;
     }
+    
     @Override
     public View getView(int i, View view, ViewGroup viewgroup)
     {
@@ -39,17 +43,19 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
         ImageView userPhoto = (ImageView)v.findViewById(R.id.item_user_photo);
         
         ImageView item_add = (ImageView)v.findViewById(R.id.item_add);
-        if(user==null)
+        if (user == null)
         {
-            return v;
+            return null;
         }
         TextView alarmTitle = (TextView)v.findViewById(R.id.item_alarm_title);
         alarmTitle.setText(alarm.getTitle());
         TextView item_createtime = (TextView)v.findViewById(R.id.item_createtime);
         Calendar c = Calendar.getInstance(TimeZone.getDefault());
-        c.setTimeInMillis(alarm.getAlarmTime());
+        c.setTimeInMillis(alarm.getCreateTime());
         StringBuilder sb = new StringBuilder();
-        sb.append(c.get(Calendar.YEAR))
+        sb.append(user.getNickName())
+            .append(" * ")
+            .append(c.get(Calendar.YEAR))
             .append("-")
             .append(c.get(Calendar.MONTH) + 1)
             .append("-")
@@ -61,24 +67,21 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
         item_createtime.setText(sb.toString());
         sb.setLength(0);
         TextView item_des = (TextView)v.findViewById(R.id.item_des);
-        sb.append("[").append(alarm.getTitle()).append("]")
-        .append(alarm.getDes());
+        sb.append(alarm.getDes());
         item_des.setText(sb.toString());
-        
+        TextView joinNum = (TextView)v.findViewById(R.id.item_joinNum);
+        joinNum.setText(String.valueOf(alarm.getJoinNum()));
         return v;
     }
+    
     @Override
     public void registerDataSetObserver(DataSetObserver datasetobserver)
     {
-        // TODO Auto-generated method stub
-        
     }
     
     @Override
     public void unregisterDataSetObserver(DataSetObserver datasetobserver)
     {
-        // TODO Auto-generated method stub
-        
     }
     
     @Override
@@ -96,7 +99,7 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
     @Override
     public long getItemId(int i)
     {
-        return alarms.get(i).getId();
+        return i;
     }
     
     @Override
@@ -134,11 +137,11 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
     {
         return true;
     }
+    
     @Override
     public void notifyDataSetChanged()
     {
         super.notifyDataSetChanged();
     }
-    
     
 }

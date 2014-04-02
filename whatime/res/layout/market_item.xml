@@ -33,7 +33,7 @@
                 android:src="@drawable/main_clock_normal" />
 
             <TextView
-                android:id="@+id/item_createtime"
+                android:id="@+id/item_joinNum"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -88,6 +88,7 @@
             android:maxLines="3"
             android:text="描述"
             android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textSize="15dip"
             android:textColor="?android:attr/textColorTertiary"/>
 
         <LinearLayout

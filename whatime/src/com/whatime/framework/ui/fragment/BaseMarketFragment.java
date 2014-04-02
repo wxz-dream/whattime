@@ -15,9 +15,9 @@ import com.whatime.R;
 
 public class BaseMarketFragment extends BaseFragment
 {
-    
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        mContext = inflater.getContext();
         View mView = inflater.inflate(R.layout.market_view_pager, null);
         showLeft = (View)mView.findViewById(R.id.head_layout_showLeft);
         showRight = (View)mView.findViewById(R.id.head_layout_showRight);

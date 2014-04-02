@@ -452,6 +452,7 @@ public class AlarmAddActivity extends Activity
             mAlarm.setFroms(AlarmCons.FROMS_ANDROID);
             mAlarm.setType(alarm_type);
             mAlarm.setEndTime(time.getTimeInMillis());
+            mAlarm.setJoinNum(1l);
             User user = MyApp.getInstance().getUser();
             if (user != null)
             {
@@ -841,7 +842,6 @@ public class AlarmAddActivity extends Activity
             }
         });
         dialog.show();
-        
     }
     
     @Override
@@ -1202,6 +1202,5 @@ public class AlarmAddActivity extends Activity
                     break;
             }
         }
-        
     }
 }
