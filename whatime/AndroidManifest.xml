@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:name="AppShareApplication"
+    android:name="com.qh.ttyy"
     package="com.whatime"
     android:versionCode="1"
     android:versionName="1.0" >
@@ -188,10 +188,10 @@
             </intent-filter>
         </receiver>
 
-        <!-- service -->
+        <!-- service android:process="com.qh.whatime.AlarmService"-->
         <service
             android:name="com.whatime.framework.aservice.AlarmCenterAService"
-            android:process="com.qh.whatime.AlarmService">
+            >
             <intent-filter>
                 <action android:name="com.whatime.ALARM_ALERT" />
                 <action android:name="com.whatime.UPT_NOTIFICATION" />

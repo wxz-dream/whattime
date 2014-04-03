@@ -79,9 +79,10 @@ public class AlarmServiceImpl implements AlarmService
     }
     
     @Override
-    public void uptAlarm(Alarm alarm ,Handler myHandler)
+    public void uptAlarm(Alarm alarm, Handler myHandler)
     {
         DBHelper.getInstance().uptAlarm(alarm);
+        setNextAlert();
         if (SysUtil.hasNetWorkConection(context))
         {
             User user = MyApp.getInstance().getUser();
@@ -97,7 +98,6 @@ public class AlarmServiceImpl implements AlarmService
                 }
             }
         }
-        setNextAlert();
     }
     
     @Override
@@ -149,7 +149,7 @@ public class AlarmServiceImpl implements AlarmService
         return null;
     }
     
-    private static List<Alarm> getOpenAlarms()
+    private List<Alarm> getOpenAlarms()
     {
         return DBHelper.getInstance().getOpenAlarms();
     }
@@ -162,7 +162,7 @@ public class AlarmServiceImpl implements AlarmService
         if (alarmId != -1)
         {
             //如果设置时间比下一次响铃时间小，更新文件
-            if (alarmTime < snoozeTime || snoozeTime < System.currentTimeMillis())
+            if (alarmTime < snoozeTime || snoozeTime < System.currentTimeMillis() || alarmId == id)
             {
                 NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
                 nm.cancel(0);
@@ -185,7 +185,7 @@ public class AlarmServiceImpl implements AlarmService
         context.startService(uptNotify);
     }
     
-    public static void saveSnoozeAlert(final Context context, final SharedPreferences prefs, final long id,
+    public void saveSnoozeAlert(final Context context, final SharedPreferences prefs, final long id,
         final long time)
     {
         if (id == -1)
@@ -202,7 +202,7 @@ public class AlarmServiceImpl implements AlarmService
         }
     }
     
-    private static void setNextAlarmAlert(Alarm a)
+    private void setNextAlarmAlert(Alarm a)
     {
         boolean open = false;
         if (!a.getOpen() || (a.getAlarmTime() != null && a.getAlarmTime() > System.currentTimeMillis()))
@@ -293,7 +293,7 @@ public class AlarmServiceImpl implements AlarmService
         DBHelper.getInstance().uptAlarm(a);
     }
     
-    private static void alarmRepeatOther(Calendar cal, Task task)
+    private void alarmRepeatOther(Calendar cal, Task task)
     {
         String[] strs = task.getRepeatInfo().split(",");
         switch (Integer.valueOf(strs[0]))
@@ -310,7 +310,7 @@ public class AlarmServiceImpl implements AlarmService
         }
     }
     
-    private static void larmRepeatTwo(Calendar cal, Task task)
+    private void larmRepeatTwo(Calendar cal, Task task)
     {
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
         switch (dayOfWeek)
@@ -324,7 +324,7 @@ public class AlarmServiceImpl implements AlarmService
         }
     }
     
-    private static void alarmRepeatFive(Calendar cal, Task task)
+    private void alarmRepeatFive(Calendar cal, Task task)
     {
         int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
         switch (dayOfWeek)
@@ -352,7 +352,7 @@ public class AlarmServiceImpl implements AlarmService
         am.cancel(sender);
     }
     
-    private static void enableAlert(long id, long time)
+    private void enableAlert(long id, long time)
     {
         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         
@@ -367,10 +367,11 @@ public class AlarmServiceImpl implements AlarmService
         
         am.set(AlarmManager.RTC_WAKEUP, time, sender);
     }
-
+    
     @Override
-    public void addAlarm(Alarm alarm,Handler myHandler)
+    public void addAlarm(Alarm alarm, Handler myHandler)
     {
+        setNextAlert();
         if (SysUtil.hasNetWorkConection(context))
         {
             User user = MyApp.getInstance().getUser();
@@ -393,8 +394,6 @@ public class AlarmServiceImpl implements AlarmService
                 ShareUtil.shareAll(alarm.getShare());
             }
         }
-        setNextAlert();
     }
-
     
 }

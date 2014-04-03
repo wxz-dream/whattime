@@ -16,7 +16,6 @@ import com.whatime.db.User;
 import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.view.ToastMaster;
-import com.whatime.module.addcolock.AlarmAddActivity;
 
 @EActivity(R.layout.friend_add)
 public class FriendAdd extends Activity

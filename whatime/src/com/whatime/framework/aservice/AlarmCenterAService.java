@@ -240,7 +240,6 @@ public class AlarmCenterAService extends Service
                 title = a.getTitle();
             }
             time = AlarmUtil.getShowTime(this, a.getAlarmTime());
-            
         }
         notification.setLatestEventInfo(this, title, time, contentIntent);
         startForegroundCompat(NOTIFICATION_ID, notification);
