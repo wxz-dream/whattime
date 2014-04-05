@@ -1,16 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="center">
+    android:orientation="vertical" >
+    
+    <com.whatime.module.alert.SliderRelativeLayout
+        android:id="@+id/slider_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="63dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dip"
+        android:background="@drawable/step2_tip_2" >
 
+        <!-- Lock OK icon -->
+
+        <ImageView
+            android:id="@+id/getup_finish_ico"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dip"
+            android:background="@drawable/slider_ico_alarm" >
+        </ImageView>
+
+        <!-- Arrow Animation -->
+
+        <ImageView
+            android:id="@+id/getup_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/getup_finish_ico"
+            android:layout_marginRight="20dip"
+            android:layout_toLeftOf="@id/getup_finish_ico"
+            android:background="@anim/slider_tip_anim" >
+        </ImageView>
+
+        <!-- hint_unlock -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/getup_finish_ico"
+            android:layout_toLeftOf="@id/getup_arrow"
+            android:text="@string/hint_unlock" >
+        </TextView>
+
+        <!-- slider img -->
+
+        <TextView
+            android:id="@+id/slider_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dip"
+            android:drawableTop="@drawable/getup_slider_ico_normal" >
+        </TextView>
+    </com.whatime.module.alert.SliderRelativeLayout>
+    
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_horizontal"
-        android:background="@drawable/dialog"
+        android:layout_above="@id/slider_layout"
         android:orientation="vertical">
 
         <TextView android:id="@+id/alertTitle"
@@ -64,22 +116,8 @@
                 android:layout_weight="3"
                 android:text="@string/alarm_alert_snooze_text" />
 
-            <!-- blank stretchable view -->
-            <View
-                android:layout_width="2dip"
-                android:layout_height="2dip"
-                android:layout_gravity="fill_horizontal"
-                android:layout_weight="1"/>
-
-            <Button
-                android:id="@+id/dismiss"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="@string/alarm_alert_dismiss_text" />
-
         </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

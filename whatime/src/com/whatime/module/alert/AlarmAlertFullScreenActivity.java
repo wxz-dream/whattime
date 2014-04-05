@@ -26,9 +26,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -36,6 +38,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +78,13 @@ public class AlarmAlertFullScreenActivity extends Activity
     protected Alarm mAlarm;
     
     private int mVolumeBehavior;
+    
+    private SliderRelativeLayout sliderLayout = null;
+
+    private ImageView imgView_getup_arrow; // 动画图片
+    private AnimationDrawable animArrowDrawable = null;
+
+    public static int MSG_LOCK_SUCESS = 1;
     
     private AlarmController controller = new AlarmController();
     
@@ -133,6 +143,9 @@ public class AlarmAlertFullScreenActivity extends Activity
         }
         
         setContentView(R.layout.alarm_alert);
+        initViews();
+        
+        sliderLayout.setMainHandler(mHandler);
         updateLayout();
         
         // Register to get the alarm killed/snooze/dismiss intent.
@@ -142,6 +155,53 @@ public class AlarmAlertFullScreenActivity extends Activity
         registerReceiver(mReceiver, filter);
     }
     
+    private void initViews(){
+        sliderLayout = (SliderRelativeLayout)findViewById(R.id.slider_layout);
+        //获得动画，并开始转动
+        imgView_getup_arrow = (ImageView)findViewById(R.id.getup_arrow);
+        animArrowDrawable = (AnimationDrawable) imgView_getup_arrow.getBackground() ;
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        animArrowDrawable.stop();
+    }
+    
+    //通过延时控制当前绘制bitmap的位置坐标
+    private Runnable AnimationDrawableTask = new Runnable(){
+        
+        public void run(){
+            animArrowDrawable.start();
+            mHandler.postDelayed(AnimationDrawableTask, 300);
+        }
+    };
+    
+    private Handler mHandler =new Handler (){
+        
+        public void handleMessage(Message msg){
+            
+            if(MSG_LOCK_SUCESS == msg.what)
+                dismiss(false);
+                finish(); // 锁屏成功时，结束我们的Activity界面
+        }
+    };
+    
+    //屏蔽掉Home键
+    public void onAttachedToWindow() {
+        this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
+        super.onAttachedToWindow();
+    }
+    
+    //屏蔽掉Back键
+    public boolean onKeyDown(int keyCode ,KeyEvent event){
+        
+        if(event.getKeyCode() == KeyEvent.KEYCODE_BACK)
+            return true ;
+        else
+            return super.onKeyDown(keyCode, event);
+        
+    }
+
     private void setTitle()
     {
         Task task = mAlarm.getTask();
@@ -165,15 +225,6 @@ public class AlarmAlertFullScreenActivity extends Activity
             public void onClick(View v)
             {
                 snooze();
-            }
-        });
-        
-        /* dismiss button: close notification */
-        findViewById(R.id.dismiss).setOnClickListener(new Button.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                dismiss(false);
             }
         });
         
@@ -201,7 +252,7 @@ public class AlarmAlertFullScreenActivity extends Activity
         {
             t.setSetTime(t.getAlarmTime());
         }
-        else if(t.getSetTime()< t.getAlarmTime())
+        else if (t.getSetTime() < t.getAlarmTime())
         {
             t.setAlarmTime(snoozeTime);
         }
@@ -213,7 +264,7 @@ public class AlarmAlertFullScreenActivity extends Activity
         Task currentTask = DBHelper.getInstance().getNextTaskByAlarmId(mAlarm.getId());
         mAlarm.setTask(currentTask);
         mAlarm.setAlarmTime(currentTask.getAlarmTime());
-        controller.uptAlarm(mAlarm,new Handler());
+        controller.uptAlarm(mAlarm, new Handler());
         
         // Get the display time for the snooze and update the notification.
         final Calendar c = Calendar.getInstance();
@@ -296,6 +347,7 @@ public class AlarmAlertFullScreenActivity extends Activity
             Button snooze = (Button)findViewById(R.id.snooze);
             snooze.setEnabled(false);
         }
+        mHandler.postDelayed(AnimationDrawableTask, 300);  //开始绘制动画
     }
     
     @Override

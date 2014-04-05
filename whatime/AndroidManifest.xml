@@ -59,6 +59,7 @@
         <activity
             android:name="com.whatime.module.alert.AlarmAlertActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Wallpaper"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.whatime.module.alert.AlarmAlertFullScreenActivity"
