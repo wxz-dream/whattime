@@ -88,7 +88,7 @@
             	的类，这个类可以监听到页面的生命周期，也可以获取授权页面的各种UI控件。 
             	开发者可以通过继承AuthorizeAdapter，重写其方法，并获取各种UI来自定义这个页面的行为。
             -->
-            <meta-data android:name="AuthorizeAdapter" android:value="cn.sharesdk.demo.MyAdapter" />
+            <meta-data android:name="AuthorizeAdapter" android:value="com.whatime.module.thirdLogin.MyAdapter" />
             
             <!-- 
             	QZoneWebShareAdapter表示一个继承自cn.sharesdk.tencent.qzone.QZoneWebShareAdapter

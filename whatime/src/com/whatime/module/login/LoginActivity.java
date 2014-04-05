@@ -32,6 +32,7 @@ import com.whatime.framework.application.MyApp;
 import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.view.ToastMaster;
+import com.whatime.module.thirdLogin.MyPlatformActionListener;
 
 public class LoginActivity extends Activity implements Callback, OnClickListener, PlatformActionListener
 {
@@ -138,6 +139,7 @@ public class LoginActivity extends Activity implements Callback, OnClickListener
     
     private void initData()
     {
+        ShareSDK.initSDK(this);
         Platform[] tmp = ShareSDK.getPlatformList(mContext);
         if (tmp == null)
         {
@@ -249,6 +251,11 @@ public class LoginActivity extends Activity implements Callback, OnClickListener
             case 1:
             { // 成功
                 Platform weibo = (Platform)msg.obj;
+                cn.sharesdk.tencent.qzone.QZone.ShareParams sp = new cn.sharesdk.tencent.qzone.QZone.ShareParams();
+                sp.setText("测试分享的文本");
+                // 执行图文分享
+                weibo.setPlatformActionListener(new MyPlatformActionListener());
+                weibo.share(sp);
                 User u = MyApp.getInstance().getUser();
                 if (u == null)
                 {
@@ -275,7 +282,7 @@ public class LoginActivity extends Activity implements Callback, OnClickListener
                         type = UserCons.AUTH_QQ;
                     }
                     u.setAuthType(type);
-                    new RemoteApiImpl().registUser(u.getUserName(), "000000", handler);
+                    new RemoteApiImpl().registUser(u.getUserName(), "000000", myHandler);
                     this.finish();
                 }
                 

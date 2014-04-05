@@ -77,6 +77,7 @@ import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.ui.view.MyListView;
 import com.whatime.framework.ui.view.SwitchButton;
 import com.whatime.framework.ui.view.ToastMaster;
+import com.whatime.framework.util.ShareUtil;
 import com.whatime.framework.util.SysUtil;
 import com.whatime.module.linkman.ContactListView;
 import com.whatime.module.thirdLogin.AuthActivity;
@@ -386,7 +387,7 @@ public class AlarmAddActivity extends Activity
         {
             alarm_scope_label.setText(mAlarm.getScope());
         }
-        if(mAlarm.getCategory()==null)
+        if (mAlarm.getCategory() == null)
         {
             alarm_cate_label.setText("未选择");
         }
@@ -604,6 +605,11 @@ public class AlarmAddActivity extends Activity
                 if (alarm_id == -1)
                 {
                     controller.addAlarm(mAlarm, myHandler);
+                    //share
+                    if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
+                    {
+                        new ShareUtil().shareAll(mAlarm.getShare(), mAlarm);
+                    }
                 }
                 else
                 {
@@ -799,7 +805,7 @@ public class AlarmAddActivity extends Activity
             @Override
             public void onItemSelected(AdapterView<?> adapterview, View view, int i, long l)
             {
-                childCates = DBHelper.getInstance().getcateByParentId(i+1);
+                childCates = DBHelper.getInstance().getcateByParentId(i + 1);
                 childCatesNames = new ArrayList<String>();
                 for (Category cate : childCates)
                 {

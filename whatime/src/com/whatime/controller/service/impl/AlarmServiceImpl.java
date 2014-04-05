@@ -26,7 +26,6 @@ import com.whatime.db.Task;
 import com.whatime.db.User;
 import com.whatime.framework.application.MyApp;
 import com.whatime.framework.network.service.RemoteApiImpl;
-import com.whatime.framework.util.ShareUtil;
 import com.whatime.framework.util.SysUtil;
 
 public class AlarmServiceImpl implements AlarmService
@@ -387,11 +386,6 @@ public class AlarmServiceImpl implements AlarmService
                 {
                     new RemoteApiImpl().alarmLocalAdd(user, alarm, myHandler);
                 }
-            }
-            //share
-            if (alarm.getShare() != null && alarm.getShare().length() > 0)
-            {
-                ShareUtil.shareAll(alarm.getShare());
             }
         }
     }

@@ -455,7 +455,6 @@ public class TaskAddActivity extends Activity
         {
             task_music.setText(RingtoneManager.getRingtone(context, Uri.parse(mTask.getMusic())).getTitle(context));
         }
-        
         show();
         
     }
