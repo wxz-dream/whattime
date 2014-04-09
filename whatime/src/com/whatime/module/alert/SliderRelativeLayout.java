@@ -127,7 +127,7 @@ public class SliderRelativeLayout extends RelativeLayout {
 		int x = (int) event.getX() ;	
 		Log.e(TAG, "handleActionUpEvent : x -->" + x + "   getRight() " + getRight() );
 		//距离在15dip以内代表解锁成功。
-		boolean isSucess= Math.abs(x - getRight()) <= 15 ;
+		boolean isSucess= Math.abs(x - getRight()) <= 60 ;
 		
 		if(isSucess){
 		   Toast.makeText(mContext, "解锁成功", 1000).show();
