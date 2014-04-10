@@ -59,11 +59,12 @@
         <activity
             android:name="com.whatime.module.alert.AlarmAlertActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Wallpaper"
+            android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.whatime.module.alert.AlarmAlertFullScreenActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.whatime.module.login.LoginActivity"
@@ -191,8 +192,7 @@
 
         <!-- service android:process="com.qh.whatime.AlarmService"-->
         <service
-            android:name="com.whatime.framework.aservice.AlarmCenterAService"
-            >
+            android:name="com.whatime.framework.aservice.AlarmCenterAService">
             <intent-filter>
                 <action android:name="com.whatime.ALARM_ALERT" />
                 <action android:name="com.whatime.UPT_NOTIFICATION" />

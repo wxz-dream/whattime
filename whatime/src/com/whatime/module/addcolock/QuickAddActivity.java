@@ -44,7 +44,6 @@ import com.whatime.db.Task;
 import com.whatime.db.User;
 import com.whatime.framework.application.MyApp;
 import com.whatime.framework.network.pojo.ResponseCons;
-import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.view.GVData;
 import com.whatime.framework.ui.view.MyGridView;
 import com.whatime.framework.ui.view.ToastMaster;
@@ -66,7 +65,9 @@ public class QuickAddActivity extends Activity
     
     private AlertDialog time_dialog;
     
-    private MyGridView grid;
+    private MyGridView gridTx;
+    
+    private MyGridView gridHd;
     
     private Context context;
     
@@ -134,10 +135,11 @@ public class QuickAddActivity extends Activity
         initTitle();
         initll();
         initBt();
-        initGd();
+        initGdTx();
+        initGdHd();
     }
     
-    private void initGd()
+    private void initGdTx()
     {
         ArrayList<GVData> ls = new ArrayList<GVData>();
         ls.add(new GVData(0, getString(R.string.quick_alarm), R.drawable.quick_alarm));
@@ -148,10 +150,10 @@ public class QuickAddActivity extends Activity
         ls.add(new GVData(5, getString(R.string.drink), R.drawable.drink_alarm));
         ls.add(new GVData(6, getString(R.string.someday), R.drawable.someday_alarm));
         ls.add(new GVData(7, getString(R.string.take_pills), R.drawable.take_pill_alarm));
-        grid = (MyGridView)findViewById(R.id.alarm_type_gd);
+        gridTx = (MyGridView)findViewById(R.id.alarm_type_tx);
         GdAdapter adapter = new GdAdapter(ls);
-        grid.setAdapter(adapter);
-        grid.setOnItemClickListener(new OnItemClickListener()
+        gridTx.setAdapter(adapter);
+        gridTx.setOnItemClickListener(new OnItemClickListener()
         {
 
             @Override
@@ -159,6 +161,27 @@ public class QuickAddActivity extends Activity
             {
                 startActivity(new Intent(QuickAddActivity.this, AlarmAddActivity_.class)
                 .putExtra(AlarmServiceCons.ALARM_ID,-1).putExtra(AlarmServiceCons.ALARM_TYPE,i));
+                QuickAddActivity.this.finish();
+            }
+        });
+        
+    }
+    
+    private void initGdHd()
+    {
+        ArrayList<GVData> ls = new ArrayList<GVData>();
+        ls.add(new GVData(0, "多人活动", R.drawable.quick_alarm));
+        gridHd = (MyGridView)findViewById(R.id.alarm_type_hd);
+        GdAdapter adapter = new GdAdapter(ls);
+        gridHd.setAdapter(adapter);
+        gridHd.setOnItemClickListener(new OnItemClickListener()
+        {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterview, View view, int i, long l)
+            {
+                startActivity(new Intent(QuickAddActivity.this, AlarmAddActivity_.class)
+                .putExtra(AlarmServiceCons.ALARM_ID,-1).putExtra(AlarmServiceCons.ALARM_TYPE,8));
                 QuickAddActivity.this.finish();
             }
         });

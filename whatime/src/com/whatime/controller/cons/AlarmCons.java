@@ -19,6 +19,8 @@ public class AlarmCons
     public static final int TYPE_SOMEDAY = 6;
 
     public static final int TYPE_TAKE_PILLS = 7;
+    
+    public static final int TYPE_TASK = 8;
 
     // 来源
     public static final int FROMS_ANDROID = 1;

@@ -139,7 +139,7 @@ public class LeftFragment extends Fragment implements OnItemClickListener
             
             if (position == selectPosition)
             {
-                row.setBackgroundResource(R.drawable.navbg);
+                row.setBackgroundResource(R.drawable.ic_top_back);
                 textView.setSelected(true);
             }
             return row;

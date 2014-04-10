@@ -27,7 +27,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -66,8 +65,6 @@ public class AlarmAlertFullScreenActivity extends Activity
     private static final String DEFAULT_VOLUME_BEHAVIOR = "2";
     
     protected static final String SCREEN_OFF = "screen_off";
-    
-    private static final int ALARM_STREAM_TYPE_BIT = 1 << AudioManager.STREAM_ALARM;
     
     public static final String KEY_ALARM_IN_SILENT_MODE = "alarm_in_silent_mode";
     
@@ -186,15 +183,9 @@ public class AlarmAlertFullScreenActivity extends Activity
         }
     };
     
-    //屏蔽掉Home键
-    public void onAttachedToWindow() {
-        this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
-        super.onAttachedToWindow();
-    }
-    
     //屏蔽掉Back键
+    @Override
     public boolean onKeyDown(int keyCode ,KeyEvent event){
-        
         if(event.getKeyCode() == KeyEvent.KEYCODE_BACK)
             return true ;
         else

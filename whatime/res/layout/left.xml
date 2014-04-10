@@ -33,9 +33,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:cacheColorHint="@null"
-            android:divider="@drawable/navbg"
+            android:divider="@drawable/ic_top_back"
             android:dividerHeight="1px"
-            android:listSelector="@drawable/navbg" />
+            android:listSelector="@drawable/ic_top_back" />
     </LinearLayout>
 
 </LinearLayout>

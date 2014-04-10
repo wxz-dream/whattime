@@ -833,7 +833,10 @@ public class AlarmAddActivity extends Activity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                mAlarm.setCategory(childCates.get(child_spinner.getSelectedItemPosition()));
+                if(childCates.size()>0)
+                {
+                    mAlarm.setCategory(childCates.get(child_spinner.getSelectedItemPosition()));
+                }
                 uptUi();
             }
         });
