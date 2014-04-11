@@ -31,6 +31,17 @@
             android:textColor="#ffffff"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/userinfo_save"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/title_btn_right"
+            android:text="保存"
+            android:textColor="#fff"
+            android:textSize="14sp" />
     </RelativeLayout>
 
     <ScrollView
@@ -242,6 +253,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="1.0px"
                     android:background="@drawable/shape_line" />
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="50.0dip"
@@ -432,6 +444,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="1.0px"
                     android:background="@drawable/shape_line" />
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="50.0dip"
@@ -476,6 +489,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="1.0px"
                     android:background="@drawable/shape_line" />
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="50.0dip"
@@ -520,24 +534,6 @@
                     android:layout_width="fill_parent"
                     android:layout_height="1.0px"
                     android:background="@drawable/shape_line" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20.0dip"
-                android:layout_marginLeft="20.0dip"
-                android:layout_marginRight="20.0dip"
-                android:layout_marginTop="10.0dip" >
-
-                <Button
-                    android:id="@+id/userinfo_save"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/op_bg_selector"
-                    android:text="确认修改"
-                    android:textColor="#ff000000"
-                    android:textSize="18.0sp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

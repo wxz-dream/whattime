@@ -43,28 +43,28 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
         ImageView userPhoto = (ImageView)v.findViewById(R.id.item_user_photo);
         
         ImageView item_add = (ImageView)v.findViewById(R.id.item_add);
-        if (user == null)
+        StringBuilder sb = new StringBuilder();
+        if (user != null)
         {
-            return null;
+            TextView item_createtime = (TextView)v.findViewById(R.id.item_createtime);
+            Calendar c = Calendar.getInstance(TimeZone.getDefault());
+            c.setTimeInMillis(alarm.getCreateTime());
+            
+            sb.append(user.getNickName())
+                .append(" * ")
+                .append(c.get(Calendar.YEAR))
+                .append("-")
+                .append(c.get(Calendar.MONTH) + 1)
+                .append("-")
+                .append(c.get(Calendar.DAY_OF_MONTH))
+                .append(" ")
+                .append(c.get(Calendar.HOUR_OF_DAY))
+                .append(":")
+                .append(SysUtil.doubleDataFormat(c.get(Calendar.MINUTE)));
+            item_createtime.setText(sb.toString());
         }
         TextView alarmTitle = (TextView)v.findViewById(R.id.item_alarm_title);
         alarmTitle.setText(alarm.getTitle());
-        TextView item_createtime = (TextView)v.findViewById(R.id.item_createtime);
-        Calendar c = Calendar.getInstance(TimeZone.getDefault());
-        c.setTimeInMillis(alarm.getCreateTime());
-        StringBuilder sb = new StringBuilder();
-        sb.append(user.getNickName())
-            .append(" * ")
-            .append(c.get(Calendar.YEAR))
-            .append("-")
-            .append(c.get(Calendar.MONTH) + 1)
-            .append("-")
-            .append(c.get(Calendar.DAY_OF_MONTH))
-            .append(" ")
-            .append(c.get(Calendar.HOUR_OF_DAY))
-            .append(":")
-            .append(SysUtil.doubleDataFormat(c.get(Calendar.MINUTE)));
-        item_createtime.setText(sb.toString());
         sb.setLength(0);
         TextView item_des = (TextView)v.findViewById(R.id.item_des);
         sb.append(alarm.getDes());

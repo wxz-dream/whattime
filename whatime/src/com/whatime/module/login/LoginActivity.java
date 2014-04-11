@@ -45,8 +45,6 @@ public class LoginActivity extends Activity implements Callback, OnClickListener
     
     private Button back;
     
-    private Button forget_passwd;
-    
     private Button regist;
     
     private Button login_login_btn;
@@ -112,7 +110,6 @@ public class LoginActivity extends Activity implements Callback, OnClickListener
         mUser = (EditText)findViewById(R.id.login_user_edit);
         mPassword = (EditText)findViewById(R.id.login_passwd_edit);
         back = (Button)findViewById(R.id.login_reback_btn);
-        forget_passwd = (Button)findViewById(R.id.forget_passwd);
         regist = (Button)findViewById(R.id.regist);
         login_login_btn = (Button)findViewById(R.id.login_btn);
         qq = (ImageView)findViewById(R.id.login_qq_bt);
@@ -126,7 +123,6 @@ public class LoginActivity extends Activity implements Callback, OnClickListener
         
         listener = new MyOnclickListener();
         back.setOnClickListener(listener);
-        forget_passwd.setOnClickListener(listener);
         regist.setOnClickListener(listener);
         login_login_btn.setOnClickListener(listener);
         qq.setOnClickListener(this);
@@ -183,15 +179,6 @@ public class LoginActivity extends Activity implements Callback, OnClickListener
                 case R.id.login_reback_btn:
                     LoginActivity.this.finish();
                     break;
-                case R.id.forget_passwd:
-                    if (MyApp.getInstance().getUser() == null)
-                    {
-                        Toast toast = Toast.makeText(LoginActivity.this, "请先注册", Toast.LENGTH_SHORT);
-                        ToastMaster.setToast(toast);
-                        toast.show();
-                    }
-                    break;
-                
                 case R.id.regist:
                     startActivity(new Intent(LoginActivity.this, RegistActivity.class));
                     LoginActivity.this.finish();

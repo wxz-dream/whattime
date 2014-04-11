@@ -31,6 +31,17 @@
             android:textColor="#ffffff"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/regist"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/title_btn_right"
+            android:text="@string/login_regist"
+            android:textColor="#fff"
+            android:textSize="14sp" />
     </RelativeLayout>
 
     <EditText
@@ -70,33 +81,11 @@
         android:layout_marginTop="20dp" >
 
         <Button
-            android:id="@+id/forget_passwd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="23dp"
-            android:layout_marginTop="5dp"
-            android:background="#0000"
-            android:text="@string/login_forget_passwd"
-            android:textColor="#00f"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/regist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="23dp"
-            android:layout_marginTop="5dp"
-            android:layout_toRightOf="@id/forget_passwd"
-            android:background="#0000"
-            android:text="@string/login_regist"
-            android:textColor="#00f"
-            android:textSize="18sp" />
-
-        <Button
             android:id="@+id/login_btn"
-            android:layout_width="90dp"
-            android:layout_height="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/btn_style_green"
             android:text="@string/login_label"
@@ -120,7 +109,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="25dp"
                 android:background="@drawable/login_editbox"
                 android:gravity="center"
                 android:text="@string/thrid_auth"

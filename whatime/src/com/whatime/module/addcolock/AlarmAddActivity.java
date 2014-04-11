@@ -454,6 +454,7 @@ public class AlarmAddActivity extends Activity
             mAlarm.setType(alarm_type);
             mAlarm.setEndTime(time.getTimeInMillis());
             mAlarm.setJoinNum(1l);
+            mAlarm.setAllowChange(true);
             User user = MyApp.getInstance().getUser();
             if (user != null)
             {
@@ -557,6 +558,11 @@ public class AlarmAddActivity extends Activity
                 t11.setDes("谨遵医嘱，按时服药。");
                 t11.setAlarmTime(AlarmUtil.getDrinkTime(18, 30));
                 DBHelper.getInstance().addTask(t11);
+                break;
+            case AlarmCons.TYPE_TASK:
+                mAlarm.setAllowChange(false);
+                mAlarm.setShare("0,1");
+                break;
             default:
                 break;
         }

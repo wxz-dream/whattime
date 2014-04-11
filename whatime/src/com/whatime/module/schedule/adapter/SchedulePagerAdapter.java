@@ -73,6 +73,8 @@ public class SchedulePagerAdapter extends PagerAdapter
     
     private View view;
     
+    private View lastView;
+    
     /**
      * 汉字转换成拼音的类
      */
@@ -148,7 +150,6 @@ public class SchedulePagerAdapter extends PagerAdapter
                 obj = clockView;
                 
                 break;
-            
             case 2:
                 view = LayoutInflater.from(context).inflate(R.layout.address_book_fragment, null);
                 TextView friendAdd = (TextView)view.findViewById(R.id.friendAdd);
@@ -160,6 +161,8 @@ public class SchedulePagerAdapter extends PagerAdapter
                         context.startActivity(new Intent(context, FriendAdd_.class));
                     }
                 });
+                container.removeView(lastView);
+                lastView = view;
                 container.addView(view, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 initViews();
                 obj = view;
