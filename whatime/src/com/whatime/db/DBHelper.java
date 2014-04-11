@@ -559,7 +559,7 @@ public class DBHelper
             qb1.where(com.whatime.db.TaskDao.Properties.AlarmId.eq(id),
                 com.whatime.db.TaskDao.Properties.AlarmTime.gt(System.currentTimeMillis()),
                 com.whatime.db.TaskDao.Properties.Del.eq(false),
-                com.whatime.db.TaskDao.Properties.Open.eq(true)).orderAsc(com.whatime.db.TaskDao.Properties.AlarmTime);
+                com.whatime.db.TaskDao.Properties.Open.eq(true)).orderDesc(com.whatime.db.TaskDao.Properties.AlarmTime);
             if (qb1.buildCount().count() > 0)
             {
                 return qb1.list().get(0);

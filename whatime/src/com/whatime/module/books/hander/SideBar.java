@@ -79,6 +79,9 @@ public class SideBar extends View {
 
 		switch (action) {
 		case MotionEvent.ACTION_UP:// 抬起 
+		case MotionEvent.ACTION_OUTSIDE:
+		case MotionEvent.ACTION_POINTER_UP:
+		case MotionEvent.ACTION_CANCEL:
 			setBackgroundDrawable(new ColorDrawable(0x00000000));
 			choose = -1;//
 			invalidate();
