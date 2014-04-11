@@ -75,9 +75,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
         // Disable this alarm if it does not repeat.
         long alertTime = alarm.getAlarmTime();
-        Log.e("xpf", "1="+alertTime);
-        controller.setNextAlert();
-        
         // Intentionally verbose: always log the alarm time to provide useful
         // information in bug reports.
         long now = System.currentTimeMillis();
@@ -147,6 +144,8 @@ public class AlarmReceiver extends BroadcastReceiver {
         // correct notification.
         NotificationManager nm = getNotificationManager(context);
         nm.notify(0, n);
+        Log.e("xpf", "1="+alertTime);
+        controller.setNextAlert();
     }
 
     private NotificationManager getNotificationManager(Context context) {

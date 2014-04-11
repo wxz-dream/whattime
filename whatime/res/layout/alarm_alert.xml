@@ -75,6 +75,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:padding="5dip"
+            android:lines="5"
             android:singleLine="true" />
 
         <ImageView

@@ -541,5 +541,19 @@ public class DBHelper
             .orderAsc(com.whatime.db.AlarmDao.Properties.AlarmTime);
         return qb.list();
     }
+
+    public Task getLastTaskByAlarmId(long id)
+    {
+        QueryBuilder<Task> qb = taskDao.queryBuilder();
+        qb.where(com.whatime.db.TaskDao.Properties.AlarmId.eq(id),
+            com.whatime.db.TaskDao.Properties.AlarmTime.lt(System.currentTimeMillis()),
+            com.whatime.db.TaskDao.Properties.Del.eq(false),
+            com.whatime.db.TaskDao.Properties.Open.eq(false)).orderDesc(com.whatime.db.TaskDao.Properties.AlarmTime);
+        if (qb.buildCount().count() > 0)
+        {
+            return qb.list().get(0);
+        }
+        return null;
+    }
     
 }

@@ -17,6 +17,7 @@
 package com.whatime.module.alert;
 
 import java.util.Calendar;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -195,7 +196,7 @@ public class AlarmAlertFullScreenActivity extends Activity
 
     private void setTitle()
     {
-        Task task = mAlarm.getTask();
+        Task task = DBHelper.getInstance().getLastTaskByAlarmId(mAlarm.getId());
         String label = "";
         if (task != null && task.getDes() != null)
         {
