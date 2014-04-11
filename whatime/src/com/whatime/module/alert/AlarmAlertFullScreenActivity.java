@@ -17,7 +17,6 @@
 package com.whatime.module.alert;
 
 import java.util.Calendar;
-import java.util.List;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -212,6 +211,11 @@ public class AlarmAlertFullScreenActivity extends Activity
         /* snooze behavior: pop a snooze confirmation view, kick alarm
            manager. */
         Button snooze = (Button)findViewById(R.id.snooze);
+        
+        if(mAlarm.getTasks().size()>1)
+        {
+            snooze.setVisibility(View.GONE);
+        }
         snooze.setOnClickListener(new Button.OnClickListener()
         {
             public void onClick(View v)

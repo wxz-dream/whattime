@@ -553,6 +553,18 @@ public class DBHelper
         {
             return qb.list().get(0);
         }
+        else
+        {
+            QueryBuilder<Task> qb1 = taskDao.queryBuilder();
+            qb1.where(com.whatime.db.TaskDao.Properties.AlarmId.eq(id),
+                com.whatime.db.TaskDao.Properties.AlarmTime.gt(System.currentTimeMillis()),
+                com.whatime.db.TaskDao.Properties.Del.eq(false),
+                com.whatime.db.TaskDao.Properties.Open.eq(true)).orderAsc(com.whatime.db.TaskDao.Properties.AlarmTime);
+            if (qb1.buildCount().count() > 0)
+            {
+                return qb1.list().get(0);
+            }
+        }
         return null;
     }
     
