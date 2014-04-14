@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -13,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 
 import com.whatime.R;
 import com.whatime.db.Alarm;
@@ -65,6 +68,16 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
                         {
                             listAdapter = new MyListAdapter(context, alarms.get(mPager.getCurrentItem()));
                             plv = (XListView)views.get(mPager.getCurrentItem());
+                            plv.setOnItemClickListener(new OnItemClickListener()
+                            {
+                                
+                                @Override
+                                public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+                                {
+                                    context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm",
+                                        alarms.get(mPager.getCurrentItem()).get((int)arg3)));
+                                }
+                            });
                             plv.setAdapter(listAdapter);
                         }
                     }
@@ -81,7 +94,7 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     }
     
     @Override
-    public Object instantiateItem(ViewGroup container, int position)
+    public Object instantiateItem(ViewGroup container, final int position)
     {
         if (position >= views.size())
         {
@@ -94,6 +107,16 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
             listAdapter = new MyListAdapter(context, alarms.get(position));
             plv.setAdapter(listAdapter);
             plv.setXListViewListener(this);
+            plv.setOnItemClickListener(new OnItemClickListener()
+            {
+                
+                @Override
+                public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+                {
+                    context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm",
+                        alarms.get(mPager.getCurrentItem()).get((int)arg3)));
+                }
+            });
             views.add(position, plv);
         }
         mPage = 0;
@@ -148,7 +171,8 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
         if (endC.getTimeInMillis() < endTime)
         {
             endC.setTimeInMillis(endTime);
-        }else
+        }
+        else
         {
             endC.setTimeInMillis(startC.getTimeInMillis());
         }

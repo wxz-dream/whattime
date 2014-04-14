@@ -1,5 +1,7 @@
 package com.whatime.db;
 
+import java.io.Serializable;
+
 import com.alibaba.fastjson.annotation.JSONField;
 import com.whatime.db.DaoSession;
 import de.greenrobot.dao.DaoException;
@@ -8,7 +10,11 @@ import de.greenrobot.dao.DaoException;
 /**
  * Entity mapped to table TASK.
  */
-public class Task {
+public class Task implements Serializable{
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     @JSONField (serialize= false)
     private Long id;
     private String uuid;

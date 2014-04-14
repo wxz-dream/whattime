@@ -827,4 +827,39 @@ public class RemoteApiImpl
             });
     }
     
+    public void joinAlarm(String alarmUuid, final Handler handler)
+    {
+        final Message msg = new Message();
+        final Bundle data = new Bundle();
+        msg.what = 0x001;
+        final User user = MyApp.getInstance().getUser();
+        RequestParams params = new RequestParams();
+        if (user != null)
+        {
+            params.addBodyParameter("userUuid", user.getUuid());
+            params.addBodyParameter("mime", user.getMime());
+        }
+        params.addBodyParameter("alarmUuid", alarmUuid);
+        HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.MARKET_GET_JOIN_ALARM_POST_URL),
+            params,
+            new MyRequestCallBack(msg, data, handler)
+            {
+                @Override
+                public void onSuccess(ResponseInfo<String> json)
+                {
+                    JSONObject response = JSON.parseObject(json.result);
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    int state = response.getInteger("state");
+                    String stateInfo = response.getString("stateInfo");
+                    data.putInt(ResponseCons.STATE, state);
+                    data.putString(ResponseCons.STATEINFO, stateInfo);
+                    msg.setData(data);
+                    handler.sendMessage(msg);
+                }
+            });
+    }
+    
 }

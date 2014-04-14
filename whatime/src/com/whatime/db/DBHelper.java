@@ -567,5 +567,16 @@ public class DBHelper
         }
         return null;
     }
+
+    public boolean isExist(String uuid)
+    {
+        QueryBuilder<Alarm> qb = alarmDao.queryBuilder();
+        qb.where(com.whatime.db.AlarmDao.Properties.OwerUuid.eq(uuid));
+        if (qb.buildCount().count() > 0)
+        {
+            return true;
+        }
+        return false;
+    }
     
 }

@@ -49,6 +49,8 @@ public class Constants
     
     public static final String MARKET_GET_SYNC_CATEGORY_POST_URL = "cate/getSyncCategory";
     
+    public static final String MARKET_GET_JOIN_ALARM_POST_URL = "userShareAlarm/joinAlarm";
+    
     //操作
     public static final String OPT = "OPT";
     

@@ -1,24 +1,38 @@
 package com.whatime.framework.ui.adapter;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whatime.R;
+import com.whatime.controller.center.AlarmController;
 import com.whatime.db.Alarm;
+import com.whatime.db.DBHelper;
+import com.whatime.db.Task;
 import com.whatime.db.User;
+import com.whatime.framework.application.MyApp;
+import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.network.service.RemoteApiImpl;
+import com.whatime.framework.ui.view.ToastMaster;
 import com.whatime.framework.util.SysUtil;
+import com.whatime.module.books.FriendInfo_;
+import com.whatime.module.login.LoginActivity;
 
 public class MyListAdapter extends BaseAdapter implements ListAdapter
 {
@@ -26,7 +40,27 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
     
     private List<Alarm> alarms;
     
-    private User user = null;
+    private List<User> users = new ArrayList<User>();
+    
+    private AlarmController controller = new AlarmController();
+    
+    private Handler handler = new Handler()
+    {
+        public void handleMessage(android.os.Message msg)
+        {
+            switch (msg.what)
+            {
+                case 0x001:
+                    int state = msg.getData().getInt(ResponseCons.STATE);
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        
+                        notifyDataSetChanged();
+                    }
+                    break;
+            }
+        };
+    };
     
     public MyListAdapter(Context context, List<Alarm> alarms)
     {
@@ -35,34 +69,83 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
     }
     
     @Override
-    public View getView(int i, View view, ViewGroup viewgroup)
+    public View getView(final int i, View view, ViewGroup viewgroup)
     {
-        Alarm alarm = alarms.get(i);
-        user = new RemoteApiImpl().getUserByUuid(alarm.getUserUuid());
+        final Alarm alarm = alarms.get(i);
+        final User user = new RemoteApiImpl().getUserByUuid(alarm.getUserUuid());
         View v = LayoutInflater.from(context).inflate(R.layout.market_item, null);
         ImageView userPhoto = (ImageView)v.findViewById(R.id.item_user_photo);
-        
+        userPhoto.setOnClickListener(new OnClickListener()
+        {
+            
+            @Override
+            public void onClick(View v)
+            {
+                if (user != null)
+                {
+                    context.startActivity(new Intent(context, FriendInfo_.class).putExtra("user", users.get(i)));
+                }
+            }
+        });
         ImageView item_add = (ImageView)v.findViewById(R.id.item_add);
+        if (DBHelper.getInstance().isExist(alarm.getUuid()))
+        {
+            item_add.setImageResource(R.drawable.added_live_clock);
+        }
+        else
+        {
+            item_add.setOnClickListener(new OnClickListener()
+            {
+                
+                @Override
+                public void onClick(View v)
+                {
+                    User me = MyApp.getInstance().getUser();
+                    if (me != null)
+                    {
+                        new RemoteApiImpl().joinAlarm(alarm.getUuid(), handler);
+                        List<Task> myTasks = alarm.getTasks();
+                        String uuid = UUID.randomUUID().toString();
+                        alarm.setUuid(uuid);
+                        DBHelper.getInstance().addAlarm(alarm);
+                        for (Task task : myTasks)
+                        {
+                            task.setAlarm(alarm);
+                            DBHelper.getInstance().addTask(task);
+                        }
+                        controller.addAlarm(alarm, handler);
+                    }
+                    else
+                    {
+                        Toast toast = Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT);
+                        ToastMaster.setToast(toast);
+                        toast.show();
+                        context.startActivity(new Intent(context, LoginActivity.class));
+                    }
+                }
+            });
+        }
         StringBuilder sb = new StringBuilder();
+        users.add(user);
+        TextView item_createtime = (TextView)v.findViewById(R.id.item_createtime);
+        Calendar c = Calendar.getInstance(TimeZone.getDefault());
+        c.setTimeInMillis(alarm.getCreateTime());
         if (user != null)
         {
-            TextView item_createtime = (TextView)v.findViewById(R.id.item_createtime);
-            Calendar c = Calendar.getInstance(TimeZone.getDefault());
-            c.setTimeInMillis(alarm.getCreateTime());
-            
-            sb.append(user.getNickName())
-                .append(" * ")
-                .append(c.get(Calendar.YEAR))
-                .append("-")
-                .append(c.get(Calendar.MONTH) + 1)
-                .append("-")
-                .append(c.get(Calendar.DAY_OF_MONTH))
-                .append(" ")
-                .append(c.get(Calendar.HOUR_OF_DAY))
-                .append(":")
-                .append(SysUtil.doubleDataFormat(c.get(Calendar.MINUTE)));
-            item_createtime.setText(sb.toString());
+            users.add(i, user);
+            sb.append(user.getNickName());
         }
+        sb.append(" * ")
+            .append(c.get(Calendar.YEAR))
+            .append("-")
+            .append(c.get(Calendar.MONTH) + 1)
+            .append("-")
+            .append(c.get(Calendar.DAY_OF_MONTH))
+            .append(" ")
+            .append(c.get(Calendar.HOUR_OF_DAY))
+            .append(":")
+            .append(SysUtil.doubleDataFormat(c.get(Calendar.MINUTE)));
+        item_createtime.setText(sb.toString());
         TextView alarmTitle = (TextView)v.findViewById(R.id.item_alarm_title);
         alarmTitle.setText(alarm.getTitle());
         sb.setLength(0);

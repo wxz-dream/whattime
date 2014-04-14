@@ -109,59 +109,59 @@ public class UserInfoActivity extends Activity
     {
         if (user != null)
         {
-            if (user.getUserphotoUri() != null && user.getUserphotoUri().length() > 0)
+            if (photoUri == null)
             {
-                photoUri = Uri.parse(user.getUserphotoUri());
-                Log.e("uri", photoUri.toString());
-                ContentResolver cr = this.getContentResolver();
-                try
+                if (user.getUserphotoUri() != null && user.getUserphotoUri().length() > 0)
                 {
-                    Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(photoUri));
-                    /* 将Bitmap设定到ImageView */
-                    photo_iv.setImageBitmap(bitmap);
-                }
-                catch (FileNotFoundException e)
-                {
-                    Log.e("Exception", e.getMessage(), e);
+                    photoUri = Uri.parse(user.getUserphotoUri());
+                    Log.e("uri", photoUri.toString());
                 }
             }
-            else
+            ContentResolver cr = this.getContentResolver();
+            try
             {
-                
+                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(photoUri));
+                /* 将Bitmap设定到ImageView */
+                photo_iv.setImageBitmap(bitmap);
             }
-            if(user.getUserName()!=null)
+            catch (FileNotFoundException e)
+            {
+                Log.e("Exception", e.getMessage(), e);
+            }
+            
+            if (user.getUserName() != null)
             {
                 userName.setText(user.getUserName());
             }
-            if(user.getNickName()!=null)
+            if (user.getNickName() != null)
             {
                 nickName.setText(user.getNickName());
             }
-            if(user.getSex()!=null)
+            if (user.getSex() != null)
             {
                 sex.setSelection(user.getSex());
             }
-            if(user.getEmail()!=null)
+            if (user.getEmail() != null)
             {
                 email.setText(user.getEmail());
             }
-            if(user.getRealName()!=null)
+            if (user.getRealName() != null)
             {
                 realName.setText(user.getRealName());
             }
-            if(user.getCity()!=null)
+            if (user.getCity() != null)
             {
                 city.setText(user.getCity());
             }
-            if(user.getTelphone()!=null)
+            if (user.getTelphone() != null)
             {
                 phone.setText(user.getTelphone());
             }
-            if(user.getIdentityCard()!=null)
+            if (user.getIdentityCard() != null)
             {
                 identityCard.setText(user.getIdentityCard());
             }
-            if(user.getQq()!=null)
+            if (user.getQq() != null)
             {
                 qq.setText(user.getQq());
             }
@@ -219,7 +219,7 @@ public class UserInfoActivity extends Activity
                     finish();
                     break;
                 case R.id.userinfo_save:
-                    if(photoUri!=null)
+                    if (photoUri != null)
                     {
                         user.setUserphotoUri(photoUri.toString());
                     }
@@ -245,7 +245,7 @@ public class UserInfoActivity extends Activity
             photoUri = data.getData();
             Log.e("uri", photoUri.toString());
             ContentResolver cr = this.getContentResolver();
-            try 
+            try
             {
                 Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(photoUri));
                 /* 将Bitmap设定到ImageView */
