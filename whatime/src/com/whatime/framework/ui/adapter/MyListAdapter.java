@@ -31,7 +31,7 @@ import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.view.ToastMaster;
 import com.whatime.framework.util.SysUtil;
-import com.whatime.module.books.FriendInfo_;
+import com.whatime.module.books.FriendInfoActivity_;
 import com.whatime.module.login.LoginActivity;
 
 public class MyListAdapter extends BaseAdapter implements ListAdapter
@@ -83,7 +83,7 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
             {
                 if (user != null)
                 {
-                    context.startActivity(new Intent(context, FriendInfo_.class).putExtra("user", users.get(i)));
+                    context.startActivity(new Intent(context, FriendInfoActivity_.class).putExtra("user", users.get(i)));
                 }
             }
         });
@@ -110,6 +110,7 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
                         DBHelper.getInstance().addAlarm(alarm);
                         for (Task task : myTasks)
                         {
+                            task.setUuid(UUID.randomUUID().toString());
                             task.setAlarm(alarm);
                             DBHelper.getInstance().addTask(task);
                         }

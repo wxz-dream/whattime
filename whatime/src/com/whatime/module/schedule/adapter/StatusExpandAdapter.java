@@ -182,6 +182,8 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
                             }
                             entity.setDel(true);
                             entity.setOpen(false);
+                            entity.setOwerUserUuid("");
+                            entity.setOwerUuid("");
                             controller.uptAlarm(entity,new Handler());
                             schedulePagerAdapter.notifyDataChange();
                         }

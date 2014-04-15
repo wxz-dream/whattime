@@ -18,7 +18,7 @@ import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.view.ToastMaster;
 
 @EActivity(R.layout.friend_add)
-public class FriendAdd extends Activity
+public class FriendAddActivity extends Activity
 {
     @ViewById
     EditText username;
@@ -36,12 +36,12 @@ public class FriendAdd extends Activity
                         User user = (User)msg.getData().getSerializable(ResponseCons.RESINFO);
                         if(user!=null)
                         {
-                            startActivity(new Intent(FriendAdd.this, FriendInfo_.class).putExtra("user", user));
+                            startActivity(new Intent(FriendAddActivity.this, FriendInfoActivity_.class).putExtra("user", user));
                             login_reback_btn();
                         }
                         else
                         {
-                            Toast toast = Toast.makeText(FriendAdd.this, "查无此人", Toast.LENGTH_SHORT);
+                            Toast toast = Toast.makeText(FriendAddActivity.this, "查无此人", Toast.LENGTH_SHORT);
                             ToastMaster.setToast(toast);
                             toast.show();
                         }

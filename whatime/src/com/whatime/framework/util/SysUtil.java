@@ -253,7 +253,7 @@ public class SysUtil
     {
         Context ctx = MyApp.getInstance().getApplicationContext();
         TelephonyManager mTm = (TelephonyManager) ctx.getSystemService(ctx.TELEPHONY_SERVICE);    
-        return mTm.getDeviceId();   
+        return mTm.getDeviceId()==null?"":mTm.getDeviceId();   
     }
     
 }

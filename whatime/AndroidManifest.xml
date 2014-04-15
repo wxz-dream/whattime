@@ -162,13 +162,19 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
         
         <activity
-            android:name="com.whatime.module.books.FriendAdd_"
+            android:name="com.whatime.module.books.FriendAddActivity_"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         
         <activity
-            android:name="com.whatime.module.books.FriendInfo_"
+            android:name="com.whatime.module.books.FriendInfoActivity_"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        
+        <activity
+            android:name="com.whatime.module.books.FriendReqActivity_"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />

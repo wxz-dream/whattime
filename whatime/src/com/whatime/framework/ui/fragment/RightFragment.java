@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.whatime.R;
 import com.whatime.db.User;
 import com.whatime.framework.application.MyApp;
+import com.whatime.module.books.FriendReqActivity_;
 import com.whatime.module.history.HistoryActivity_;
 import com.whatime.module.login.LoginActivity;
 import com.whatime.module.login.UserInfoActivity;
@@ -45,6 +46,8 @@ public class RightFragment extends Fragment
     private Context mContext;
     
     private TextView share_iv;
+    
+    private TextView friend_iv;
     
     private TextView history_iv;
     
@@ -80,10 +83,12 @@ public class RightFragment extends Fragment
         logedUI();
         login_iv.setOnClickListener(listener);
         share_iv = (TextView)view.findViewById(R.id.share_iv);
+        friend_iv = (TextView)view.findViewById(R.id.friend_iv);
         history_iv = (TextView)view.findViewById(R.id.history_iv);
         help_iv = (TextView)view.findViewById(R.id.help_iv);
         about_iv = (TextView)view.findViewById(R.id.about_iv);
         share_iv.setOnClickListener(listener);
+        friend_iv.setOnClickListener(listener);
         history_iv.setOnClickListener(listener);
         help_iv.setOnClickListener(listener);
         about_iv.setOnClickListener(listener);
@@ -124,6 +129,9 @@ public class RightFragment extends Fragment
                     break;
                 case R.id.share_iv:
                     startActivity(new Intent(mContext, AuthActivity.class));
+                    break;
+                case R.id.friend_iv:
+                    startActivity(new Intent(mContext, FriendReqActivity_.class));
                     break;
                 case R.id.history_iv:
                     startActivity(new Intent(mContext, HistoryActivity_.class));

@@ -49,7 +49,13 @@ public class Constants
     
     public static final String MARKET_GET_SYNC_CATEGORY_POST_URL = "cate/getSyncCategory";
     
-    public static final String MARKET_GET_JOIN_ALARM_POST_URL = "userShareAlarm/joinAlarm";
+    public static final String MARKET_JOIN_ALARM_POST_URL = "userShareAlarm/joinAlarm";
+    
+    public static final String MARKET_ADD_FRIEND_REQ_POST_URL = "friend/addFriendReq";
+    
+    public static final String MARKET_ADD_OPERA_FRIENDS_REQ_POST_URL = "friend/operaMyFriendReq";
+    
+    public static final String MARKET_ADD_FIND_FRIENDS_REQ_POST_URL = "friend/findMyAddFriendsReq";
     
     //操作
     public static final String OPT = "OPT";

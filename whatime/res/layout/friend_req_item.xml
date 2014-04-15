@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical" >
+
+        <ImageView
+            android:id="@+id/item_friend_photo"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/icon" />
+
+        <LinearLayout
+            android:id="@+id/item_right"
+            android:layout_width="70dip"
+            android:layout_height="50dip"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/firend_get"
+                style="@style/RedGreen"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:background="@drawable/common_btn_red"
+                android:text="接受"
+                android:textColor="#fff"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dip"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="5dip"
+            android:layout_toLeftOf="@id/item_right"
+            android:layout_toRightOf="@id/item_friend_photo"
+            android:gravity="center_vertical"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/item_friend_nickName"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="大佬王"
+                android:textColor="@color/black"
+                android:textSize="18dip" />
+
+            <TextView
+                android:id="@+id/item_friend_remark"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dip"
+                android:text="交个朋友吧"
+                android:textSize="12dip" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

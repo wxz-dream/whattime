@@ -378,8 +378,14 @@ public class AlarmServiceImpl implements AlarmService
             {
                 if (alarm.getShare() != null && alarm.getShare().length() > 0)
                 {
-                    alarm.setOwerUuid(alarm.getUuid());
-                    alarm.setOwerUserUuid(alarm.getUserUuid());
+                    if(alarm.getOwerUuid()==null)
+                    {
+                        alarm.setOwerUuid(alarm.getUuid());
+                    }
+                    if(alarm.getOwerUserUuid()==null)
+                    {
+                        alarm.setOwerUserUuid(alarm.getUserUuid());
+                    }
                     new RemoteApiImpl().alarmShareAdd(user, alarm, myHandler);
                 }
                 else
