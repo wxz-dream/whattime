@@ -29,9 +29,14 @@ import com.whatime.R;
 import com.whatime.controller.center.AlarmController;
 import com.whatime.db.Alarm;
 import com.whatime.db.DBHelper;
+import com.whatime.db.User;
+import com.whatime.framework.application.MyApp;
+import com.whatime.framework.network.pojo.ResponseCons;
+import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.view.ToastMaster;
 import com.whatime.framework.util.SysUtil;
 import com.whatime.module.books.FriendAddActivity_;
+import com.whatime.module.books.FriendInfoActivity_;
 import com.whatime.module.books.SortAdapter;
 import com.whatime.module.books.SortModel;
 import com.whatime.module.books.hander.CharacterParser;
@@ -82,6 +87,8 @@ public class SchedulePagerAdapter extends PagerAdapter
     
     private List<SortModel> SourceDateList;
     
+    private List<User> friends = new ArrayList<User>();
+    
     private AlarmController controller = new AlarmController();
     
     /**
@@ -107,6 +114,31 @@ public class SchedulePagerAdapter extends PagerAdapter
                     break;
             }
         };
+    };
+    
+    private Handler myHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            super.handleMessage(msg);
+            switch (msg.what)
+            {
+                case 0x001:
+                    int state = msg.getData().getInt(ResponseCons.STATE);
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        ArrayList list = msg.getData().getParcelableArrayList(ResponseCons.RESINFO);
+                        if(list!=null)
+                        {
+                            friends = (List<User>)list.get(0);
+                            MyApp.getInstance().setMyFriends(friends);
+                            initViews();
+                        }
+                    }
+                    break;
+            }
+        }
     };
     
     public SchedulePagerAdapter(int itemCount)
@@ -163,6 +195,7 @@ public class SchedulePagerAdapter extends PagerAdapter
                 });
                 container.removeView(lastView);
                 lastView = view;
+                new RemoteApiImpl().findMyFriends(myHandler);
                 container.addView(view, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
                 initViews();
                 obj = view;
@@ -408,45 +441,17 @@ public class SchedulePagerAdapter extends PagerAdapter
         sortListView = (ListView)view.findViewById(R.id.country_lvcountry);
         sortListView.setOnItemClickListener(new OnItemClickListener()
         {
-            
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                //这里要利用adapter.getItem(position)来获取当前position所对应的对象
-                Toast.makeText(context, ((SortModel)sortAdapter.getItem(position)).getName(), Toast.LENGTH_SHORT).show();
+                context.startActivity(new Intent(context,FriendInfoActivity_.class).putExtra("user", friends.get((int)id)));
             }
         });
-        
-        SourceDateList =
-            filledData(context.getResources().getStringArray(R.array.date),
-                context.getResources().getStringArray(R.array.img_src_data));
-        
+        SourceDateList =filledData(friends);
         // 根据a-z进行排序源数据
         Collections.sort(SourceDateList, pinyinComparator);
         sortAdapter = new SortAdapter(context, SourceDateList);
         sortListView.setAdapter(sortAdapter);
-        
-        //      mClearEditText = (ClearEditText) view.findViewById(R.id.filter_edit);
-        //      
-        //      //根据输入框输入值的改变来过滤搜索
-        //      mClearEditText.addTextChangedListener(new TextWatcher() {
-        //          
-        //          @Override
-        //          public void onTextChanged(CharSequence s, int start, int before, int count) {
-        //              //当输入框里面的值为空，更新为原来的列表，否则为过滤数据列表
-        //              filterData(s.toString());
-        //          }
-        //          
-        //          @Override
-        //          public void beforeTextChanged(CharSequence s, int start, int count,
-        //                  int after) {
-        //              
-        //          }
-        //          
-        //          @Override
-        //          public void afterTextChanged(Editable s) {
-        //          }
-        //      });
     }
     
     /**
@@ -454,17 +459,23 @@ public class SchedulePagerAdapter extends PagerAdapter
      * @param date
      * @return
      */
-    private List<SortModel> filledData(String[] date, String[] imgData)
+    private List<SortModel> filledData(List<User> friends)
     {
         List<SortModel> mSortList = new ArrayList<SortModel>();
         
-        for (int i = 0; i < date.length; i++)
+        for (int i = 0; i < friends.size(); i++)
         {
+            User firend = friends.get(i);
             SortModel sortModel = new SortModel();
-            sortModel.setImgSrc(imgData[i]);
-            sortModel.setName(date[i]);
+            
+            sortModel.setImgSrc(firend.getUserphotoUri());
+            sortModel.setName(firend.getNickName());
             //汉字转换成拼音
-            String pinyin = characterParser.getSelling(date[i]);
+            String pinyin = characterParser.getSelling(firend.getNickName());
+            if(pinyin.length()==0)
+            {
+                continue;
+            }
             String sortString = pinyin.substring(0, 1).toUpperCase();
             
             // 正则表达式，判断首字母是否是英文字母

@@ -74,8 +74,12 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
                                 @Override
                                 public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
                                 {
-                                    context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm",
-                                        alarms.get(mPager.getCurrentItem()).get((int)arg3)));
+                                    int position = (int)arg3;
+                                    if (position != -1)
+                                    {
+                                        context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm",
+                                            alarms.get(mPager.getCurrentItem()).get((int)arg3)));
+                                    }
                                 }
                             });
                             plv.setAdapter(listAdapter);
@@ -113,8 +117,12 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
                 @Override
                 public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
                 {
-                    context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm",
-                        alarms.get(mPager.getCurrentItem()).get((int)arg3)));
+                    int position = (int)arg3;
+                    if (position != -1)
+                    {
+                        context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm",
+                            alarms.get(mPager.getCurrentItem()).get((int)arg3)));
+                    }
                 }
             });
             views.add(position, plv);
@@ -178,7 +186,7 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
         }
         if (endC.getTimeInMillis() <= startC.getTimeInMillis())
         {
-            endC.set(Calendar.DAY_OF_YEAR, endC.get(Calendar.DAY_OF_YEAR) + 1);
+            endC.set(Calendar.DAY_OF_YEAR, endC.get(Calendar.DAY_OF_YEAR) + 31);
             endC.set(Calendar.HOUR_OF_DAY, 0);
             endC.set(Calendar.MINUTE, 0);
             endC.set(Calendar.SECOND, 0);

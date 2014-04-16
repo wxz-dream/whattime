@@ -494,9 +494,6 @@ public class RemoteApiImpl
      */
     public User getUserByUuid(String userUuid)
     {
-        final Message msg = new Message();
-        final Bundle data = new Bundle();
-        msg.what = 0x001;
         RequestParams params = new RequestParams();
         params.addBodyParameter("userUuid", userUuid);
         String json = HttpSycnUtil.post(HttpSycnUtil.getUrl(Constants.GET_USER_BY_UUID_POST_URL), params);
@@ -507,9 +504,6 @@ public class RemoteApiImpl
             return user;
         }
         int state = response.getInteger("state");
-        String stateInfo = response.getString("stateInfo");
-        data.putInt(ResponseCons.STATE, state);
-        data.putString(ResponseCons.STATEINFO, stateInfo);
         if (state == ResponseCons.STATE_SUCCESS)
         {
             if (response.containsKey("resInfo"))
@@ -665,6 +659,7 @@ public class RemoteApiImpl
             
         });
     }
+    
     /**
      * 修改提醒
      * @param json
@@ -713,6 +708,7 @@ public class RemoteApiImpl
             
         }
     }
+    
     /**
      * 获取同步分类
      * @param uuid
@@ -758,6 +754,7 @@ public class RemoteApiImpl
                 }
             });
     }
+    
     /**
      * 获取商城提醒集合
      * @param handler
@@ -816,6 +813,7 @@ public class RemoteApiImpl
                 }
             });
     }
+    
     /**
      * 根据userName获取用户信息
      * @param userName
@@ -863,6 +861,7 @@ public class RemoteApiImpl
                 }
             });
     }
+    
     /**
      * 参加一个活动
      * @param alarmUuid
@@ -881,27 +880,27 @@ public class RemoteApiImpl
             params.addBodyParameter("mime", user.getMime());
         }
         params.addBodyParameter("alarmUuid", alarmUuid);
-        HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.MARKET_JOIN_ALARM_POST_URL),
-            params,
-            new MyRequestCallBack(msg, data, handler)
+        HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.MARKET_JOIN_ALARM_POST_URL), params, new MyRequestCallBack(
+            msg, data, handler)
+        {
+            @Override
+            public void onSuccess(ResponseInfo<String> json)
             {
-                @Override
-                public void onSuccess(ResponseInfo<String> json)
+                JSONObject response = JSON.parseObject(json.result);
+                if (response == null)
                 {
-                    JSONObject response = JSON.parseObject(json.result);
-                    if (response == null)
-                    {
-                        return;
-                    }
-                    int state = response.getInteger("state");
-                    String stateInfo = response.getString("stateInfo");
-                    data.putInt(ResponseCons.STATE, state);
-                    data.putString(ResponseCons.STATEINFO, stateInfo);
-                    msg.setData(data);
-                    handler.sendMessage(msg);
+                    return;
                 }
-            });
+                int state = response.getInteger("state");
+                String stateInfo = response.getString("stateInfo");
+                data.putInt(ResponseCons.STATE, state);
+                data.putString(ResponseCons.STATEINFO, stateInfo);
+                msg.setData(data);
+                handler.sendMessage(msg);
+            }
+        });
     }
+    
     /**
      * 添加好友申请
      * @param uuid
@@ -943,6 +942,7 @@ public class RemoteApiImpl
                 }
             });
     }
+    
     /**
      * 操作好友申请
      * @param friendReqUuid
@@ -950,7 +950,7 @@ public class RemoteApiImpl
      * @param uuid
      * @param handler
      */
-    public void operaMyFriendReq(int access,String uuid,final Handler handler)
+    public void operaMyFriendReq(int access, String uuid, final Handler handler)
     {
         final Message msg = new Message();
         final Bundle data = new Bundle();
@@ -985,6 +985,7 @@ public class RemoteApiImpl
                 }
             });
     }
+    
     /**
      * 获取好友申请集合
      * @param handler
@@ -1025,6 +1026,135 @@ public class RemoteApiImpl
                             ArrayList list = new ArrayList();
                             List<FriendReq> reqs = JSONArray.parseArray(resInfo, FriendReq.class);
                             list.add(reqs);
+                            data.putParcelableArrayList(ResponseCons.RESINFO, list);
+                        }
+                    }
+                    msg.setData(data);
+                    handler.sendMessage(msg);
+                }
+            });
+    }
+    
+    /**
+     * 获取好友列表
+     * @param handler
+     */
+    public void findMyFriends(final Handler handler)
+    {
+        final Message msg = new Message();
+        final Bundle data = new Bundle();
+        msg.what = 0x001;
+        final User user = MyApp.getInstance().getUser();
+        RequestParams params = new RequestParams();
+        if (user != null)
+        {
+            params.addBodyParameter("userUuid", user.getUuid());
+            params.addBodyParameter("mime", user.getMime());
+        }
+        HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.MARKET_ADD_FIND_MY_FRIENDS_POST_URL),
+            params,
+            new MyRequestCallBack(msg, data, handler)
+            {
+                @Override
+                public void onSuccess(ResponseInfo<String> json)
+                {
+                    JSONObject response = JSON.parseObject(json.result);
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    int state = response.getInteger("state");
+                    String stateInfo = response.getString("stateInfo");
+                    data.putInt(ResponseCons.STATE, state);
+                    data.putString(ResponseCons.STATEINFO, stateInfo);
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        if (response.containsKey("resInfo"))
+                        {
+                            String resInfo = response.getString("resInfo");
+                            ArrayList list = new ArrayList();
+                            List<User> reqs = JSONArray.parseArray(resInfo, User.class);
+                            list.add(reqs);
+                            data.putParcelableArrayList(ResponseCons.RESINFO, list);
+                        }
+                    }
+                    msg.setData(data);
+                    handler.sendMessage(msg);
+                }
+            });
+    }
+    /**
+     * 获取好友列表同步接口
+     * @return
+     */
+    public List<User> findMyFriends()
+    {
+        final User user = MyApp.getInstance().getUser();
+        RequestParams params = new RequestParams();
+        if (user != null)
+        {
+            params.addBodyParameter("userUuid", user.getUuid());
+            params.addBodyParameter("mime", user.getMime());
+        }
+        String json = HttpSycnUtil.post(HttpSycnUtil.getUrl(Constants.MARKET_ADD_FIND_MY_FRIENDS_POST_URL), params);
+        JSONObject response = JSON.parseObject(json);
+        List<User> friends = new ArrayList<User>();
+        if (response == null)
+        {
+            return friends;
+        }
+        int state = response.getInteger("state");
+        if (state == ResponseCons.STATE_SUCCESS)
+        {
+            if (response.containsKey("resInfo"))
+            {
+                String resInfo = response.getString("resInfo");
+                friends = JSONArray.parseArray(resInfo, User.class);
+            }
+        }
+        return friends;
+    }
+
+    public void getManAlarm(final Handler handler,String userUuid, long startTime, long endTime, int page)
+    {
+        final Message msg = new Message();
+        final Bundle data = new Bundle();
+        msg.what = 0x002;
+        final User user = MyApp.getInstance().getUser();
+        RequestParams params = new RequestParams();
+        if (user != null)
+        {
+            params.addBodyParameter("userUuid", user.getUuid());
+            params.addBodyParameter("mime", user.getMime());
+        }
+        params.addBodyParameter("manUuid", userUuid);
+        params.addBodyParameter("startTime", String.valueOf(startTime));
+        params.addBodyParameter("endTime", String.valueOf(endTime));
+        params.addBodyParameter("page", String.valueOf(page));
+        HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.MARKET_GET_MAN_ALARM_POST_URL),
+            params,
+            new MyRequestCallBack(msg, data, handler)
+            {
+                @Override
+                public void onSuccess(ResponseInfo<String> json)
+                {
+                    JSONObject response = JSON.parseObject(json.result);
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    int state = response.getInteger("state");
+                    String stateInfo = response.getString("stateInfo");
+                    data.putInt(ResponseCons.STATE, state);
+                    data.putString(ResponseCons.STATEINFO, stateInfo);
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        if (response.containsKey("resInfo"))
+                        {
+                            String resInfo = response.getString("resInfo");
+                            ArrayList list = new ArrayList();
+                            List<Alarm> alarms = JSONArray.parseArray(resInfo, Alarm.class);
+                            list.add(alarms);
                             data.putParcelableArrayList(ResponseCons.RESINFO, list);
                         }
                     }

@@ -1,6 +1,7 @@
 package com.whatime.framework.util;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -11,6 +12,7 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 
 import com.whatime.R;
+import com.whatime.db.User;
 import com.whatime.framework.application.MyApp;
 
 public class SysUtil
@@ -29,6 +31,7 @@ public class SysUtil
         final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return (networkInfo != null && networkInfo.isAvailable());
     }
+    
     /**
      * 判断是否具有wifi连接
      * @param context
@@ -186,7 +189,7 @@ public class SysUtil
         return ret.toString();
     }
     
-    public static long getTime(int year,int month,int day,int hour,int minute,int second)
+    public static long getTime(int year, int month, int day, int hour, int minute, int second)
     {
         Calendar c = Calendar.getInstance(TimeZone.getDefault()); //获取东八区时间
         int mYear = c.get(Calendar.YEAR);
@@ -195,12 +198,12 @@ public class SysUtil
         int mHour = c.get(Calendar.HOUR_OF_DAY);
         int mMinute = c.get(Calendar.MINUTE);
         int mSecond = c.get(Calendar.SECOND);
-        year=year==-1?mYear:year;
-        month=month==-1?mMonth:month;
-        day=day==-1?mDay:day;
-        hour=hour==-1?mHour:hour;
-        minute=minute==-1?mMinute:minute;
-        second=second==-1?mSecond:second;
+        year = year == -1 ? mYear : year;
+        month = month == -1 ? mMonth : month;
+        day = day == -1 ? mDay : day;
+        hour = hour == -1 ? mHour : hour;
+        minute = minute == -1 ? mMinute : minute;
+        second = second == -1 ? mSecond : second;
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, day);
@@ -209,6 +212,7 @@ public class SysUtil
         c.set(Calendar.SECOND, second);
         return c.getTimeInMillis();
     }
+    
     /**
      * 获取客户端手机信息
      * @return
@@ -217,9 +221,9 @@ public class SysUtil
     {
         Context ctx = MyApp.getInstance().getApplicationContext();
         StringBuilder info = new StringBuilder();
-        TelephonyManager mTm = (TelephonyManager) ctx.getSystemService(ctx.TELEPHONY_SERVICE);    
-        String imei = mTm.getDeviceId();    
-        String imsi = mTm.getSubscriberId();    
+        TelephonyManager mTm = (TelephonyManager)ctx.getSystemService(ctx.TELEPHONY_SERVICE);
+        String imei = mTm.getDeviceId();
+        String imsi = mTm.getSubscriberId();
         String mtype = android.os.Build.MODEL; // 手机型号    
         String numer = mTm.getLine1Number(); // 手机号码，有的可得，有的不可得
         int sdk = android.os.Build.VERSION.SDK_INT;
@@ -234,17 +238,33 @@ public class SysUtil
         String operator = mTm.getNetworkOperatorName();
         sb.append(operator);
         
-        info.append("IMEI:").append(imei).append("*;*")
-        .append("IMSI:").append(imsi).append("*;*")
-        .append("MTYPE:").append(mtype).append("*;*")
-        .append("NUMER:").append(numer).append("*;*")
-        .append("SDK:").append(sdk).append("*;*")
-        .append("LANGUAGE:").append(language).append("*;*")
-        .append("COUNTRY:").append(country).append("*;*")
-        .append("OPERATOR:").append(sb.toString()).append("*;*")
-        ;
+        info.append("IMEI:")
+            .append(imei)
+            .append("*;*")
+            .append("IMSI:")
+            .append(imsi)
+            .append("*;*")
+            .append("MTYPE:")
+            .append(mtype)
+            .append("*;*")
+            .append("NUMER:")
+            .append(numer)
+            .append("*;*")
+            .append("SDK:")
+            .append(sdk)
+            .append("*;*")
+            .append("LANGUAGE:")
+            .append(language)
+            .append("*;*")
+            .append("COUNTRY:")
+            .append(country)
+            .append("*;*")
+            .append("OPERATOR:")
+            .append(sb.toString())
+            .append("*;*");
         return info.toString();
     }
+    
     /**
      * 获取mime
      * @return
@@ -252,8 +272,31 @@ public class SysUtil
     public static String getMime()
     {
         Context ctx = MyApp.getInstance().getApplicationContext();
-        TelephonyManager mTm = (TelephonyManager) ctx.getSystemService(ctx.TELEPHONY_SERVICE);    
-        return mTm.getDeviceId()==null?"":mTm.getDeviceId();   
+        TelephonyManager mTm = (TelephonyManager)ctx.getSystemService(ctx.TELEPHONY_SERVICE);
+        return mTm.getDeviceId() == null ? "" : mTm.getDeviceId();
+    }
+    
+    /**
+     * 判断用户是否为好友
+     * @param uuid
+     * @return
+     */
+    public static boolean isFriends(String uuid)
+    {
+        List<User> myFriends = MyApp.getInstance().getMyFriends();
+        User me = MyApp.getInstance().getUser();
+        if (me != null && me.getUuid().equals(uuid))
+        {
+            return true;
+        }
+        for (User u : myFriends)
+        {
+            if (u.getUuid().equals(uuid))
+            {
+                return true;
+            }
+        }
+        return false;
     }
     
 }

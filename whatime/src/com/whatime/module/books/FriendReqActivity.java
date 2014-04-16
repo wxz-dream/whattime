@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.whatime.R;
+import com.whatime.framework.application.MyApp;
 import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.view.MyListView;
@@ -58,6 +59,7 @@ public class FriendReqActivity extends Activity
                         if(list!=null)
                         {
                             reqs = (List<FriendReq>)list.get(0);
+                            firend_req_lv.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
                         }
                     }

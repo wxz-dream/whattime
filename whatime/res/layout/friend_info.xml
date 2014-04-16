@@ -33,78 +33,81 @@
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:background="@drawable/shape_bg"
         android:layout_below="@id/login_top_layout"
-        android:fillViewport="true" >
+        android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginRight="10.0dip"
+            android:layout_marginTop="5.0dip"
             android:background="@drawable/shape_bg"
             android:orientation="vertical" >
 
             <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginLeft="10.0dip"
-                android:layout_marginRight="10.0dip"
-                android:layout_marginTop="5.0dip"
-                android:background="@drawable/shape_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="5dip"
+                android:layout_marginRight="5dip"
+                android:layout_marginTop="10dip"
+                android:background="@drawable/common_strip_setting_middle"
+                android:gravity="center"
                 android:orientation="vertical" >
 
-                <LinearLayout
+                <ImageView
+                    android:id="@+id/login_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip"
+                    android:src="@drawable/avatar_default" />
+
+                <TextView
+                    android:id="@+id/nick_name"
+                    style="@style/B4_Font_white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginLeft="5dip"
-                    android:layout_marginRight="5dip"
-                    android:layout_marginTop="10dip"
-                    android:background="@drawable/common_strip_setting_middle"
+                    android:layout_gravity="center"
                     android:gravity="center"
-                    android:orientation="vertical" >
-
-                    <ImageView
-                        android:id="@+id/login_iv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dip"
-                        android:src="@drawable/avatar_default" />
-
-                    <TextView
-                        android:id="@+id/nick_name"
-                        style="@style/B4_Font_white"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="昵称"
-                        android:textSize="20sp" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="1.0px"
-                    android:background="@drawable/shape_line" />
-
-                <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent" >
-
-                    <Button
-                        android:id="@+id/add_friend"
-                        style="@style/RedGreen"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20.0dip"
-                        android:layout_marginTop="10.0dip"
-                        android:background="@drawable/login_editbox"
-                        android:text="添加好友"
-                        android:textColor="@color/blue" />
-                </LinearLayout>
+                    android:text="昵称"
+                    android:textSize="20sp" />
             </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1.0px"
+                android:background="@drawable/shape_line" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <Button
+                    android:id="@+id/add_friend"
+                    style="@style/RedGreen"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:background="@drawable/login_editbox"
+                    android:text="添加好友"
+                    android:textColor="@color/blue" />
+            </LinearLayout>
+
+            <com.whatime.framework.ui.pull.XListView
+                android:id="@+id/friend_alarm_lv"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="2dip"
+                android:layout_marginRight="2dip"
+                android:cacheColorHint="#00000000" >
+            </com.whatime.framework.ui.pull.XListView>
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
 </RelativeLayout>

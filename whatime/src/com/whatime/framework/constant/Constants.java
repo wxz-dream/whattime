@@ -57,6 +57,10 @@ public class Constants
     
     public static final String MARKET_ADD_FIND_FRIENDS_REQ_POST_URL = "friend/findMyAddFriendsReq";
     
+    public static final String MARKET_ADD_FIND_MY_FRIENDS_POST_URL = "friend/findMyFriends";
+    
+    public static final String MARKET_GET_MAN_ALARM_POST_URL = "market/getManAlarm";
+    
     //操作
     public static final String OPT = "OPT";
     

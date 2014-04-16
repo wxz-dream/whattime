@@ -207,11 +207,9 @@ public class UserInfoActivity extends Activity
             switch (v.getId())
             {
                 case R.id.photo_iv:
-                    Intent intent = new Intent();
-                    /* 开启Pictures画面Type设定为image */
-                    intent.setType("image/*");
-                    /* 使用Intent.ACTION_GET_CONTENT这个Action */
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    Intent intent =
+                        new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    
                     /* 取得相片后返回本画面 */
                     startActivityForResult(intent, 1);
                     break;
