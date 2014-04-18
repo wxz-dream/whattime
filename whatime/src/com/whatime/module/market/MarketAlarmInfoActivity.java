@@ -182,7 +182,10 @@ public class MarketAlarmInfoActivity extends Activity
         market_alarm_des.setText(mAlarm.getDes());
         adapter = new MyAdapter();
         market_task_lv.setAdapter(adapter);
-        market_alarm_cate.setText(DBHelper.getInstance().getcaById(mAlarm.getCateId()).getName());
+        if(mAlarm.getCateId()!=null)
+        {
+            market_alarm_cate.setText(DBHelper.getInstance().getcaById(mAlarm.getCateId()).getName());
+        }
         market_alarm_scope.setText(mAlarm.getScope());
         market_alarm_linkman.setText("");
         

@@ -125,9 +125,13 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
         
         GroupViewHolder holder = new GroupViewHolder();
         
-        if (convertView == null||oneList.size()==0)
+        if (convertView == null)
         {
             convertView = inflater.inflate(R.layout.one_status_item, null);
+        }
+        if(oneList.size()==0)
+        {
+            return convertView;
         }
         holder.groupName = (TextView)convertView.findViewById(R.id.one_status_name);
         holder.group_tiao = (TextView)convertView.findViewById(R.id.group_tiao);

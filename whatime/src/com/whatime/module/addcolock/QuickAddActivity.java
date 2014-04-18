@@ -170,7 +170,7 @@ public class QuickAddActivity extends Activity
     private void initGdHd()
     {
         ArrayList<GVData> ls = new ArrayList<GVData>();
-        ls.add(new GVData(0, "多人活动", R.drawable.quick_alarm));
+        ls.add(new GVData(0, "多人活动", R.drawable.huodong_alarm));
         gridHd = (MyGridView)findViewById(R.id.alarm_type_hd);
         GdAdapter adapter = new GdAdapter(ls);
         gridHd.setAdapter(adapter);

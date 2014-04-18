@@ -1,5 +1,6 @@
 package com.whatime.framework.network.service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,17 +52,12 @@ public class RemoteApiImpl
     public void registUser(final String userName, final String password, final Handler handler)
     {
         RequestParams params = new RequestParams();
-        Resources r = MyApp.getInstance().getApplicationContext().getResources();
-        Uri uri =
-            Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + r.getResourcePackageName(R.drawable.icon) + "/"
-                + r.getResourceTypeName(R.drawable.icon) + "/" + r.getResourceEntryName(R.drawable.icon));
         final User user = new User();
         user.setUuid(UUID.randomUUID().toString());
         user.setUserName(userName);
         user.setPassword(MD5.GetMD5Code(password));
         user.setMime(SysUtil.getMime());
         user.setPhoneInfo(SysUtil.getPhoneInfo());
-        user.setUserphotoUri(uri.toString());
         user.setDel(false);
         user.setAvailable(false);
         params.addBodyParameter("user", JSON.toJSONString(user));
@@ -1156,6 +1152,97 @@ public class RemoteApiImpl
                             List<Alarm> alarms = JSONArray.parseArray(resInfo, Alarm.class);
                             list.add(alarms);
                             data.putParcelableArrayList(ResponseCons.RESINFO, list);
+                        }
+                    }
+                    msg.setData(data);
+                    handler.sendMessage(msg);
+                }
+            });
+    }
+
+    public void findUserFriendsAlarms(final Handler handler,long startTime, long endTime, int page)
+    {
+        final Message msg = new Message();
+        final Bundle data = new Bundle();
+        msg.what = 0x002;
+        final User user = MyApp.getInstance().getUser();
+        RequestParams params = new RequestParams();
+        if (user != null)
+        {
+            params.addBodyParameter("userUuid", user.getUuid());
+            params.addBodyParameter("mime", user.getMime());
+        }
+        params.addBodyParameter("startTime", String.valueOf(startTime));
+        params.addBodyParameter("endTime", String.valueOf(endTime));
+        params.addBodyParameter("page", String.valueOf(page));
+        HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.MARKET_FIND_FRIENDS_ALARMS_POST_URL),
+            params,
+            new MyRequestCallBack(msg, data, handler)
+            {
+                @Override
+                public void onSuccess(ResponseInfo<String> json)
+                {
+                    JSONObject response = JSON.parseObject(json.result);
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    int state = response.getInteger("state");
+                    String stateInfo = response.getString("stateInfo");
+                    data.putInt(ResponseCons.STATE, state);
+                    data.putString(ResponseCons.STATEINFO, stateInfo);
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        if (response.containsKey("resInfo"))
+                        {
+                            String resInfo = response.getString("resInfo");
+                            ArrayList list = new ArrayList();
+                            List<Alarm> alarms = JSONArray.parseArray(resInfo, Alarm.class);
+                            list.add(alarms);
+                            data.putParcelableArrayList(ResponseCons.RESINFO, list);
+                        }
+                    }
+                    msg.setData(data);
+                    handler.sendMessage(msg);
+                }
+            });
+    }
+
+    public void putUserPhotoFile(File photoFile,final Handler handler)
+    {
+        final Message msg = new Message();
+        final Bundle data = new Bundle();
+        msg.what = 0x003;
+        final User user = MyApp.getInstance().getUser();
+        RequestParams params = new RequestParams();
+        if (user != null)
+        {
+            params.addBodyParameter("userUuid", user.getUuid());
+            params.addBodyParameter("mime", user.getMime());
+        }
+        params.addBodyParameter("fileType", "img");
+        HttpAsycnUtil.putFile(HttpAsycnUtil.getUrl(Constants.SYSTEM_PUT_FILE_URL),
+            photoFile,
+            params,
+            new MyRequestCallBack(msg, data, handler)
+            {
+                @Override
+                public void onSuccess(ResponseInfo<String> json)
+                {
+                    JSONObject response = JSON.parseObject(json.result);
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    int state = response.getInteger("state");
+                    String stateInfo = response.getString("stateInfo");
+                    data.putInt(ResponseCons.STATE, state);
+                    data.putString(ResponseCons.STATEINFO, stateInfo);
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        if (response.containsKey("resInfo"))
+                        {
+                            
                         }
                     }
                     msg.setData(data);

@@ -23,7 +23,6 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.whatime.R;
 import com.whatime.controller.center.AlarmController;
@@ -33,6 +32,9 @@ import com.whatime.db.User;
 import com.whatime.framework.application.MyApp;
 import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.network.service.RemoteApiImpl;
+import com.whatime.framework.ui.adapter.MyListAdapter;
+import com.whatime.framework.ui.pull.XListView;
+import com.whatime.framework.ui.pull.XListView.IXListViewListener;
 import com.whatime.framework.ui.view.ToastMaster;
 import com.whatime.framework.util.SysUtil;
 import com.whatime.module.books.FriendAddActivity_;
@@ -44,8 +46,9 @@ import com.whatime.module.books.hander.ClearEditText;
 import com.whatime.module.books.hander.PinyinComparator;
 import com.whatime.module.books.hander.SideBar;
 import com.whatime.module.books.hander.SideBar.OnTouchingLetterChangedListener;
+import com.whatime.module.market.MarketAlarmInfoActivity_;
 
-public class SchedulePagerAdapter extends PagerAdapter
+public class SchedulePagerAdapter extends PagerAdapter implements IXListViewListener
 {
     
     public static final String PREFERENCES = "AlarmClock";
@@ -79,6 +82,18 @@ public class SchedulePagerAdapter extends PagerAdapter
     private View view;
     
     private View lastView;
+    
+    private XListView friend_alarm_lv;
+    
+    private MyListAdapter listAdapter;
+    
+    private List<Alarm> alarms = new ArrayList<Alarm>();
+    
+    private long startTime;
+    
+    private long endTime;
+    
+    private int mPage;
     
     /**
      * 汉字转换成拼音的类
@@ -122,20 +137,47 @@ public class SchedulePagerAdapter extends PagerAdapter
         public void handleMessage(Message msg)
         {
             super.handleMessage(msg);
+            int state = msg.getData().getInt(ResponseCons.STATE);
             switch (msg.what)
             {
                 case 0x001:
-                    int state = msg.getData().getInt(ResponseCons.STATE);
                     if (state == ResponseCons.STATE_SUCCESS)
                     {
                         ArrayList list = msg.getData().getParcelableArrayList(ResponseCons.RESINFO);
-                        if(list!=null)
+                        if (list != null)
                         {
                             friends = (List<User>)list.get(0);
                             MyApp.getInstance().setMyFriends(friends);
                             initViews();
                         }
                     }
+                    break;
+                case 0x002:
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        ArrayList list = msg.getData().getParcelableArrayList(ResponseCons.RESINFO);
+                        alarms = (List<Alarm>)list.get(0);
+                        if (alarms.size() > 0)
+                        {
+                            listAdapter = new MyListAdapter(context, alarms);
+                            friend_alarm_lv.setOnItemClickListener(new OnItemClickListener()
+                            {
+                                
+                                @Override
+                                public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+                                {
+                                    int position = (int)arg3;
+                                    if (position != -1)
+                                    {
+                                        context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm",
+                                            alarms.get(position)));
+                                    }
+                                }
+                            });
+                            friend_alarm_lv.setAdapter(listAdapter);
+                        }
+                    }
+                    onLoad();
                     break;
             }
         }
@@ -159,7 +201,7 @@ public class SchedulePagerAdapter extends PagerAdapter
                 //更新布局界面
                 mAlarmsList = (ExpandableListView)clockView.findViewById(R.id.expandlist);
                 getBars();
-                statusAdapter = new StatusExpandAdapter(this,context, bars);
+                statusAdapter = new StatusExpandAdapter(this, context, bars);
                 mAlarmsList.setAdapter(statusAdapter);
                 mAlarmsList.setGroupIndicator(null); // 去掉默认带的箭头
                 
@@ -201,11 +243,100 @@ public class SchedulePagerAdapter extends PagerAdapter
                 obj = view;
                 break;
             case 1:
+                onRefresh();
+                listAdapter = new MyListAdapter(context, alarms);
+                friend_alarm_lv = (XListView)LayoutInflater.from(context)
+                    .inflate(R.layout.layout_listview_in_viewpager, container, false);
+                friend_alarm_lv.setAdapter(listAdapter);
+                friend_alarm_lv.setXListViewListener(this);
+                friend_alarm_lv.setOnItemClickListener(new OnItemClickListener()
+                {
+                    
+                    @Override
+                    public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
+                    {
+                        int position = (int)arg3;
+                        if (position != -1)
+                        {
+                            context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm",
+                                alarms.get(position)));
+                        }
+                    }
+                });
+                container.addView(friend_alarm_lv, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+                obj = friend_alarm_lv;
             default:
                 break;
         }
         
         return obj;
+    }
+    
+
+    @Override
+    public void onRefresh()
+    {
+        Calendar startC = Calendar.getInstance(TimeZone.getDefault());
+        if (startC.getTimeInMillis() < startTime)
+        {
+            startC.setTimeInMillis(startTime);
+        }
+        Calendar endC = Calendar.getInstance(TimeZone.getDefault());
+        if (endC.getTimeInMillis() < endTime)
+        {
+            endC.setTimeInMillis(endTime);
+        }
+        else
+        {
+            endC.setTimeInMillis(startC.getTimeInMillis());
+        }
+        if (endC.getTimeInMillis() <= startC.getTimeInMillis())
+        {
+            endC.set(Calendar.DAY_OF_YEAR, endC.get(Calendar.DAY_OF_YEAR) + 365);
+            endC.set(Calendar.HOUR_OF_DAY, 0);
+            endC.set(Calendar.MINUTE, 0);
+            endC.set(Calendar.SECOND, 0);
+        }
+        startTime = startC.getTimeInMillis();
+        endTime = endC.getTimeInMillis();
+        new RemoteApiImpl().findUserFriendsAlarms(myHandler,
+            startTime,
+            endTime,
+            0);
+        myHandler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                onLoad();
+            }
+        }, 4000);
+    }
+    
+    @Override
+    public void onLoadMore()
+    {
+        new RemoteApiImpl().findUserFriendsAlarms(myHandler,
+            startTime,
+            endTime,
+            mPage++);
+        myHandler.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                onLoad();
+            }
+        }, 4000);
+        
+    }
+    
+    private void onLoad()
+    {
+        friend_alarm_lv.stopRefresh();
+        friend_alarm_lv.stopLoadMore();
+        friend_alarm_lv.setRefreshTime("刚刚");
+        
     }
     
     @Override
@@ -350,7 +481,7 @@ public class SchedulePagerAdapter extends PagerAdapter
             bars.add(new OneBar(month2_title, monthAlarms));
         }
         //本年
-        if(month.getTimeInMillis()<week.getTimeInMillis())
+        if (month.getTimeInMillis() < week.getTimeInMillis())
         {
             month = week;
         }
@@ -444,10 +575,11 @@ public class SchedulePagerAdapter extends PagerAdapter
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                context.startActivity(new Intent(context,FriendInfoActivity_.class).putExtra("user", friends.get((int)id)));
+                context.startActivity(new Intent(context, FriendInfoActivity_.class).putExtra("user",
+                    friends.get((int)id)));
             }
         });
-        SourceDateList =filledData(friends);
+        SourceDateList = filledData(friends);
         // 根据a-z进行排序源数据
         Collections.sort(SourceDateList, pinyinComparator);
         sortAdapter = new SortAdapter(context, SourceDateList);
@@ -472,7 +604,7 @@ public class SchedulePagerAdapter extends PagerAdapter
             sortModel.setName(firend.getNickName());
             //汉字转换成拼音
             String pinyin = characterParser.getSelling(firend.getNickName());
-            if(pinyin.length()==0)
+            if (pinyin.length() == 0)
             {
                 continue;
             }

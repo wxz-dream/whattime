@@ -1,17 +1,21 @@
 package com.whatime.module.login;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import android.app.Activity;
-import android.content.ContentResolver;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -21,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.BitmapUtils;
 import com.whatime.R;
 import com.whatime.db.User;
 import com.whatime.framework.application.MyApp;
@@ -30,8 +35,6 @@ import com.whatime.framework.ui.view.ToastMaster;
 
 public class UserInfoActivity extends Activity
 {
-    private Uri photoUri;
-    
     private ImageView photo_iv;
     
     private MyOnclickListener listener;
@@ -58,7 +61,11 @@ public class UserInfoActivity extends Activity
     
     private Button login_reback_btn;
     
+    private File photoFile;
+    
     private User user = MyApp.getInstance().getUser();
+    
+    private BitmapUtils bitmapUtils;
     
     private Handler myHandler = new Handler()
     {
@@ -93,6 +100,7 @@ public class UserInfoActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.userinfo);
+        bitmapUtils = new BitmapUtils(this);
         listener = new MyOnclickListener();
         initUi();
     }
@@ -109,26 +117,11 @@ public class UserInfoActivity extends Activity
     {
         if (user != null)
         {
-            if (photoUri == null)
+            // 加载网络图片
+            if (user.getUserphotoUri() != null)
             {
-                if (user.getUserphotoUri() != null && user.getUserphotoUri().length() > 0)
-                {
-                    photoUri = Uri.parse(user.getUserphotoUri());
-                    Log.e("uri", photoUri.toString());
-                }
+                bitmapUtils.display(photo_iv, user.getUserphotoUri());
             }
-            ContentResolver cr = this.getContentResolver();
-            try
-            {
-                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(photoUri));
-                /* 将Bitmap设定到ImageView */
-                photo_iv.setImageBitmap(bitmap);
-            }
-            catch (FileNotFoundException e)
-            {
-                Log.e("Exception", e.getMessage(), e);
-            }
-            
             if (user.getUserName() != null)
             {
                 userName.setText(user.getUserName());
@@ -198,6 +191,45 @@ public class UserInfoActivity extends Activity
         photo_iv.setOnClickListener(listener);
     }
     
+    /**
+     * 选择提示对话框
+     */
+    private void ShowPickDialog()
+    {
+        new AlertDialog.Builder(this).setTitle("设置头像...").setNegativeButton("相册", new DialogInterface.OnClickListener()
+        {
+            public void onClick(DialogInterface dialog, int which)
+            {
+                dialog.dismiss();
+                Intent intent =
+                    new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                
+                /* 取得相片后返回本画面 */
+                startActivityForResult(intent, 1);
+                
+            }
+        })
+            .setPositiveButton("拍照", new DialogInterface.OnClickListener()
+            {
+                public void onClick(DialogInterface dialog, int whichButton)
+                {
+                    dialog.dismiss();
+                    /**
+                     * 下面这句还是老样子，调用快速拍照功能，至于为什么叫快速拍照，大家可以参考如下官方
+                     * 文档，you_sdk_path/docs/guide/topics/media/camera.html
+                     * 我刚看的时候因为太长就认真看，其实是错的，这个里面有用的太多了，所以大家不要认为
+                     * 官方文档太长了就不看了，其实是错的，这个地方小马也错了，必须改正
+                     */
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    //下面这句指定调用相机拍照后的照片存储的路径
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "xiaoma.jpg")));
+                    startActivityForResult(intent, 2);
+                }
+            })
+            .show();
+    }
+    
     class MyOnclickListener implements OnClickListener
     {
         
@@ -207,20 +239,12 @@ public class UserInfoActivity extends Activity
             switch (v.getId())
             {
                 case R.id.photo_iv:
-                    Intent intent =
-                        new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    
-                    /* 取得相片后返回本画面 */
-                    startActivityForResult(intent, 1);
+                    ShowPickDialog();
                     break;
                 case R.id.login_reback_btn:
                     finish();
                     break;
                 case R.id.userinfo_save:
-                    if (photoUri != null)
-                    {
-                        user.setUserphotoUri(photoUri.toString());
-                    }
                     user.setNickName(nickName.getText().toString());
                     user.setSex(sex.getSelectedItemPosition());
                     user.setEmail(email.getText().toString());
@@ -230,6 +254,10 @@ public class UserInfoActivity extends Activity
                     user.setIdentityCard(identityCard.getText().toString());
                     user.setQq(qq.getText().toString());
                     new RemoteApiImpl().uptUserInfo(user, myHandler);
+                    if (photoFile != null)
+                    {
+                        new RemoteApiImpl().putUserPhotoFile(photoFile, myHandler);
+                    }
                     break;
             }
         }
@@ -238,22 +266,127 @@ public class UserInfoActivity extends Activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (resultCode == RESULT_OK)
+        switch (requestCode)
         {
-            photoUri = data.getData();
-            Log.e("uri", photoUri.toString());
-            ContentResolver cr = this.getContentResolver();
-            try
-            {
-                Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(photoUri));
-                /* 将Bitmap设定到ImageView */
-                photo_iv.setImageBitmap(bitmap);
-            }
-            catch (FileNotFoundException e)
-            {
-                Log.e("Exception", e.getMessage(), e);
-            }
+        // 如果是直接从相册获取
+            case 1:
+                if (data != null)
+                {
+                    startPhotoZoom(data.getData());
+                }
+                break;
+            // 如果是调用相机拍照时
+            case 2:
+                File temp = new File(Environment.getExternalStorageDirectory() + "/xiaoma.jpg");
+                startPhotoZoom(Uri.fromFile(temp));
+                break;
+            // 取得裁剪后的图片
+            case 3:
+                /**
+                 * 非空判断大家一定要验证，如果不验证的话，
+                 * 在剪裁之后如果发现不满意，要重新裁剪，丢弃
+                 * 当前功能时，会报NullException，小马只
+                 * 在这个地方加下，大家可以根据不同情况在合适的
+                 * 地方做判断处理类似情况
+                 * 
+                 */
+                if (data != null)
+                {
+                    setPicToView(data);
+                }
+                break;
+            default:
+                break;
+        
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+    
+    /**
+     * 裁剪图片方法实现
+     * @param uri
+     */
+    public void startPhotoZoom(Uri uri)
+    {
+        /*
+         * 至于下面这个Intent的ACTION是怎么知道的，大家可以看下自己路径下的如下网页
+         * yourself_sdk_path/docs/reference/android/content/Intent.html
+         * 直接在里面Ctrl+F搜：CROP ，之前小马没仔细看过，其实安卓系统早已经有自带图片裁剪功能,
+         * 是直接调本地库的，小马不懂C C++  这个不做详细了解去了，有轮子就用轮子，不再研究轮子是怎么
+         * 制做的了...吼吼
+         */
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        //下面这个crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 150);
+        intent.putExtra("outputY", 150);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, 3);
+    }
+    
+    /**
+     * 保存裁剪之后的图片数据
+     * @param picdata
+     */
+    private void setPicToView(Intent picdata)
+    {
+        Bundle extras = picdata.getExtras();
+        if (extras != null)
+        {
+            Bitmap photo = extras.getParcelable("data");
+            /**
+             * 下面注释的方法是将裁剪之后的图片以Base64Coder的字符方式上
+             * 传到服务器，QQ头像上传采用的方法跟这个类似
+             */
+            
+            /*ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            photo.compress(Bitmap.CompressFormat.JPEG, 60, stream);
+            
+            byte[] b = stream.toByteArray();
+            // 将图片流以字符串形式存储下来
+            
+            String tp = new String(Base64Coder.encodeLines(b));
+            *//**这个地方大家可以写下给服务器上传图片的实现，直接把tp直接上传就可以了，
+                                服务器处理的方法是服务器那边的事了，吼吼
+              
+                                如果下载到的服务器的数据还是以Base64Coder的形式的话，可以用以下方式转换
+                                为我们可以用的图片类型就OK啦...吼吼
+                                */
+            /*
+            Bitmap dBitmap = BitmapFactory.decodeFile(tp);
+            Drawable drawable = new BitmapDrawable(dBitmap);*/
+            File f = new File(Environment.getExternalStorageDirectory() + "/myPhoto.jpg");
+            FileOutputStream fOut = null;
+            try
+            {
+                f.createNewFile();
+                fOut = new FileOutputStream(f);
+            }
+            catch (Exception e1)
+            {
+            }
+            photo.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+            try
+            {
+                if(fOut!=null)
+                {
+                    fOut.flush();
+                    fOut.close();
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+            photoFile = f;
+            //photoUri = Uri.fromFile(new File(tp));
+            photo_iv.setImageBitmap(photo);
+        }
+    }
+    
 }

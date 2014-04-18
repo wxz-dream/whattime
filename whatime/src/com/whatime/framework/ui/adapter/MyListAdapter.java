@@ -153,6 +153,20 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
         TextView item_des = (TextView)v.findViewById(R.id.item_des);
         sb.append(alarm.getDes());
         item_des.setText(sb.toString());
+        TextView alarmTime = (TextView)v.findViewById(R.id.item_alarm_alarmTime);
+        Calendar alarmC = Calendar.getInstance(TimeZone.getDefault());
+        alarmC.setTimeInMillis(alarm.getAlarmTime());
+        StringBuilder alarmLabel = new StringBuilder()
+            .append(alarmC.get(Calendar.YEAR))
+            .append("-")
+            .append(alarmC.get(Calendar.MONTH) + 1)
+            .append("-")
+            .append(alarmC.get(Calendar.DAY_OF_MONTH))
+            .append(" ")
+            .append(alarmC.get(Calendar.HOUR_OF_DAY))
+            .append(":")
+            .append(SysUtil.doubleDataFormat(alarmC.get(Calendar.MINUTE)));
+        alarmTime.setText(alarmLabel);
         TextView joinNum = (TextView)v.findViewById(R.id.item_joinNum);
         joinNum.setText(String.valueOf(alarm.getJoinNum()));
         return v;
