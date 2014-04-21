@@ -15,6 +15,10 @@ public class ApkVersion implements Serializable
     private String version;
     
     private String url;
+    
+    private Long size;
+    
+    private String des;
 
     public String getUuid()
     {
@@ -45,7 +49,25 @@ public class ApkVersion implements Serializable
     {
         this.url = url;
     }
-    
-    
+
+    public Long getSize()
+    {
+        return size;
+    }
+
+    public void setSize(Long size)
+    {
+        this.size = size;
+    }
+
+    public String getDes()
+    {
+        return des;
+    }
+
+    public void setDes(String des)
+    {
+        this.des = des;
+    }
     
 }

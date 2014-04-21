@@ -112,6 +112,7 @@ public class MainActivity extends FragmentActivity implements IChangeFragment
             String serverVersion = version.getVersion();
             if (!myVersion.equals(serverVersion))
             {
+                Long size = version.getSize()/(1024*1024);
                 StringBuilder sb = new StringBuilder();
                 sb.append("当前版本： ")
                     .append(myVersion)
@@ -120,7 +121,10 @@ public class MainActivity extends FragmentActivity implements IChangeFragment
                     .append(serverVersion)
                     .append("\n")
                     .append("新版本大小： ")
-                    .append("");
+                    .append(size).append("MB")
+                    .append("\n")
+                    .append("更新信息： ")
+                    .append(version.getDes());
                 new AlertDialog.Builder(context).setTitle("发现新版本")
                     .setMessage(sb)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
