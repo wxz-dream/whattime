@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lidroid.xutils.BitmapUtils;
 import com.whatime.R;
 import com.whatime.db.User;
 import com.whatime.framework.application.MyApp;
@@ -57,6 +58,8 @@ public class RightFragment extends Fragment
     
     private MyOnclickListener listener;
     
+    private BitmapUtils bitmapUtils;
+    
     private User user = MyApp.getInstance().getUser();
     
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -64,6 +67,7 @@ public class RightFragment extends Fragment
         view = inflater.inflate(R.layout.right, null);
         mContext = inflater.getContext();
         listener = new MyOnclickListener();
+        bitmapUtils = new BitmapUtils(mContext);
         initUi();
         
         return view;
@@ -100,6 +104,7 @@ public class RightFragment extends Fragment
         if (user != null)
         {
             user_name.setText(user.getNickName());
+            bitmapUtils.display(login_iv, user.getUserphotoUri());
         }
     }
     
