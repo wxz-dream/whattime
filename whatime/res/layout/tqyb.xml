@@ -59,11 +59,4 @@
             android:id="@+id/content"
             layout="@layout/content_layout" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/test"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/weather_title" />
-
 </LinearLayout>

@@ -9,69 +9,69 @@ public class WeatherUtil
     {
         if (strIcon == null)
             return -1;
-        if ("a_0".equals(strIcon))
+        if ("0.gif".equals(strIcon))
             return R.drawable.a_0;
-        if ("a_1".equals(strIcon))
+        if ("1.gif".equals(strIcon))
             return R.drawable.a_1;
-        if ("a_2".equals(strIcon))
+        if ("2.gif".equals(strIcon))
             return R.drawable.a_2;
-        if ("a_3".equals(strIcon))
+        if ("3.gif".equals(strIcon))
             return R.drawable.a_3;
-        if ("a_4".equals(strIcon))
+        if ("4.gif".equals(strIcon))
             return R.drawable.a_4;
-        if ("a_5".equals(strIcon))
+        if ("5.gif".equals(strIcon))
             return R.drawable.a_5;
-        if ("a_6".equals(strIcon))
+        if ("6.gif".equals(strIcon))
             return R.drawable.a_6;
-        if ("a_7".equals(strIcon))
+        if ("7.gif".equals(strIcon))
             return R.drawable.a_7;
-        if ("a_8".equals(strIcon))
+        if ("8.gif".equals(strIcon))
             return R.drawable.a_8;
-        if ("a_9".equals(strIcon))
+        if ("9.gif".equals(strIcon))
             return R.drawable.a_9;
-        if ("a_10".equals(strIcon))
+        if ("10.gif".equals(strIcon))
             return R.drawable.a_10;
-        if ("a_11".equals(strIcon))
+        if ("11.gif".equals(strIcon))
             return R.drawable.a_11;
-        if ("a_12".equals(strIcon))
+        if ("12.gif".equals(strIcon))
             return R.drawable.a_12;
-        if ("a_13".equals(strIcon))
+        if ("13.gif".equals(strIcon))
             return R.drawable.a_13;
-        if ("a_14".equals(strIcon))
+        if ("14.gif".equals(strIcon))
             return R.drawable.a_14;
-        if ("a_15".equals(strIcon))
+        if ("15.gif".equals(strIcon))
             return R.drawable.a_15;
-        if ("a_16".equals(strIcon))
+        if ("16.gif".equals(strIcon))
             return R.drawable.a_16;
-        if ("a_17".equals(strIcon))
+        if ("17.gif".equals(strIcon))
             return R.drawable.a_17;
-        if ("a_18".equals(strIcon))
+        if ("18.gif".equals(strIcon))
             return R.drawable.a_18;
-        if ("a_19".equals(strIcon))
+        if ("19.gif".equals(strIcon))
             return R.drawable.a_19;
-        if ("a_20".equals(strIcon))
+        if ("20.gif".equals(strIcon))
             return R.drawable.a_20;
-        if ("a_21".equals(strIcon))
+        if ("21.gif".equals(strIcon))
             return R.drawable.a_21;
-        if ("a_22".equals(strIcon))
+        if ("22.gif".equals(strIcon))
             return R.drawable.a_22;
-        if ("a_23".equals(strIcon))
+        if ("23.gif".equals(strIcon))
             return R.drawable.a_23;
-        if ("a_24".equals(strIcon))
+        if ("24.gif".equals(strIcon))
             return R.drawable.a_24;
-        if ("a_25".equals(strIcon))
+        if ("25.gif".equals(strIcon))
             return R.drawable.a_25;
-        if ("a_26".equals(strIcon))
+        if ("26.gif".equals(strIcon))
             return R.drawable.a_26;
-        if ("a_27".equals(strIcon))
+        if ("27.gif".equals(strIcon))
             return R.drawable.a_27;
-        if ("a_28".equals(strIcon))
+        if ("28.gif".equals(strIcon))
             return R.drawable.a_28;
-        if ("a_29".equals(strIcon))
+        if ("29.gif".equals(strIcon))
             return R.drawable.a_29;
-        if ("a_30".equals(strIcon))
+        if ("30.gif".equals(strIcon))
             return R.drawable.a_30;
-        if ("a_31".equals(strIcon))
+        if ("31.gif".equals(strIcon))
             return R.drawable.a_31;
         return 0;
     }

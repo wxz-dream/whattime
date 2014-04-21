@@ -2,13 +2,11 @@ package com.whatime.module.market;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
 import net.simonvt.datepicker.DatePicker;
 import net.simonvt.datepicker.DatePickerDialog;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,10 +19,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -57,11 +55,7 @@ public class MarketFragment extends BaseMarketFragment
     
     private Spinner city_spinner;
     
-    private HashMap<String, String> pros;
-    
     private List<String> provinces;
-    
-    private HashMap<String, String> cts;
     
     private List<String> citys;
     
@@ -184,18 +178,13 @@ public class MarketFragment extends BaseMarketFragment
                     // 城市Spinner
                     city_spinner = (Spinner)selectView.findViewById(R.id.city_spinner);
                     // 省份列表
-                    pros = MyApp.getInstance().getProvince();
-                    provinces = new ArrayList<String>();
-                    for (String p : pros.keySet())
-                    {
-                        provinces.add(p);
-                    }
+                    provinces = MyApp.getInstance().getProvince();
                     ArrayAdapter adapter = new ArrayAdapter(mContext, android.R.layout.simple_spinner_item, provinces);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     no_scope = (CheckBox)selectView.findViewById(R.id.no_scope);
                     pro = (CheckBox)selectView.findViewById(R.id.pro);
                     ct = (CheckBox)selectView.findViewById(R.id.ct);
-                    
+                    final String scope = listViewPagerAdapter.getScope();
                     no_scope.setOnCheckedChangeListener(new MyOncheckListener());
                     pro.setOnCheckedChangeListener(new MyOncheckListener());
                     ct.setOnCheckedChangeListener(new MyOncheckListener());
@@ -207,16 +196,15 @@ public class MarketFragment extends BaseMarketFragment
                         @Override
                         public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3)
                         {
-                            cts = MyApp.getInstance().getCitys().get(pros.get(provinces.get(position)));
-                            citys = new ArrayList<String>();
-                            for (String c : cts.keySet())
-                            {
-                                citys.add(c);
-                            }
+                            citys = MyApp.getInstance().getCitys().get(provinces.get(position));
                             ArrayAdapter adapter1 =
                                 new ArrayAdapter(mContext, android.R.layout.simple_spinner_item, citys);
                             adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             city_spinner.setAdapter(adapter1);
+                            if (scope.contains("|"))
+                            {
+                                city_spinner.setSelection(citys.indexOf(scope.split("\\|")[1]));
+                            }
                         }
                         
                         @Override
@@ -299,7 +287,6 @@ public class MarketFragment extends BaseMarketFragment
                             dialog.dismiss();
                         }
                     });
-                    String scope = listViewPagerAdapter.getScope();
                     if (scope == null)
                     {
                         no_scope.setChecked(true);

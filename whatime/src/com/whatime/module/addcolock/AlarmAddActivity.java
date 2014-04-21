@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -178,11 +177,7 @@ public class AlarmAddActivity extends Activity
     
     private AlarmController controller = new AlarmController();
     
-    private HashMap<String, String> pros;
-    
     private List<String> provinces;
-    
-    private HashMap<String, String> cts;
     
     private List<String> citys;
     
@@ -692,18 +687,13 @@ public class AlarmAddActivity extends Activity
         city_spinner = (Spinner)view.findViewById(R.id.city_spinner);
         
         // 省份列表
-        pros = MyApp.getInstance().getProvince();
-        provinces = new ArrayList<String>();
-        for (String p : pros.keySet())
-        {
-            provinces.add(p);
-        }
+        provinces = MyApp.getInstance().getProvince();
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, provinces);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         no_scope = (CheckBox)view.findViewById(R.id.no_scope);
         pro = (CheckBox)view.findViewById(R.id.pro);
         ct = (CheckBox)view.findViewById(R.id.ct);
-        
+        final String scope = mAlarm.getScope();
         no_scope.setOnCheckedChangeListener(new MyOncheckListener());
         pro.setOnCheckedChangeListener(new MyOncheckListener());
         ct.setOnCheckedChangeListener(new MyOncheckListener());
@@ -715,16 +705,14 @@ public class AlarmAddActivity extends Activity
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3)
             {
-                cts = MyApp.getInstance().getCitys().get(pros.get(provinces.get(position)));
-                citys = new ArrayList<String>();
-                for (String c : cts.keySet())
-                {
-                    citys.add(c);
-                }
+                citys = MyApp.getInstance().getCitys().get(provinces.get(position));
                 ArrayAdapter adapter1 = new ArrayAdapter(context, android.R.layout.simple_spinner_item, citys);
                 adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 city_spinner.setAdapter(adapter1);
-                
+                if (scope.contains("|"))
+                {
+                    city_spinner.setSelection(citys.indexOf(scope.split("\\|")[1]));
+                }
             }
             
             @Override
@@ -771,7 +759,7 @@ public class AlarmAddActivity extends Activity
                 
             }
         });
-        String scope = mAlarm.getScope();
+        
         if (scope == null)
         {
             no_scope.setChecked(true);

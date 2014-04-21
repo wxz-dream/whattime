@@ -24,6 +24,21 @@ public class HttpSycnUtil
         }
         return "";
     }
+    public static String get(String urlString)
+    {
+        http.configCurrentHttpCacheExpiry(1000 * 20);
+        try
+        {
+            ResponseStream responseStream =
+                http.sendSync(HttpRequest.HttpMethod.GET, urlString);
+            return responseStream.readString();
+        }
+        catch (Exception e)
+        {
+        }
+        return "";
+    }
+    
     
     public static String getUrl(String action)
     {

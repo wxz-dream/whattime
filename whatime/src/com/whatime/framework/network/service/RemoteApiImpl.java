@@ -1253,6 +1253,7 @@ public class RemoteApiImpl
                 }
             });
     }
+    
     /**
      * 获取版本信息
      * @return
@@ -1284,8 +1285,14 @@ public class RemoteApiImpl
         }
         return null;
     }
-
-    public void getApk(String url,String path,final Handler handler)
+    
+    /**
+     * 获取更新
+     * @param url
+     * @param path
+     * @param handler
+     */
+    public void getApk(String url, String path, final Handler handler)
     {
         final Message msg = new Message();
         final Bundle data = new Bundle();
@@ -1297,8 +1304,7 @@ public class RemoteApiImpl
             params.addBodyParameter("userUuid", user.getUuid());
             params.addBodyParameter("mime", user.getMime());
         }
-        HttpAsycnUtil.getFile(url, path, params, new MyFileRequestCallBack(msg,
-            data, handler)
+        HttpAsycnUtil.getFile(url, path, params, new MyFileRequestCallBack(msg, data, handler)
         {
             
             @Override
@@ -1311,4 +1317,13 @@ public class RemoteApiImpl
         });
     }
     
+    public String getWeather(String code)
+    {
+        String json = "";
+        String url =
+            "http://api.map.baidu.com/telematics/v3/weather?location=" + code
+                + "&output=json&ak=s16vrbPCWHHjsHk5Cas7YjMN";
+        json = HttpSycnUtil.get(url);
+        return json;
+    }
 }

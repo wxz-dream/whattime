@@ -1,7 +1,7 @@
 package com.whatime.framework.application;
 
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import android.app.Application;
@@ -27,9 +27,9 @@ public class MyApp extends Application
     
     private static DaoSession daoSession;
     
-    private static HashMap<String, String> providers;
+    private static List<String> providers;
     
-    private static HashMap<String, HashMap<String, String>> citys;
+    private static HashMap<String, List<String>> citys;
     
     private static List<User> myFriends;
     
@@ -57,29 +57,29 @@ public class MyApp extends Application
         return instance;
     }
     
-    public synchronized HashMap<String, HashMap<String, String>> getCitys()
+    public synchronized HashMap<String, List<String>> getCitys()
     {
         if (citys == null || citys.size() == 0)
         {
-            citys = new HashMap<String, HashMap<String, String>>();
-            HashMap<String, String> ps = getProvince();
-            Iterator<String> it = ps.keySet().iterator();
-            while (it.hasNext())
+            citys = new HashMap<String, List<String>>();
+            List<String> ps = getProvince();
+            for(String pro: ps)
             {
-                String key = it.next();
-                HashMap<String, String> city = WebServiceUtil.getCityListByProvince(ps.get(key));
-                citys.put(ps.get(key), city);
+                List<String> city = WebServiceUtil.getCityListByProvince(pro);
+                Collections.sort(city);
+                citys.put(pro, city);
             }
         }
         
         return citys;
     }
     
-    public synchronized HashMap<String, String> getProvince()
+    public synchronized List<String> getProvince()
     {
         if (null == providers || providers.size() == 0)
         {
             providers = WebServiceUtil.getProvinceList();
+            Collections.sort(providers);
         }
         return providers;
     }

@@ -1,7 +1,8 @@
 package com.whatime.framework.ui.fragment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+
+import org.ksoap2.serialization.SoapObject;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -163,16 +164,15 @@ public class ScheduleBaseFragment extends BaseFragment
         protected String doInBackground(String... arg0)
         {
             String city = preference.getString("city", "北京");
-            String code = preference.getString("code", "101010200");
-            HashMap<String, String> detail = WebServiceUtil.getWeatherByCity(code);
+            SoapObject detail = WebServiceUtil.getWeatherByCity(city);
             try
             {
                 Message msg = new Message();
                 msg.what = 0x01;
                 Bundle data = new Bundle();
                 data.putString("city", city);
-                data.putInt("icon", WeatherUtil.parseIcon("a_" + detail.get("img1")));
-                data.putString("temperature", detail.get("temp1"));
+                data.putInt("icon", WeatherUtil.parseIcon(detail.getProperty(10).toString()));
+                data.putString("temperature", detail.getProperty(8).toString());
                 msg.setData(data);
                 handler.sendMessage(msg);
                 

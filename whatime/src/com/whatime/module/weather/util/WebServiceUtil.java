@@ -1,281 +1,155 @@
 package com.whatime.module.weather.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import android.util.Xml;
-
-import com.google.gson.stream.JsonReader;
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
 
 public class WebServiceUtil
 {
     
-    static final String SERVICE_PROVIDER = "http://flash.weather.com.cn/wmaps/xml/china.xml";
-    
-    static final String SERVICE_CITY = "http://flash.weather.com.cn/wmaps/xml/";
-    
-    static final String SERVICE_SEARCH = "http://m.weather.com.cn/data/";
-    
-    public static HashMap<String, String> providers;
-    
-    static class Provider
-    {
-        public String name;
-        
-        public String code;
-    }
-    
-    static class City
-    {
-        public String name;
-        
-        public String code;
-    }
-    
+ // 定义Web Service的命名空间
+    static final String SERVICE_NS = "http://WebXml.com.cn/";
+    // 定义Web Service提供服务的URL
+    static final String SERVICE_URL = "http://webservice.webxml.com.cn/WebServices/WeatherWS.asmx";
+
     /**
      * 获得州，国内外省份和城市信息
      * 
      * @return
      */
-    public static HashMap<String, String> getProvinceList()
+    public static List<String> getProvinceList()
     {
-        if (providers != null && providers.size() > 0)
-        {
-            return providers;
-        }
-        providers = new HashMap<String, String>();
-        HttpGet get = new HttpGet(SERVICE_PROVIDER);
-        HttpClient client = new DefaultHttpClient();
+
+        // 需要调用的方法名(获得本天气预报Web Services支持的洲、国内外省份和城市信息)
+        String methodName = "getRegionProvince";
+        // 创建HttpTransportSE传输对象
+        HttpTransportSE httpTranstation = new HttpTransportSE(SERVICE_URL);
+
+        httpTranstation.debug = true;
+        // 使用SOAP1.1协议创建Envelop对象
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        // 实例化SoapObject对象
+        SoapObject soapObject = new SoapObject(SERVICE_NS, methodName);
+        envelope.bodyOut = soapObject;
+        // 设置与.Net提供的Web Service保持较好的兼容性
+        envelope.dotNet = true;
         try
         {
-            HttpResponse response = client.execute(get);
-            HttpEntity entity = response.getEntity();
-            InputStream input = entity.getContent();
-            XmlPullParser parser = Xml.newPullParser();
-            parser.setInput(input, "utf-8");
-            int type = parser.getEventType();
-            while (type != XmlPullParser.END_DOCUMENT)
+            // 调用Web Service
+            httpTranstation.call(SERVICE_NS + methodName, envelope);
+            if (envelope.getResponse() != null)
             {
-                switch (type)
-                {
-                    case XmlPullParser.START_TAG:
-                        if (parser.getName().equals("city"))
-                        {
-                            Provider p = new Provider();
-                            for (int i = 0; i < parser.getAttributeCount(); i++)
-                            {
-                                
-                                if (parser.getAttributeName(i).equals("quName"))
-                                {
-                                    p.name = parser.getAttributeValue(i);
-                                }
-                                if (parser.getAttributeName(i).equals("pyName"))
-                                {
-                                    p.code = parser.getAttributeValue(i);
-                                }
-                                providers.put(p.name, p.code);
-                            }
-                        }
-                        break;
-                    case XmlPullParser.TEXT:
-                        break;
-                    case XmlPullParser.END_TAG:
-                        break;
-                    default:
-                        break;
-                }
-                type = parser.next();
+                // 获取服务器响应返回的SOAP消息
+                SoapObject result = (SoapObject) envelope.bodyIn;
+                SoapObject detail = (SoapObject) result.getProperty(methodName
+                        + "Result");
+                // 解析服务器响应的SOAP消息。
+                return parseProvinceOrCity(detail);
             }
-        }
-        catch (ClientProtocolException e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        catch (XmlPullParserException e)
-        {
-            e.printStackTrace();
-        }
-        return providers;
+
+        return null;
     }
-    
+
     /**
      * 根据省份获取城市列表
      * 
      * @param province
      * @return
      */
-    public static HashMap<String, String> getCityListByProvince(String code)
+    public static List<String> getCityListByProvince(String province)
     {
-        HashMap<String, String> cs = new HashMap<String, String>();
-        HttpGet get = new HttpGet(SERVICE_CITY + code + ".xml");
-        HttpClient client = new DefaultHttpClient();
+
+        // 需要调用的方法名(获得本天气预报Web Services支持的城市信息,根据省份查询城市集合：带参数)
+        String methodName = "getSupportCityString";
+        
+        HttpTransportSE httpTranstation = new HttpTransportSE(SERVICE_URL);
+        httpTranstation.debug = true;
+        
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+
+        SoapObject soapObject = new SoapObject(SERVICE_NS, methodName);
+        soapObject.addProperty("theRegionCode", province);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
         try
         {
-            HttpResponse response = client.execute(get);
-            HttpEntity entity = response.getEntity();
-            InputStream input = entity.getContent();
-            XmlPullParser parser = Xml.newPullParser();
-            parser.setInput(input, "utf-8");
-            int type = parser.getEventType();
-            while (type != XmlPullParser.END_DOCUMENT)
+            // 调用Web Service
+            httpTranstation.call(SERVICE_NS + methodName, envelope);
+            if (envelope.getResponse() != null)
             {
-                switch (type)
-                {
-                    case XmlPullParser.START_TAG:
-                        if (parser.getName().equals("city"))
-                        {
-                            City c = new City();
-                            for (int i = 0; i < parser.getAttributeCount(); i++)
-                            {
-                                if (parser.getAttributeName(i).equals("cityname"))
-                                {
-                                    c.name = parser.getAttributeValue(i);
-                                }
-                                if (parser.getAttributeName(i).equals("url"))
-                                {
-                                    c.code = parser.getAttributeValue(i);
-                                }
-                                if (c.name != null && !c.equals("null"))
-                                {
-                                    cs.put(c.name, c.code);
-                                }
-                            }
-                        }
-                        break;
-                    case XmlPullParser.TEXT:
-                        break;
-                    case XmlPullParser.END_TAG:
-                        break;
-                    default:
-                        break;
-                }
-                type = parser.next();
+                // 获取服务器响应返回的SOAP消息
+                SoapObject result = (SoapObject) envelope.bodyIn;
+                SoapObject detail = (SoapObject) result.getProperty(methodName
+                        + "Result");
+                // 解析服务器响应的SOAP消息。
+                return parseProvinceOrCity(detail);
             }
-        }
-        catch (ClientProtocolException e)
+        } catch (Exception e)
         {
+            e.printStackTrace();
         }
-        catch (IOException e)
-        {
-        }
-        catch (XmlPullParserException e)
-        {
-        }
-        return cs;
+
+        return null;
+
     }
-    
-    public static HashMap<String, String> getWeatherByCity(String code)
+
+    private static List<String> parseProvinceOrCity(SoapObject detail)
     {
-        InputStream input = null;
-        HashMap<String, String> ret = new HashMap<String, String>();
-        HttpGet get = new HttpGet(SERVICE_SEARCH + code + ".html");
-        HttpClient client = new DefaultHttpClient();
-        HttpResponse response;
+        ArrayList<String> result = new ArrayList<String>();
+        for (int i = 0; i < detail.getPropertyCount(); i++)
+        {
+            String str = detail.getProperty(i).toString();
+            // 解析出每个省份
+            result.add(str.split(",")[0]);
+        }
+        return result;
+    }
+
+    public static SoapObject getWeatherByCity(String cityName)
+    {
+
+        // 根据城市或地区名称查询获得未来三天内天气情况、现在的天气实况、天气和生活指数
+        String methodName = "getWeather";
+        
+        HttpTransportSE httpTranstation = new HttpTransportSE(SERVICE_URL);
+        httpTranstation.debug = true;
+        
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+                SoapEnvelope.VER11);
+        SoapObject soapObject = new SoapObject(SERVICE_NS, methodName);
+        soapObject.addProperty("theCityCode", cityName);
+        envelope.bodyOut = soapObject;
+        envelope.dotNet = true;
         
         try
         {
-            response = client.execute(get);
-            if (response == null)
+            // 调用Web Service
+            httpTranstation.call(SERVICE_NS + methodName, envelope);
+            if (envelope.getResponse() != null)
             {
-                return ret;
+                // 获取服务器响应返回的SOAP消息
+                SoapObject result = (SoapObject) envelope.bodyIn;
+                SoapObject detail = (SoapObject) result.getProperty(methodName
+                        + "Result");
+                // 解析服务器响应的SOAP消息。
+                return detail;
             }
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
-            {
-                return ret;
-            }
-            HttpEntity entity = response.getEntity();
-            if (entity == null)
-            {
-                return ret;
-            }
-            input = entity.getContent();
-            if (input == null)
-            {
-                return ret;
-            }
-        }
-        catch (ClientProtocolException e)
+        } catch (Exception e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        catch (IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        
-        try
-        {
-            if (input == null)
-            {
-                return ret;
-            }
-            JsonReader reader = new JsonReader(new InputStreamReader(input, "utf-8"));
-            reader.beginObject();
-            while (reader.hasNext())
-            {
-                String localName = reader.nextName();
-                if (localName.equals("weatherinfo"))
-                {
-                    reader.beginObject();
-                    while (reader.hasNext())
-                    {
-                        localName = reader.nextName();
-                        if (localName.contains("temp"))
-                        {
-                            String[] str = reader.nextString().split("~");
-                            float left = 0;
-                            float right = 1;
-                            if(str[0].contains("℉"))
-                            {
-                                left = Float.valueOf(str[0].substring(0, str[0].indexOf("℉")));
-                                right = Float.valueOf(str[1].substring(0, str[1].indexOf("℉")));
-                            }else
-                            {
-                                left = Float.valueOf(str[0].substring(0, str[0].indexOf("℃")));
-                                right = Float.valueOf(str[1].substring(0, str[1].indexOf("℃")));
-                            }
-                             
-                            if(left>right)
-                            {
-                                ret.put(localName, str[1] + "~" + str[0]);
-                            }else
-                            {
-                                ret.put(localName, str[0] + "~" + str[1]);
-                            }
-                        }
-                        else
-                        {
-                            ret.put(localName, reader.nextString());
-                        }
-                        
-                    }
-                }
-                reader.endObject();
-            }
-            reader.endObject();
-        }
-        catch (IOException e)
-        {
-        }
-        return ret;
+
+        return null;
     }
     
 }
