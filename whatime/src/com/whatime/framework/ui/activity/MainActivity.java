@@ -15,23 +15,34 @@
  */
 package com.whatime.framework.ui.activity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.whatime.R;
 import com.whatime.controller.center.AlarmController;
 import com.whatime.framework.aservice.AlarmCenterAService;
+import com.whatime.framework.network.pojo.ApkVersion;
+import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.ui.fragment.BaseFragment;
 import com.whatime.framework.ui.fragment.BaseFragment.MyPageChangeListener;
 import com.whatime.framework.ui.fragment.IChangeFragment;
 import com.whatime.framework.ui.fragment.LeftFragment;
 import com.whatime.framework.ui.fragment.RightFragment;
 import com.whatime.framework.ui.view.SlidingMenu;
+import com.whatime.framework.ui.view.ToastMaster;
+import com.whatime.framework.util.SysUtil;
 import com.whatime.module.market.MarketFragment;
 import com.whatime.module.schedule.fragment.ScheduleFragment;
 
@@ -53,45 +64,96 @@ public class MainActivity extends FragmentActivity implements IChangeFragment
     
     ScheduleFragment newsFragment;
     
+    private Context context;
+    
     private AlarmController controller = new AlarmController();
+    
+    private Handler myHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            super.handleMessage(msg);
+            switch (msg.what)
+            {
+                case 0x001:
+                    int state = msg.getData().getInt(ResponseCons.STATE);
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        Toast toast = Toast.makeText(context, "下载成功", Toast.LENGTH_SHORT);
+                        ToastMaster.setToast(toast);
+                        toast.show();
+                        SysUtil.installApp(context);
+                    }
+                    else
+                    {
+                    }
+                    break;
+            }
+        }
+    };
     
     @Override
     protected void onCreate(Bundle arg0)
     {
         super.onCreate(arg0);
+        context = this;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
         init();
         initListener(newsFragment);
-        startService(new Intent(MainActivity.this,AlarmCenterAService.class));
+        startService(new Intent(MainActivity.this, AlarmCenterAService.class));
         controller.sync();
+        final ApkVersion version = controller.checkVersion();
+        if (version != null)
+        {
+            final String path = Environment.getExternalStorageDirectory() + "/ttyy/ttyy.apk";
+            String myVersion = SysUtil.getAppVersionName();
+            String serverVersion = version.getVersion();
+            if (!myVersion.equals(serverVersion))
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.append("当前版本： ")
+                    .append(myVersion)
+                    .append("\n")
+                    .append("更新版本： ")
+                    .append(serverVersion)
+                    .append("\n")
+                    .append("新版本大小： ")
+                    .append("");
+                new AlertDialog.Builder(context).setTitle("发现新版本")
+                    .setMessage(sb)
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+                    {
+                        public void onClick(DialogInterface d, int w)
+                        {
+                            controller.getApk(version.getUrl(), path, myHandler);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+            }
+        }
     }
     
     private void init()
     {
-        
         mSlidingMenu = (SlidingMenu)findViewById(R.id.slidingMenu);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int mScreenWidth = dm.widthPixels;// 获取屏幕分辨率宽度
-        mSlidingMenu.setLeftView(getLayoutInflater().inflate(R.layout.left_frame, null),(int)(mScreenWidth*0.8));
-        mSlidingMenu.setRightView(getLayoutInflater().inflate(R.layout.right_frame, null),(int)(mScreenWidth*0.8));
+        mSlidingMenu.setLeftView(getLayoutInflater().inflate(R.layout.left_frame, null), (int)(mScreenWidth * 0.8));
+        mSlidingMenu.setRightView(getLayoutInflater().inflate(R.layout.right_frame, null), (int)(mScreenWidth * 0.8));
         mSlidingMenu.setCenterView(getLayoutInflater().inflate(R.layout.center_frame, null));
-        
         FragmentTransaction t = this.getSupportFragmentManager().beginTransaction();
-        
         leftFragment = new LeftFragment();
         leftFragment.setChangeFragmentListener(this);
-        
         t.replace(R.id.left_frame, leftFragment);
         rightFragment = new RightFragment();
-        
         t.replace(R.id.right_frame, rightFragment);
         newsFragment = new ScheduleFragment(this);
-        
         t.replace(R.id.center_frame, newsFragment);
         t.commit();
-        
     }
     
     private void initListener(final BaseFragment fragment)
@@ -139,25 +201,25 @@ public class MainActivity extends FragmentActivity implements IChangeFragment
                 fragment = new ScheduleFragment(this);
                 break;
             case 1:
-                fragment = new MarketFragment(this,1);
+                fragment = new MarketFragment(this, 1);
                 break;
             case 2:
-                fragment = new MarketFragment(this,2);
+                fragment = new MarketFragment(this, 2);
                 break;
             case 3:
-                fragment = new MarketFragment(this,3);
+                fragment = new MarketFragment(this, 3);
                 break;
             case 4:
-                fragment = new MarketFragment(this,4);
+                fragment = new MarketFragment(this, 4);
                 break;
             case 5:
-                fragment = new MarketFragment(this,5);
+                fragment = new MarketFragment(this, 5);
                 break;
             case 6:
-                fragment = new MarketFragment(this,6);
+                fragment = new MarketFragment(this, 6);
                 break;
             case 7:
-                fragment = new MarketFragment(this,7);
+                fragment = new MarketFragment(this, 7);
                 break;
             default:
                 break;

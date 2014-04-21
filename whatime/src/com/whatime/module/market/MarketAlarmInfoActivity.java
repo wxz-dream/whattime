@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
 import java.util.TimeZone;
 
 import org.androidannotations.annotations.AfterViews;
@@ -16,26 +14,19 @@ import org.androidannotations.annotations.ViewById;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.whatime.R;
-import com.whatime.controller.center.AlarmController;
 import com.whatime.controller.cons.AdvanceCons;
 import com.whatime.db.Alarm;
-import com.whatime.db.Category;
 import com.whatime.db.DBHelper;
 import com.whatime.db.Task;
-import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.ui.view.MyListView;
-import com.whatime.framework.ui.view.ToastMaster;
 import com.whatime.framework.util.SysUtil;
 
 @EActivity(R.layout.market_alarm_info)
@@ -74,55 +65,9 @@ public class MarketAlarmInfoActivity extends Activity
     
     private Alarm mAlarm;
     
-    private AlarmController controller = new AlarmController();
-    
-    private HashMap<String, String> pros;
-    
-    private List<String> provinces;
-    
-    private HashMap<String, String> cts;
-    
-    private List<String> citys;
-    
-    private List<Category> parentCates;
-    
-    private List<String> parentCatesNames;
-    
-    private List<Category> childCates;
-    
-    private List<String> childCatesNames;
-    
     private ArrayList<String> repeatLabels = new ArrayList<String>();
     
     final String[] langs = {"朋友圈", "网络", "新浪微博", "QQ空间", "人人网", "腾讯微博"};
-    
-    private Handler myHandler = new Handler()
-    {
-        @Override
-        public void handleMessage(Message msg)
-        {
-            super.handleMessage(msg);
-            switch (msg.what)
-            {
-                case 0x001:
-                    int state = msg.getData().getInt(ResponseCons.STATE);
-                    if (state == ResponseCons.STATE_SUCCESS)
-                    {
-                        Toast toast = Toast.makeText(MarketAlarmInfoActivity.this, "同步成功", Toast.LENGTH_SHORT);
-                        ToastMaster.setToast(toast);
-                        toast.show();
-                    }
-                    else
-                    {
-                        Toast toast = Toast.makeText(MarketAlarmInfoActivity.this, "同步失败", Toast.LENGTH_SHORT);
-                        ToastMaster.setToast(toast);
-                        toast.show();
-                    }
-                    break;
-            }
-        }
-    };
-    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {

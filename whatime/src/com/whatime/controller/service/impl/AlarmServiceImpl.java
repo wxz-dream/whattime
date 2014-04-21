@@ -25,6 +25,7 @@ import com.whatime.db.DBHelper;
 import com.whatime.db.Task;
 import com.whatime.db.User;
 import com.whatime.framework.application.MyApp;
+import com.whatime.framework.network.pojo.ApkVersion;
 import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.util.SysUtil;
 
@@ -184,8 +185,7 @@ public class AlarmServiceImpl implements AlarmService
         context.startService(uptNotify);
     }
     
-    public void saveSnoozeAlert(final Context context, final SharedPreferences prefs, final long id,
-        final long time)
+    public void saveSnoozeAlert(final Context context, final SharedPreferences prefs, final long id, final long time)
     {
         if (id == -1)
         {
@@ -378,11 +378,11 @@ public class AlarmServiceImpl implements AlarmService
             {
                 if (alarm.getShare() != null && alarm.getShare().length() > 0)
                 {
-                    if(alarm.getOwerUuid()==null)
+                    if (alarm.getOwerUuid() == null)
                     {
                         alarm.setOwerUuid(alarm.getUuid());
                     }
-                    if(alarm.getOwerUserUuid()==null)
+                    if (alarm.getOwerUserUuid() == null)
                     {
                         alarm.setOwerUserUuid(alarm.getUserUuid());
                     }
@@ -394,6 +394,26 @@ public class AlarmServiceImpl implements AlarmService
                     new RemoteApiImpl().alarmLocalAdd(user, alarm, myHandler);
                 }
             }
+        }
+    }
+    
+    @Override
+    public ApkVersion checkVersion()
+    {
+        ApkVersion version = null;
+        if (SysUtil.hasNetWorkConection(context))
+        {
+            version = new RemoteApiImpl().updateAppVersion();
+        }
+        return version;
+    }
+
+    @Override
+    public void getApk(String url,String path, Handler handler)
+    {
+        if (SysUtil.hasNetWorkConection(context))
+        {
+            new RemoteApiImpl().getApk(url,path,handler);
         }
     }
     

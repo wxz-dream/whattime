@@ -16,7 +16,7 @@ public class Constants
     //http://192.168.11.7:8080/whatimeSae/
     //http://whatime.duapp.com/
     //http://192.168.11.9:8080/whatimeServer/
-    public static final String URL = "http://192.168.11.9:8080/whatimeServer/";
+    public static final String URL = "http://whatime.duapp.com/";
     
     public static final String REGIST_USER_POST_URL = "android/user/registUser";
     
@@ -65,6 +65,8 @@ public class Constants
     public static final String MARKET_FIND_FRIENDS_ALARMS_POST_URL = "android/friend/findFriendsAlarm";
     
     public static final String SYSTEM_PUT_FILE_URL = "file";
+    
+    public static final String SYSTEM_CHECK_VERSION_URL = "android/apkVersion";
     
     //操作
     public static final String OPT = "OPT";

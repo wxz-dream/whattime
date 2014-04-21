@@ -5,11 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,7 +16,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
-import com.whatime.R;
 import com.whatime.controller.center.AlarmController;
 import com.whatime.db.Alarm;
 import com.whatime.db.Category;
@@ -32,7 +28,9 @@ import com.whatime.framework.network.http.BaseRequestCallBack;
 import com.whatime.framework.network.http.HttpAsycnUtil;
 import com.whatime.framework.network.http.HttpSycnUtil;
 import com.whatime.framework.network.http.MD5;
+import com.whatime.framework.network.http.MyFileRequestCallBack;
 import com.whatime.framework.network.http.MyRequestCallBack;
+import com.whatime.framework.network.pojo.ApkVersion;
 import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.ui.activity.MainActivity;
 import com.whatime.framework.util.SysUtil;
@@ -1079,6 +1077,7 @@ public class RemoteApiImpl
                 }
             });
     }
+    
     /**
      * 获取好友列表同步接口
      * @return
@@ -1110,8 +1109,8 @@ public class RemoteApiImpl
         }
         return friends;
     }
-
-    public void getManAlarm(final Handler handler,String userUuid, long startTime, long endTime, int page)
+    
+    public void getManAlarm(final Handler handler, String userUuid, long startTime, long endTime, int page)
     {
         final Message msg = new Message();
         final Bundle data = new Bundle();
@@ -1159,8 +1158,8 @@ public class RemoteApiImpl
                 }
             });
     }
-
-    public void findUserFriendsAlarms(final Handler handler,long startTime, long endTime, int page)
+    
+    public void findUserFriendsAlarms(final Handler handler, long startTime, long endTime, int page)
     {
         final Message msg = new Message();
         final Bundle data = new Bundle();
@@ -1207,8 +1206,8 @@ public class RemoteApiImpl
                 }
             });
     }
-
-    public void putUserPhotoFile(File photoFile,final Handler handler)
+    
+    public void putUserPhotoFile(File photoFile, final Handler handler)
     {
         final Message msg = new Message();
         final Bundle data = new Bundle();
@@ -1220,6 +1219,7 @@ public class RemoteApiImpl
             params.addBodyParameter("userUuid", user.getUuid());
             params.addBodyParameter("mime", user.getMime());
         }
+        params.addBodyParameter("file", photoFile, "image/png");
         params.addBodyParameter("fileType", "img");
         HttpAsycnUtil.putFile(HttpAsycnUtil.getUrl(Constants.SYSTEM_PUT_FILE_URL),
             photoFile,
@@ -1242,13 +1242,73 @@ public class RemoteApiImpl
                     {
                         if (response.containsKey("resInfo"))
                         {
-                            
+                            String photoUri = response.getString("resInfo");
+                            user.setUserphotoUri(photoUri);
+                            DBHelper.getInstance().uptUser(user);
+                            MyApp.getInstance().setUser(user);
                         }
                     }
                     msg.setData(data);
                     handler.sendMessage(msg);
                 }
             });
+    }
+    /**
+     * 获取版本信息
+     * @return
+     */
+    public ApkVersion updateAppVersion()
+    {
+        final User user = MyApp.getInstance().getUser();
+        final RequestParams params = new RequestParams();
+        if (user != null)
+        {
+            params.addBodyParameter("userUuid", user.getUuid());
+            params.addBodyParameter("mime", user.getMime());
+        }
+        String json = HttpSycnUtil.post(HttpAsycnUtil.getUrl(Constants.SYSTEM_CHECK_VERSION_URL), params);
+        JSONObject response = JSON.parseObject(json);
+        if (response == null)
+        {
+            return null;
+        }
+        int state = response.getInteger("state");
+        if (state == ResponseCons.STATE_SUCCESS)
+        {
+            if (response.containsKey("resInfo"))
+            {
+                String verStr = response.getString("resInfo");
+                ApkVersion version = JSON.parseObject(verStr, ApkVersion.class);
+                return version;
+            }
+        }
+        return null;
+    }
+
+    public void getApk(String url,String path,final Handler handler)
+    {
+        final Message msg = new Message();
+        final Bundle data = new Bundle();
+        msg.what = 0x001;
+        final User user = MyApp.getInstance().getUser();
+        final RequestParams params = new RequestParams();
+        if (user != null)
+        {
+            params.addBodyParameter("userUuid", user.getUuid());
+            params.addBodyParameter("mime", user.getMime());
+        }
+        HttpAsycnUtil.getFile(url, path, params, new MyFileRequestCallBack(msg,
+            data, handler)
+        {
+            
+            @Override
+            public void onSuccess(ResponseInfo<File> json)
+            {
+                data.putInt(ResponseCons.STATE, ResponseCons.STATE_SUCCESS);
+                msg.setData(data);
+                handler.sendMessage(msg);
+            }
+        });
     }
     
 }

@@ -1,7 +1,6 @@
 package com.whatime.module.login;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -63,6 +62,8 @@ public class UserInfoActivity extends Activity
     
     private File photoFile;
     
+    private Bitmap photo;
+    
     private User user = MyApp.getInstance().getUser();
     
     private BitmapUtils bitmapUtils;
@@ -118,7 +119,11 @@ public class UserInfoActivity extends Activity
         if (user != null)
         {
             // 加载网络图片
-            if (user.getUserphotoUri() != null)
+            if (photo != null)
+            {
+                photo_iv.setImageBitmap(photo);
+            }
+            else if(user.getUserphotoUri() != null)
             {
                 bitmapUtils.display(photo_iv, user.getUserphotoUri());
             }
@@ -338,7 +343,7 @@ public class UserInfoActivity extends Activity
         Bundle extras = picdata.getExtras();
         if (extras != null)
         {
-            Bitmap photo = extras.getParcelable("data");
+            photo = extras.getParcelable("data");
             /**
              * 下面注释的方法是将裁剪之后的图片以Base64Coder的字符方式上
              * 传到服务器，QQ头像上传采用的方法跟这个类似
@@ -360,7 +365,7 @@ public class UserInfoActivity extends Activity
             /*
             Bitmap dBitmap = BitmapFactory.decodeFile(tp);
             Drawable drawable = new BitmapDrawable(dBitmap);*/
-            File f = new File(Environment.getExternalStorageDirectory() + "/myPhoto.jpg");
+            File f = new File(Environment.getExternalStorageDirectory() + "/ttyy/myPhoto.jpg");
             FileOutputStream fOut = null;
             try
             {
@@ -373,7 +378,7 @@ public class UserInfoActivity extends Activity
             photo.compress(Bitmap.CompressFormat.PNG, 100, fOut);
             try
             {
-                if(fOut!=null)
+                if (fOut != null)
                 {
                     fOut.flush();
                     fOut.close();

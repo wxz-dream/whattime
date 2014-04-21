@@ -26,7 +26,11 @@ public class HttpAsycnUtil
     public static void putFile(String urlString, File file, RequestParams params, RequestCallBack<String> callBack)
     {
         http.configCurrentHttpCacheExpiry(1000 * 20);
-        params.addBodyParameter("file", file ,"multipart/form-data");
         http.send(HttpRequest.HttpMethod.POST, urlString, params, callBack);
+    }
+    public static void getFile(String urlString, String filePath, RequestParams params, RequestCallBack<File> callBack)
+    {
+        http.configCurrentHttpCacheExpiry(1000 * 20);
+        http.download(urlString, filePath, params, true, true, callBack);
     }
 }

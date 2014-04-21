@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.whatime.controller.service.AlarmService;
 import com.whatime.controller.service.impl.AlarmServiceImpl;
 import com.whatime.db.Alarm;
+import com.whatime.framework.network.pojo.ApkVersion;
 
 public class AlarmController
 {
@@ -66,9 +67,9 @@ public class AlarmController
      * @param alarm
      * @return
      */
-    public void uptAlarm(Alarm alarm,Handler myHandler)
+    public void uptAlarm(Alarm alarm, Handler myHandler)
     {
-        service.uptAlarm(alarm,myHandler);
+        service.uptAlarm(alarm, myHandler);
     }
     
     /**
@@ -99,6 +100,20 @@ public class AlarmController
     public Alarm getNextAlarm()
     {
         return service.getNextAlarm();
+    }
+    
+    /**
+     * 检测版本更新
+     * @param myHandler 
+     */
+    public ApkVersion checkVersion()
+    {
+        return service.checkVersion();
+    }
+    
+    public void getApk(String url, String path, Handler handler)
+    {
+        service.getApk(url, path, handler);
     }
     
 }

@@ -1,15 +1,22 @@
 package com.whatime.framework.util;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
 import com.whatime.R;
 import com.whatime.db.User;
@@ -297,6 +304,36 @@ public class SysUtil
             }
         }
         return false;
+    }
+    
+    //获取当前版本号
+    public static String getAppVersionName()
+    {
+        String versionName = "";
+        try
+        {
+            PackageManager packageManager = MyApp.getInstance().getApplicationContext().getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo("com.whatime", 0);
+            versionName = packageInfo.versionName;
+            if (TextUtils.isEmpty(versionName))
+            {
+                return "";
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return versionName;
+    }
+    
+    public static void installApp(Context context)
+    {
+        // 获取url,然后调用系统的Intent,来自动安装下载的apk文件
+        final File realFilePath = new File(Environment.getExternalStorageDirectory() + "/ttyy/ttyy.apk");
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.fromFile(realFilePath), "application/vnd.android.package-archive");
+        context.startActivity(intent);
     }
     
 }

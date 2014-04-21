@@ -38,7 +38,7 @@ import com.whatime.framework.ui.pull.XListView;
 import com.whatime.framework.ui.pull.XListView.IXListViewListener;
 import com.whatime.framework.ui.view.ToastMaster;
 import com.whatime.framework.util.SysUtil;
-import com.whatime.module.market.MarketAlarmInfoActivity_;
+import com.whatime.module.market.*;
 
 @EActivity(R.layout.friend_info)
 public class FriendInfoActivity extends Activity implements IXListViewListener
