@@ -3,9 +3,11 @@ package com.whatime.module.login;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,8 +17,12 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -68,6 +74,16 @@ public class UserInfoActivity extends Activity
     
     private BitmapUtils bitmapUtils;
     
+    private List<String> provinces;
+    
+    private List<String> citys;
+    
+    private Spinner province_spinner;
+    
+    private Spinner city_spinner;
+    
+    private Context context;
+    
     private Handler myHandler = new Handler()
     {
         @Override
@@ -100,6 +116,7 @@ public class UserInfoActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        context = this;
         setContentView(R.layout.userinfo);
         bitmapUtils = new BitmapUtils(this);
         listener = new MyOnclickListener();
@@ -123,7 +140,7 @@ public class UserInfoActivity extends Activity
             {
                 photo_iv.setImageBitmap(photo);
             }
-            else if(user.getUserphotoUri() != null)
+            else if (user.getUserphotoUri() != null)
             {
                 bitmapUtils.display(photo_iv, user.getUserphotoUri());
             }
@@ -176,6 +193,7 @@ public class UserInfoActivity extends Activity
         email = (EditText)findViewById(R.id.email);
         realName = (EditText)findViewById(R.id.realName);
         city = (TextView)findViewById(R.id.city);
+        city.setOnClickListener(listener);
         phone = (EditText)findViewById(R.id.phone);
         identityCard = (EditText)findViewById(R.id.identityCard);
         qq = (EditText)findViewById(R.id.qq);
@@ -263,6 +281,75 @@ public class UserInfoActivity extends Activity
                     {
                         new RemoteApiImpl().putUserPhotoFile(photoFile, myHandler);
                     }
+                    break;
+                case R.id.city:
+                    // 取得city_layout.xml中的视图
+                    final View view = LayoutInflater.from(context).inflate(R.layout.city_layout, null);
+                    
+                    // 省份Spinner
+                    province_spinner = (Spinner)view.findViewById(R.id.province_spinner);
+                    // 城市Spinner
+                    city_spinner = (Spinner)view.findViewById(R.id.city_spinner);
+                    
+                    // 省份列表
+                    provinces = MyApp.getInstance().getProvince();
+                    ArrayAdapter adapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, provinces);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    final String scope = user.getCity();
+                    province_spinner.setAdapter(adapter);
+                    // 省份Spinner监听器
+                    province_spinner.setOnItemSelectedListener(new OnItemSelectedListener()
+                    {
+                        
+                        @Override
+                        public void onItemSelected(AdapterView<?> arg0, View arg1, int position, long arg3)
+                        {
+                            citys = MyApp.getInstance().getCitys().get(provinces.get(position));
+                            ArrayAdapter adapter1 =
+                                new ArrayAdapter(context, android.R.layout.simple_spinner_item, citys);
+                            adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            city_spinner.setAdapter(adapter1);
+                            if (scope.contains("|"))
+                            {
+                                city_spinner.setSelection(citys.indexOf(scope.split("\\|")[1]));
+                            }
+                        }
+                        
+                        @Override
+                        public void onNothingSelected(AdapterView<?> arg0)
+                        {
+                        }
+                    });
+                    // 选择城市对话框
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                    dialog.setTitle("请选择所属城市");
+                    dialog.setView(view);
+                    dialog.setPositiveButton("确定", new DialogInterface.OnClickListener()
+                    {
+                        
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            String scope = "";
+                            scope =
+                                provinces.get(province_spinner.getSelectedItemPosition()) + "|"
+                                    + citys.get(city_spinner.getSelectedItemPosition());
+                            user.setCity(scope);
+                            logedUi();
+                        }
+                    });
+                    dialog.setNegativeButton("取消", new DialogInterface.OnClickListener()
+                    {
+                        
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            dialog.dismiss();
+                            
+                        }
+                    });
+                    province_spinner.setSelection(provinces.indexOf(scope.split("\\|")[0]));
+                    dialog.show();
                     break;
             }
         }
