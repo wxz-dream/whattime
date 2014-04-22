@@ -73,6 +73,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="开始时间:"
+            android:textColor="@color/white"
             android:textSize="20sp" />
 
         <TextView
@@ -96,6 +97,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="结束时间:"
+            android:textColor="@color/white"
             android:textSize="20sp" />
 
         <TextView
