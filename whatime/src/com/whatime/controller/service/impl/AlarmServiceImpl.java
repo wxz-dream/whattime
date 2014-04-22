@@ -1,5 +1,6 @@
 package com.whatime.controller.service.impl;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -413,6 +414,11 @@ public class AlarmServiceImpl implements AlarmService
     {
         if (SysUtil.hasNetWorkConection(context))
         {
+            File file = new File(path);
+            if(file.isFile() && file.exists())
+            {
+                file.delete();
+            }
             new RemoteApiImpl().getApk(url,path,handler);
         }
     }

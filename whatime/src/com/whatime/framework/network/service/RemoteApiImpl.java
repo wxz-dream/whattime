@@ -1297,13 +1297,7 @@ public class RemoteApiImpl
         final Message msg = new Message();
         final Bundle data = new Bundle();
         msg.what = 0x001;
-        final User user = MyApp.getInstance().getUser();
         final RequestParams params = new RequestParams();
-        if (user != null)
-        {
-            params.addBodyParameter("userUuid", user.getUuid());
-            params.addBodyParameter("mime", user.getMime());
-        }
         HttpAsycnUtil.getFile(url, path, params, new MyFileRequestCallBack(msg, data, handler)
         {
             
@@ -1315,15 +1309,5 @@ public class RemoteApiImpl
                 handler.sendMessage(msg);
             }
         });
-    }
-    
-    public String getWeather(String code)
-    {
-        String json = "";
-        String url =
-            "http://api.map.baidu.com/telematics/v3/weather?location=" + code
-                + "&output=json&ak=s16vrbPCWHHjsHk5Cas7YjMN";
-        json = HttpSycnUtil.get(url);
-        return json;
     }
 }
