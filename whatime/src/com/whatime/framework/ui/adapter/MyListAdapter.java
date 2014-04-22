@@ -20,6 +20,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.BitmapUtils;
 import com.whatime.R;
 import com.whatime.controller.center.AlarmController;
 import com.whatime.db.Alarm;
@@ -44,6 +45,8 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
     
     private AlarmController controller = new AlarmController();
     
+    private BitmapUtils bitmapUtils;
+    
     private Handler handler = new Handler()
     {
         public void handleMessage(android.os.Message msg)
@@ -66,6 +69,7 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
     {
         this.context = context;
         this.alarms = alarms;
+        bitmapUtils = new BitmapUtils(context);
     }
     
     @Override
@@ -87,6 +91,10 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
                 }
             }
         });
+        if (user.getUserphotoUri() != null)
+        {
+            bitmapUtils.display(userPhoto, user.getUserphotoUri());
+        }
         ImageView item_add = (ImageView)v.findViewById(R.id.item_add);
         if (DBHelper.getInstance().isExist(alarm.getUuid()))
         {

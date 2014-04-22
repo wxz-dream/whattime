@@ -221,7 +221,7 @@ public class AlarmCenterAService extends Service
     {
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
         notification = new Notification();
-        notification.icon = R.drawable.icon;
+        notification.icon = R.drawable.ic_launcher;
         notification.tickerText = "天天有约";
         notification.when = System.currentTimeMillis();
         String title = "天天有约";

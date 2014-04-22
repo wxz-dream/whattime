@@ -4,30 +4,44 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.whatime.R;
+import com.whatime.controller.center.AlarmController;
 import com.whatime.controller.cons.AdvanceCons;
 import com.whatime.db.Alarm;
 import com.whatime.db.DBHelper;
 import com.whatime.db.Task;
+import com.whatime.db.User;
+import com.whatime.framework.application.MyApp;
+import com.whatime.framework.network.pojo.ResponseCons;
+import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.view.MyListView;
+import com.whatime.framework.ui.view.ToastMaster;
 import com.whatime.framework.util.SysUtil;
+import com.whatime.module.login.LoginActivity;
 
 @EActivity(R.layout.market_alarm_info)
 public class MarketAlarmInfoActivity extends Activity
@@ -59,15 +73,36 @@ public class MarketAlarmInfoActivity extends Activity
     @ViewById
     MyListView market_task_lv;
     
+    @ViewById
+    Button add_save;
+    
     private MyAdapter adapter;
     
     private Context context;
     
     private Alarm mAlarm;
     
+    private AlarmController controller = new AlarmController();
+    
     private ArrayList<String> repeatLabels = new ArrayList<String>();
     
     final String[] langs = {"朋友圈", "网络", "新浪微博", "QQ空间", "人人网", "腾讯微博"};
+    
+    private Handler handler = new Handler()
+    {
+        public void handleMessage(android.os.Message msg)
+        {
+            switch (msg.what)
+            {
+                case 0x001:
+                    int state = msg.getData().getInt(ResponseCons.STATE);
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        uptUi();
+                    }
+            }
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -136,10 +171,48 @@ public class MarketAlarmInfoActivity extends Activity
         
     }
     
+    @Click
+    void login_reback_btn()
+    {
+        onBackPressed();
+    }
+    
+    @Click
+    void add_save()
+    {
+        User me = MyApp.getInstance().getUser();
+        if (me != null)
+        {
+            new RemoteApiImpl().joinAlarm(mAlarm.getUuid(), handler);
+            List<Task> myTasks = mAlarm.getTasks();
+            String uuid = UUID.randomUUID().toString();
+            mAlarm.setUuid(uuid);
+            DBHelper.getInstance().addAlarm(mAlarm);
+            for (Task task : myTasks)
+            {
+                task.setUuid(UUID.randomUUID().toString());
+                task.setAlarm(mAlarm);
+                DBHelper.getInstance().addTask(task);
+            }
+            controller.addAlarm(mAlarm, handler);
+        }
+        else
+        {
+            Toast toast = Toast.makeText(context, "请先登录", Toast.LENGTH_SHORT);
+            ToastMaster.setToast(toast);
+            toast.show();
+            context.startActivity(new Intent(context, LoginActivity.class));
+        }
+    }
+    
     @UiThread
     void uptUi()
     {
-        
+        if (DBHelper.getInstance().isExist(mAlarm.getUuid()))
+        {
+            add_save.setEnabled(false);
+            add_save.setText("已参加");
+        }
     }
     
     class MyAdapter extends BaseAdapter

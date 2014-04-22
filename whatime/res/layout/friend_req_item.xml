@@ -15,7 +15,7 @@
             android:layout_width="50dip"
             android:layout_height="50dip"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/icon" />
+            android:src="@drawable/avatar_default" />
 
         <LinearLayout
             android:id="@+id/item_right"

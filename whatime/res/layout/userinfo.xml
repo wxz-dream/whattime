@@ -92,7 +92,7 @@
                             android:layout_height="45dip"
                             android:layout_gravity="right|center_vertical"
                             android:layout_marginRight="10.0dip"
-                            android:src="@drawable/icon" />
+                            android:src="@drawable/avatar_default" />
 
                         <ImageView
                             android:layout_width="wrap_content"

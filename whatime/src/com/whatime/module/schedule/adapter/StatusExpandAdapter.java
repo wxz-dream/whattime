@@ -95,6 +95,10 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
     public Alarm getChild(int groupPosition, int childPosition)
     {
         // TODO Auto-generated method stub
+        if(oneList.size()==0 || oneList.get(groupPosition).alarms.size()==0)
+        {
+            return null;
+        }
         return oneList.get(groupPosition).alarms.get(childPosition);
     }
     
