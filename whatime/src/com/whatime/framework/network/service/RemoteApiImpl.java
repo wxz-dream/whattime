@@ -237,6 +237,10 @@ public class RemoteApiImpl
      */
     public void alarmLocalAdd(final User user, final Alarm alarm, final Handler handler)
     {
+        if (alarm.getTasks() == null || alarm.getTasks().size() == 0)
+        {
+            return;
+        }
         final Message msg = new Message();
         final Bundle data = new Bundle();
         msg.what = 0x001;
@@ -284,6 +288,10 @@ public class RemoteApiImpl
      */
     public void alarmShareAdd(final User user, final Alarm alarm, final Handler handler)
     {
+        if (alarm.getTasks() == null || alarm.getTasks().size() == 0)
+        {
+            return;
+        }
         final Message msg = new Message();
         final Bundle data = new Bundle();
         msg.what = 0x001;
@@ -331,6 +339,10 @@ public class RemoteApiImpl
      */
     public void alarmLocalEdit(final User user, final Alarm alarm, final Handler handler)
     {
+        if (alarm.getTasks() == null || alarm.getTasks().size() == 0)
+        {
+            return;
+        }
         final Message msg = new Message();
         final Bundle data = new Bundle();
         msg.what = 0x001;
@@ -378,6 +390,10 @@ public class RemoteApiImpl
      */
     public void alarmShareEdit(final User user, final Alarm alarm, final Handler handler)
     {
+        if (alarm.getTasks() == null || alarm.getTasks().size() == 0)
+        {
+            return;
+        }
         final Message msg = new Message();
         final Bundle data = new Bundle();
         msg.what = 0x001;

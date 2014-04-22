@@ -7,11 +7,11 @@
 
     <ImageView
         android:id="@+id/left_list_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dip"
+        android:layout_height="30dip"
         android:layout_gravity="center"
         android:layout_marginLeft="10dip"
-        android:background="@drawable/ic_launcher" />
+        android:background="@drawable/serkbar" />
 
     <TextView
         android:id="@+id/left_list_text"

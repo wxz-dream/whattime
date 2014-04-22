@@ -362,17 +362,9 @@ public class SchedulePagerAdapter extends PagerAdapter implements IXListViewList
     {
         if (statusAdapter != null)
         {
-            new Thread()
-            {
-                @Override
-                public void run()
-                {
-                    getBars();
-                    handler.sendEmptyMessage(0x001);
-                    controller.setNextAlert();
-                    
-                }
-            }.start();
+            controller.setNextAlert();
+            getBars();
+            handler.sendEmptyMessage(0x001);
         }
     }
     

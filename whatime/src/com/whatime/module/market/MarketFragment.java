@@ -201,7 +201,7 @@ public class MarketFragment extends BaseMarketFragment
                                 new ArrayAdapter(mContext, android.R.layout.simple_spinner_item, citys);
                             adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             city_spinner.setAdapter(adapter1);
-                            if (scope.contains("|"))
+                            if (scope != null && scope.contains("|"))
                             {
                                 city_spinner.setSelection(citys.indexOf(scope.split("\\|")[1]));
                             }

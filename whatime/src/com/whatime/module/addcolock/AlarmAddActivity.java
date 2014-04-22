@@ -709,7 +709,7 @@ public class AlarmAddActivity extends Activity
                 ArrayAdapter adapter1 = new ArrayAdapter(context, android.R.layout.simple_spinner_item, citys);
                 adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 city_spinner.setAdapter(adapter1);
-                if (scope.contains("|"))
+                if (scope != null && scope.contains("|"))
                 {
                     city_spinner.setSelection(citys.indexOf(scope.split("\\|")[1]));
                 }
@@ -827,7 +827,7 @@ public class AlarmAddActivity extends Activity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                if(childCates.size()>0)
+                if (childCates.size() > 0)
                 {
                     mAlarm.setCategory(childCates.get(child_spinner.getSelectedItemPosition()));
                 }

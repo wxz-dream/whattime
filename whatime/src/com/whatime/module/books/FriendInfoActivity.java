@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.BitmapUtils;
 import com.whatime.R;
 import com.whatime.db.Alarm;
 import com.whatime.db.User;
@@ -68,6 +69,8 @@ public class FriendInfoActivity extends Activity implements IXListViewListener
     private int mPage;
     
     private Context context;
+    
+    private BitmapUtils bitmapUtils;
     
     private Handler handler = new Handler()
     {
@@ -130,6 +133,7 @@ public class FriendInfoActivity extends Activity implements IXListViewListener
     {
         super.onCreate(savedInstanceState);
         context = this;
+        bitmapUtils = new BitmapUtils(this);
         user = (User)getIntent().getSerializableExtra("user");
     }
     
@@ -140,6 +144,10 @@ public class FriendInfoActivity extends Activity implements IXListViewListener
         if (SysUtil.isFriends(user.getUuid()))
         {
             add_friend.setVisibility(View.GONE);
+        }
+        if (user.getUserphotoUri() != null)
+        {
+            bitmapUtils.display(login_iv, user.getUserphotoUri());
         }
         onRefresh();
         listAdapter = new MyListAdapter(context, alarms);

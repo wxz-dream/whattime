@@ -26,7 +26,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -107,35 +106,6 @@ public class LeftFragment extends Fragment implements OnItemClickListener
             View row = LayoutInflater.from(getActivity()).inflate(R.layout.left_list, null);
             TextView textView = (TextView)row.findViewById(R.id.left_list_text);
             textView.setText(data.get(position).getName());
-            ImageView img = (ImageView)row.findViewById(R.id.left_list_image);
-            switch (position)
-            {
-                case 0:
-                    img.setBackgroundResource(R.drawable.biz_navigation_tab_news);
-                    break;
-                case 1:
-                    img.setBackgroundResource(R.drawable.biz_navigation_tab_local_news);
-                    break;
-                case 2:
-                    img.setBackgroundResource(R.drawable.biz_navigation_tab_ties);
-                    break;
-                case 3:
-                    img.setBackgroundResource(R.drawable.biz_navigation_tab_pics);
-                    break;
-                case 4:
-                    img.setBackgroundResource(R.drawable.biz_navigation_tab_ugc);
-                    break;
-                case 5:
-                    img.setBackgroundResource(R.drawable.biz_navigation_tab_vote);
-                    break;
-                case 6:
-                    img.setBackgroundResource(R.drawable.biz_navigation_tab_micro);
-                case 7:
-                    img.setBackgroundResource(R.drawable.biz_navigation_tab_micro);
-                    break;
-                default:
-                    break;
-            }
             
             if (position == selectPosition)
             {
