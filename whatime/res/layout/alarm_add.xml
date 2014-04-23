@@ -199,7 +199,7 @@
                             android:background="@drawable/shape_line" />
                     </LinearLayout>
 
-                    <RelativeLayout
+                    <!-- <RelativeLayout
                         android:id="@+id/alarm_state"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
@@ -246,7 +246,7 @@
                             android:duplicateParentState="true"
                             android:gravity="center_vertical"
                             android:paddingRight="8dp" />
-                    </RelativeLayout>
+                    </RelativeLayout> -->
 
                     <com.whatime.framework.ui.view.MyListView
                         android:id="@+id/add_common_lv"
