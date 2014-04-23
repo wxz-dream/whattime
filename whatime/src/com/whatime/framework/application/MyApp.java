@@ -33,6 +33,8 @@ public class MyApp extends Application
     
     private static List<User> myFriends;
     
+    private static String url = "";
+    
     public MyApp()
     {
     }
@@ -63,7 +65,7 @@ public class MyApp extends Application
         {
             citys = new HashMap<String, List<String>>();
             List<String> ps = getProvince();
-            for(String pro: ps)
+            for (String pro : ps)
             {
                 List<String> city = WebServiceUtil.getCityListByProvince(pro);
                 Collections.sort(city);
@@ -72,6 +74,16 @@ public class MyApp extends Application
         }
         
         return citys;
+    }
+    
+    public String getAppUrl()
+    {
+        return url;
+    }
+    
+    public void setAppUrl(String u)
+    {
+        url = u;
     }
     
     public synchronized List<String> getProvince()
@@ -100,7 +112,7 @@ public class MyApp extends Application
     
     public List<User> getMyFriends()
     {
-        if(myFriends ==null)
+        if (myFriends == null)
         {
             myFriends = new RemoteApiImpl().findMyFriends();
         }

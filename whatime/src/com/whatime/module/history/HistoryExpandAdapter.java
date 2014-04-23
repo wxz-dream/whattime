@@ -20,6 +20,7 @@ import com.whatime.controller.cons.AlarmServiceCons;
 import com.whatime.db.Alarm;
 import com.whatime.db.Task;
 import com.whatime.module.addcolock.AlarmAddActivity_;
+import com.whatime.module.market.MarketAlarmInfoActivity_;
 import com.whatime.module.schedule.adapter.OneBar;
 import com.whatime.module.schedule.view.DigitalClock;
 
@@ -143,8 +144,8 @@ public class HistoryExpandAdapter extends BaseExpandableListAdapter
             @Override
             public void onClick(View v)
             {
-                context.startActivity(new Intent(context, AlarmAddActivity_.class).putExtra(AlarmServiceCons.ALARM_ID,
-                    entity.getId()).putExtra(AlarmServiceCons.ALARM_TYPE, childPosition));
+                entity.getTasks();
+                context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm", entity));
             }
         });
         View indicator = convertView.findViewById(R.id.indicator);
@@ -167,15 +168,15 @@ public class HistoryExpandAdapter extends BaseExpandableListAdapter
             @Override
             public void onClick(View v)
             {
-                context.startActivity(new Intent(context, AlarmAddActivity_.class).putExtra(AlarmServiceCons.ALARM_ID,
-                    entity.getId()).putExtra(AlarmServiceCons.ALARM_TYPE, childPosition));
+                entity.getTasks();
+                context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm", entity));
             }
         });
         TextView labelView = (TextView)convertView.findViewById(R.id.alarm_title);
         StringBuilder oneLine = new StringBuilder();
         String alarmTitle = entity.getTitle();
         Task t = entity.getTask();
-        if(t!=null)
+        if (t != null)
         {
             String taskTitle = t.getTitle();
             
@@ -211,6 +212,7 @@ public class HistoryExpandAdapter extends BaseExpandableListAdapter
         
         return convertView;
     }
+    
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition)
     {

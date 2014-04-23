@@ -50,12 +50,8 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.renren.Renren;
-import cn.sharesdk.sina.weibo.SinaWeibo;
-import cn.sharesdk.tencent.qzone.QZone;
-import cn.sharesdk.tencent.weibo.TencentWeibo;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import com.whatime.R;
 import com.whatime.controller.center.AlarmController;
@@ -76,10 +72,8 @@ import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.ui.view.MyListView;
 import com.whatime.framework.ui.view.SwitchButton;
 import com.whatime.framework.ui.view.ToastMaster;
-import com.whatime.framework.util.ShareUtil;
 import com.whatime.framework.util.SysUtil;
 import com.whatime.module.linkman.ContactListView;
-import com.whatime.module.thirdLogin.AuthActivity;
 
 @EActivity(R.layout.alarm_add)
 public class AlarmAddActivity extends Activity
@@ -191,9 +185,9 @@ public class AlarmAddActivity extends Activity
     
     private ArrayList<String> repeatLabels = new ArrayList<String>();
     
-    final String[] langs = {"朋友圈", "网络", "新浪微博", "QQ空间", "人人网", "腾讯微博"};
+    final String[] langs = {"朋友圈", "网络", "第三方平台"};
     
-    final boolean[] selected = new boolean[] {false, false, false, false, false, false};// 一个存放Boolean值的数组
+    final boolean[] selected = new boolean[] {false, false, false};// 一个存放Boolean值的数组
     
     final static int CONTACT_REQUEST_CODE = 2;
     
@@ -229,15 +223,7 @@ public class AlarmAddActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         this.context = this;
-        ShareSDK.initSDK(this);
         initData();
-    }
-    
-    @Override
-    protected void onDestroy()
-    {
-        ShareSDK.stopSDK(this);
-        super.onDestroy();
     }
     
     @AfterViews
@@ -556,7 +542,7 @@ public class AlarmAddActivity extends Activity
                 break;
             case AlarmCons.TYPE_TASK:
                 mAlarm.setAllowChange(false);
-                mAlarm.setShare("0,1");
+                mAlarm.setShare("0,1,2");
                 break;
             default:
                 break;
@@ -574,16 +560,34 @@ public class AlarmAddActivity extends Activity
     @Click
     void add_save()
     {
+        mAlarm.setTitle(alarm_title.getText().toString());
+        mAlarm.setDes(alarm_des.getText().toString());
         if (mAlarm.getTasks().size() == 0)
         {
             Toast toast = Toast.makeText(context, "至少含有一项子活动", Toast.LENGTH_SHORT);
             ToastMaster.setToast(toast);
             toast.show();
         }
+        else if (mAlarm.getTitle().length() == 0 && mAlarm.getShare() != null)
+        {
+            Toast toast = Toast.makeText(context, "分享活动标题不能为空", Toast.LENGTH_SHORT);
+            ToastMaster.setToast(toast);
+            toast.show();
+        }
+        else if (mAlarm.getDes().length() == 0 && mAlarm.getShare() != null)
+        {
+            Toast toast = Toast.makeText(context, "分享活动描述不能为空", Toast.LENGTH_SHORT);
+            ToastMaster.setToast(toast);
+            toast.show();
+        }
+        else if (mAlarm.getCategory() == null && mAlarm.getShare() != null)
+        {
+            Toast toast = Toast.makeText(context, "分享活动必须选择分类", Toast.LENGTH_SHORT);
+            ToastMaster.setToast(toast);
+            toast.show();
+        }
         else
         {
-            mAlarm.setTitle(alarm_title.getText().toString());
-            mAlarm.setDes(alarm_des.getText().toString());
             if (maxJoinNum_label.getText().toString().equals(""))
             {
                 long num = 10000;
@@ -607,9 +611,32 @@ public class AlarmAddActivity extends Activity
                 {
                     controller.addAlarm(mAlarm, myHandler);
                     //share
-                    if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
+                    if (mAlarm.getShare() != null && mAlarm.getShare().contains("2"))
                     {
-                        new ShareUtil().shareAll(mAlarm.getShare(), mAlarm);
+                        Calendar c = Calendar.getInstance(TimeZone.getDefault());
+                        c.setTimeInMillis(mAlarm.getAlarmTime());
+                        StringBuilder title = new StringBuilder();
+                        title.append("天天有约(")
+                            .append(c.get(Calendar.MONTH) + 1)
+                            .append(".")
+                            .append(c.get(Calendar.DAY_OF_MONTH))
+                            .append(")一起来[")
+                            .append(mAlarm.getTitle())
+                            .append("]吧");
+                        StringBuilder des = new StringBuilder();
+                        des.append("快下载[天天有约]来参加吧。地址：详情：\n")
+                            .append("主题：")
+                            .append(mAlarm.getTitle())
+                            .append("\n")
+                            .append("时间：")
+                            .append(c.get(Calendar.MONTH) + 1)
+                            .append(".")
+                            .append(c.get(Calendar.DAY_OF_MONTH))
+                            .append("\n")
+                            .append("描述：")
+                            .append(mAlarm.getDes());
+                        ShareSDK.initSDK(context);
+                        showOnekeyshare(null, false, title.toString(), des.toString());
                     }
                 }
                 else
@@ -619,6 +646,32 @@ public class AlarmAddActivity extends Activity
             }
             this.finish();
         }
+    }
+    
+    private void showOnekeyshare(String platform, boolean silent, String title, String des)
+    {
+        OnekeyShare oks = new OnekeyShare();
+        // 分享时Notification的图标和文字
+        oks.setNotification(R.drawable.ic_launcher, context.getString(R.string.app_name));
+        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+        oks.setTitle(title);
+        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText(des);
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl("http://sharesdk.cn");
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl("http://sharesdk.cn");
+        // 是否直接分享（true则直接分享）
+        oks.setSilent(silent);
+        // 指定分享平台，和slient一起使用可以直接分享到指定的平台
+        if (platform != null)
+        {
+            oks.setPlatform(platform);
+        }
+        
+        oks.show(context);
     }
     
     @Click
@@ -889,60 +942,13 @@ public class AlarmAddActivity extends Activity
             {// 设置多选条目
                     public void onClick(DialogInterface dialog, int which, boolean isChecked)
                     {
-                        if (isChecked)
-                        {
-                            List<Integer> ls = getShareMap();
-                            switch (which)
-                            {
-                                case AlarmCons.SHARE_SINA:
-                                    if (!ls.contains(AlarmCons.SHARE_SINA))
-                                    {
-                                        startActivity(new Intent(context, AuthActivity.class));
-                                    }
-                                    break;
-                                case AlarmCons.SHARE_QQ:
-                                    if (!ls.contains(AlarmCons.SHARE_QQ))
-                                    {
-                                        startActivity(new Intent(context, AuthActivity.class));
-                                    }
-                                    break;
-                                case AlarmCons.SHARE_RENREN:
-                                    if (!ls.contains(AlarmCons.SHARE_RENREN))
-                                    {
-                                        startActivity(new Intent(context, AuthActivity.class));
-                                    }
-                                    break;
-                                case AlarmCons.SHARE_TECENT:
-                                    if (!ls.contains(AlarmCons.SHARE_TECENT))
-                                    {
-                                        startActivity(new Intent(context, AuthActivity.class));
-                                    }
-                                    break;
-                            
-                            }
-                        }
                         selected[which] = isChecked;
-                        
                     }
                 })
             .setPositiveButton("确定", new DialogInterface.OnClickListener()
             {
                 public void onClick(DialogInterface dialog, int which)
                 {
-                    List<Integer> retLs = getShareMap();
-                    for (int i = 2; i <= 5; i++)
-                    {
-                        if (retLs.contains(i))
-                        {
-                            selected[i] = true;
-                        }
-                        else
-                        {
-                            selected[i] = false;
-                        }
-                        
-                    }
-                    
                     StringBuilder sb = new StringBuilder();
                     StringBuilder show = new StringBuilder();
                     for (int i = 0; i < selected.length; i++)
@@ -977,37 +983,6 @@ public class AlarmAddActivity extends Activity
                 }
             })
             .show();
-    }
-    
-    private List<Integer> getShareMap()
-    {
-        ShareSDK.initSDK(this);
-        List<Integer> shareLs = new ArrayList<Integer>();
-        Platform[] weibos = ShareSDK.getPlatformList(context);
-        for (Platform wb : weibos)
-        {
-            if (wb.isValid())
-            {
-                String name = wb.getName();
-                if (SinaWeibo.NAME.equals(name))
-                {
-                    shareLs.add(2);
-                }
-                if (QZone.NAME.equals(name))
-                {
-                    shareLs.add(3);
-                }
-                if (Renren.NAME.equals(name))
-                {
-                    shareLs.add(4);
-                }
-                if (TencentWeibo.NAME.equals(name))
-                {
-                    shareLs.add(5);
-                }
-            }
-        }
-        return shareLs;
     }
     
     @OnActivityResult(CONTACT_REQUEST_CODE)
