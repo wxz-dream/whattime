@@ -26,7 +26,6 @@ import com.whatime.db.DBHelper;
 import com.whatime.db.Task;
 import com.whatime.db.User;
 import com.whatime.framework.application.MyApp;
-import com.whatime.framework.network.pojo.ApkVersion;
 import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.util.SysUtil;
 
@@ -399,14 +398,12 @@ public class AlarmServiceImpl implements AlarmService
     }
     
     @Override
-    public ApkVersion checkVersion()
+    public void checkVersion(Handler handler)
     {
-        ApkVersion version = null;
         if (SysUtil.hasNetWorkConection(context))
         {
-            version = new RemoteApiImpl().updateAppVersion();
+            new RemoteApiImpl().updateAppVersion(handler);
         }
-        return version;
     }
 
     @Override

@@ -90,8 +90,8 @@ public class AlarmAddActivity extends Activity
     @ViewById
     LinearLayout alarm_des_ll;
     
-    @ViewById
-    RelativeLayout alarm_state;
+    /*@ViewById
+    RelativeLayout alarm_state;*/
     
     @ViewById
     RelativeLayout alarm_cate;
@@ -379,7 +379,7 @@ public class AlarmAddActivity extends Activity
         if (mAlarm.getShare() != null && mAlarm.getShare().length() > 0)
         {
             alarm_des_ll.setVisibility(View.VISIBLE);
-            alarm_state.setVisibility(View.VISIBLE);
+            //alarm_state.setVisibility(View.VISIBLE);
             alarm_cate.setVisibility(View.VISIBLE);
             alarm_linkman.setVisibility(View.VISIBLE);
             maxJoinNum_ll.setVisibility(View.VISIBLE);
@@ -405,7 +405,7 @@ public class AlarmAddActivity extends Activity
         else
         {
             alarm_des_ll.setVisibility(View.GONE);
-            alarm_state.setVisibility(View.GONE);
+            //alarm_state.setVisibility(View.GONE);
             alarm_cate.setVisibility(View.GONE);
             alarm_linkman.setVisibility(View.GONE);
             maxJoinNum_ll.setVisibility(View.GONE);
@@ -613,6 +613,7 @@ public class AlarmAddActivity extends Activity
                     //share
                     if (mAlarm.getShare() != null && mAlarm.getShare().contains("2"))
                     {
+                        String url = "http://whatime.duapp.com/android/android";
                         Calendar c = Calendar.getInstance(TimeZone.getDefault());
                         c.setTimeInMillis(mAlarm.getAlarmTime());
                         StringBuilder title = new StringBuilder();
@@ -624,19 +625,21 @@ public class AlarmAddActivity extends Activity
                             .append(mAlarm.getTitle())
                             .append("]吧");
                         StringBuilder des = new StringBuilder();
-                        des.append("快下载[天天有约]来参加吧。地址：详情：\n")
-                            .append("主题：")
+                        des.append("快下载APP[天天有约]来参加吧。下载地址：")
+                            .append(url)
+                            .append("\n*详情：\n")
+                            .append("*主题：")
                             .append(mAlarm.getTitle())
                             .append("\n")
-                            .append("时间：")
+                            .append("*时间：")
                             .append(c.get(Calendar.MONTH) + 1)
                             .append(".")
                             .append(c.get(Calendar.DAY_OF_MONTH))
                             .append("\n")
-                            .append("描述：")
+                            .append("*描述：")
                             .append(mAlarm.getDes());
                         ShareSDK.initSDK(context);
-                        showOnekeyshare(null, false, title.toString(), des.toString());
+                        showOnekeyshare(null, false, url, title.toString(), des.toString());
                     }
                 }
                 else
@@ -648,21 +651,21 @@ public class AlarmAddActivity extends Activity
         }
     }
     
-    private void showOnekeyshare(String platform, boolean silent, String title, String des)
+    private void showOnekeyshare(String platform, boolean silent, String url, String title, String des)
     {
         OnekeyShare oks = new OnekeyShare();
         // 分享时Notification的图标和文字
         oks.setNotification(R.drawable.ic_launcher, context.getString(R.string.app_name));
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
         oks.setTitle(title);
-        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-        oks.setTitleUrl("http://sharesdk.cn");
         // text是分享文本，所有平台都需要这个字段
         oks.setText(des);
+        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+        oks.setTitleUrl(url);
         // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl("http://sharesdk.cn");
+        oks.setUrl(url);
         // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl("http://sharesdk.cn");
+        oks.setSiteUrl(url);
         // 是否直接分享（true则直接分享）
         oks.setSilent(silent);
         // 指定分享平台，和slient一起使用可以直接分享到指定的平台

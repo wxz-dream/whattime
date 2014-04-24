@@ -5,9 +5,14 @@ import java.util.TimeZone;
 
 import android.content.Context;
 import android.text.format.DateFormat;
+import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.whatime.R;
 import com.whatime.db.Alarm;
+import com.whatime.db.DBHelper;
+import com.whatime.db.Task;
 import com.whatime.framework.application.MyApp;
 import com.whatime.framework.util.SysUtil;
 import com.whatime.module.holiday.HolidayCache;
@@ -139,5 +144,54 @@ public class AlarmUtil
             .append("  (").append(SysUtil.getCurrentDayOfWeek(context, c.get(Calendar.DAY_OF_WEEK)))
             .append(")  ").append(c.get(Calendar.HOUR_OF_DAY)).append(":").append(SysUtil.doubleDataFormat(c.get(Calendar.MINUTE)))
             .toString();
+    }
+    
+    /**
+     * 修改提醒
+     * @param json
+     */
+    public static synchronized void uptAlarms(String json)
+    {
+        com.alibaba.fastjson.JSONArray arrs = JSONArray.parseArray(json);
+        Log.e("xpf", "size_:"+arrs.size());
+        for (Object obj : arrs)
+        {
+            Alarm ps = JSON.parseObject(obj.toString(), Alarm.class);
+            Alarm alarm = DBHelper.getInstance().getAlarmByUuidd(ps.getUuid());
+            if (alarm != null)
+            {
+                ps.setId(alarm.getId());
+                if (ps.getShare() == null || (ps.getShare() != null && !ps.getAllowChange()))
+                {
+                    DBHelper.getInstance().uptAlarm(ps);
+                }
+            }
+            else
+            {
+                DBHelper.getInstance().addAlarm(ps);
+            }
+            for (Task psTask : ps.getTasks())
+            {
+                if (psTask != null)
+                {
+                    Task t = DBHelper.getInstance().getTaskByUuid(psTask.getUuid());
+                    if (t != null)
+                    {
+                        psTask.setAlarm(ps);
+                        psTask.setId(t.getId());
+                        DBHelper.getInstance().uptTask(psTask);
+                    }
+                    else
+                    {
+                        psTask.setAlarm(ps);
+                        DBHelper.getInstance().addTask(psTask);
+                    }
+                }
+            }
+            Alarm uptAlarm = DBHelper.getInstance().getAlarmById(ps.getId());
+            uptAlarm.setTask(DBHelper.getInstance().getNextTaskByAlarmId(ps.getId()));
+            DBHelper.getInstance().uptAlarm(uptAlarm);
+            
+        }
     }
 }

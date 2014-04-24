@@ -106,9 +106,9 @@ public class AlarmController
      * 检测版本更新
      * @param myHandler 
      */
-    public ApkVersion checkVersion()
+    public void checkVersion(Handler handler)
     {
-        return service.checkVersion();
+        service.checkVersion(handler);
     }
     
     public void getApk(String url, String path, Handler handler)

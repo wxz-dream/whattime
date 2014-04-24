@@ -3,7 +3,6 @@ package com.whatime.controller.service;
 import android.os.Handler;
 
 import com.whatime.db.Alarm;
-import com.whatime.framework.network.pojo.ApkVersion;
 
 public interface AlarmService
 {
@@ -27,7 +26,7 @@ public interface AlarmService
 
     public void addAlarm(Alarm alarm,Handler myHandler);
 
-    public ApkVersion checkVersion();
+    public void checkVersion(Handler handler);
 
     public void getApk(String url,String path, Handler handler);
 }

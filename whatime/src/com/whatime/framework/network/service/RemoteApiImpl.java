@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -17,6 +18,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.whatime.controller.center.AlarmController;
+import com.whatime.controller.service.AlarmUtil;
 import com.whatime.db.Alarm;
 import com.whatime.db.Category;
 import com.whatime.db.DBHelper;
@@ -472,6 +474,7 @@ public class RemoteApiImpl
                     List<Alarm> noSyncAlarms = DBHelper.getInstance().getNoSyncLocalAlarms();
                     if (noSyncAlarms != null && noSyncAlarms.size() > 0)
                     {
+                        Log.e("xpf", "getNoSyncLocalAlarms"+noSyncAlarms.size());
                         for (Alarm a : noSyncAlarms)
                         {
                             List<Task> ts = a.getTasks();
@@ -484,6 +487,7 @@ public class RemoteApiImpl
                     List<Alarm> noUptAlarms = DBHelper.getInstance().getNoUptLocalAlarms();
                     if (noUptAlarms != null && noUptAlarms.size() > 0)
                     {
+                        Log.e("xpf", "getNoUptLocalAlarms"+noUptAlarms.size());
                         for (Alarm a : noUptAlarms)
                         {
                             List<Task> ts = a.getTasks();
@@ -617,7 +621,7 @@ public class RemoteApiImpl
                 {
                     if (response.containsKey("resInfo"))
                     {
-                        uptAlarms(response.getString("resInfo"));
+                        AlarmUtil.uptAlarms(response.getString("resInfo"));
                         Context context = MyApp.getInstance().getApplicationContext();
                         controller.setNextAlert();
                         Intent i = new Intent(context, MainActivity.class);
@@ -657,7 +661,7 @@ public class RemoteApiImpl
                 {
                     if (response.containsKey("resInfo"))
                     {
-                        uptAlarms(response.getString("resInfo"));
+                        AlarmUtil.uptAlarms(response.getString("resInfo"));
                         Context context = MyApp.getInstance().getApplicationContext();
                         controller.setNextAlert();
                         Intent i = new Intent(context, MainActivity.class);
@@ -670,54 +674,7 @@ public class RemoteApiImpl
         });
     }
     
-    /**
-     * 修改提醒
-     * @param json
-     */
-    private synchronized void uptAlarms(String json)
-    {
-        com.alibaba.fastjson.JSONArray arrs = JSONArray.parseArray(json);
-        
-        for (Object obj : arrs)
-        {
-            Alarm ps = JSON.parseObject(obj.toString(), Alarm.class);
-            Alarm alarm = DBHelper.getInstance().getAlarmByUuidd(ps.getUuid());
-            if (alarm != null)
-            {
-                ps.setId(alarm.getId());
-                if (ps.getShare() != null || (ps.getShare() != null && !ps.getAllowChange()))
-                {
-                    DBHelper.getInstance().uptAlarm(ps);
-                }
-            }
-            else
-            {
-                DBHelper.getInstance().addAlarm(ps);
-            }
-            for (Task psTask : ps.getTasks())
-            {
-                if (psTask != null)
-                {
-                    Task t = DBHelper.getInstance().getTaskByUuid(psTask.getUuid());
-                    if (t != null)
-                    {
-                        psTask.setAlarm(ps);
-                        psTask.setId(t.getId());
-                        DBHelper.getInstance().uptTask(psTask);
-                    }
-                    else
-                    {
-                        psTask.setAlarm(ps);
-                        DBHelper.getInstance().addTask(psTask);
-                    }
-                }
-            }
-            Alarm uptAlarm = DBHelper.getInstance().getAlarmById(ps.getId());
-            uptAlarm.setTask(DBHelper.getInstance().getNextTaskByAlarmId(ps.getId()));
-            DBHelper.getInstance().uptAlarm(uptAlarm);
-            
-        }
-    }
+    
     
     /**
      * 获取同步分类
@@ -755,10 +712,6 @@ public class RemoteApiImpl
                             {
                                 DBHelper.getInstance().addCate(cate);
                             }
-                            Context context = MyApp.getInstance().getApplicationContext();
-                            Intent i = new Intent(context, MainActivity.class);
-                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(i);
                         }
                     }
                 }
@@ -1274,8 +1227,11 @@ public class RemoteApiImpl
      * 获取版本信息
      * @return
      */
-    public ApkVersion updateAppVersion()
+    public void updateAppVersion(final Handler handler)
     {
+        final Message msg = new Message();
+        final Bundle data = new Bundle();
+        msg.what = 0x002;
         final User user = MyApp.getInstance().getUser();
         final RequestParams params = new RequestParams();
         if (user != null)
@@ -1283,23 +1239,35 @@ public class RemoteApiImpl
             params.addBodyParameter("userUuid", user.getUuid());
             params.addBodyParameter("mime", user.getMime());
         }
-        String json = HttpSycnUtil.post(HttpAsycnUtil.getUrl(Constants.SYSTEM_CHECK_VERSION_URL), params);
-        JSONObject response = JSON.parseObject(json);
-        if (response == null)
-        {
-            return null;
-        }
-        int state = response.getInteger("state");
-        if (state == ResponseCons.STATE_SUCCESS)
-        {
-            if (response.containsKey("resInfo"))
+        HttpAsycnUtil.post(HttpAsycnUtil.getUrl(Constants.SYSTEM_CHECK_VERSION_URL),
+            params,
+            new MyRequestCallBack(msg, data, handler)
             {
-                String verStr = response.getString("resInfo");
-                ApkVersion version = JSON.parseObject(verStr, ApkVersion.class);
-                return version;
-            }
-        }
-        return null;
+                @Override
+                public void onSuccess(ResponseInfo<String> json)
+                {
+                    JSONObject response = JSON.parseObject(json.result);
+                    if (response == null)
+                    {
+                        return;
+                    }
+                    int state = response.getInteger("state");
+                    String stateInfo = response.getString("stateInfo");
+                    data.putInt(ResponseCons.STATE, state);
+                    data.putString(ResponseCons.STATEINFO, stateInfo);
+                    if (state == ResponseCons.STATE_SUCCESS)
+                    {
+                        if (response.containsKey("resInfo"))
+                        {
+                            String verStr = response.getString("resInfo");
+                            ApkVersion version = JSON.parseObject(verStr, ApkVersion.class);
+                            data.putSerializable(ResponseCons.RESINFO,version);
+                        }
+                    }
+                    msg.setData(data);
+                    handler.sendMessage(msg);
+                }
+            });
     }
     
     /**

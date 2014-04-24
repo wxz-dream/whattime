@@ -18,7 +18,6 @@ package com.whatime.framework.ui.activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -32,7 +31,6 @@ import android.widget.Toast;
 
 import com.whatime.R;
 import com.whatime.controller.center.AlarmController;
-import com.whatime.framework.aservice.AlarmCenterAService;
 import com.whatime.framework.network.pojo.ApkVersion;
 import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.ui.fragment.BaseFragment;
@@ -74,10 +72,10 @@ public class MainActivity extends FragmentActivity implements IChangeFragment
         public void handleMessage(Message msg)
         {
             super.handleMessage(msg);
+            int state = msg.getData().getInt(ResponseCons.STATE);
             switch (msg.what)
             {
                 case 0x001:
-                    int state = msg.getData().getInt(ResponseCons.STATE);
                     if (state == ResponseCons.STATE_SUCCESS)
                     {
                         Toast toast = Toast.makeText(context, "下载成功", Toast.LENGTH_SHORT);
@@ -85,14 +83,50 @@ public class MainActivity extends FragmentActivity implements IChangeFragment
                         toast.show();
                         SysUtil.installApp(context);
                     }
-                    else
+                    break;
+                case 0x002:
+                    if (state == ResponseCons.STATE_SUCCESS)
                     {
+                        final ApkVersion version = (ApkVersion)msg.getData().get(ResponseCons.RESINFO);
+                        if (version != null)
+                        {
+                            final String path = Environment.getExternalStorageDirectory() + "/ttyy/ttyy.apk";
+                            String myVersion = SysUtil.getAppVersionName();
+                            String serverVersion = version.getVersion();
+                            if (!myVersion.equals(serverVersion))
+                            {
+                                Long size = version.getSize() / (1024 * 1024);
+                                StringBuilder sb = new StringBuilder();
+                                sb.append("当前版本： ")
+                                    .append(myVersion)
+                                    .append("\n")
+                                    .append("更新版本： ")
+                                    .append(serverVersion)
+                                    .append("\n")
+                                    .append("新版本大小： ")
+                                    .append(size)
+                                    .append("MB")
+                                    .append("\n")
+                                    .append("更新信息： ")
+                                    .append(version.getDes());
+                                new AlertDialog.Builder(context).setTitle("发现新版本")
+                                    .setMessage(sb)
+                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+                                    {
+                                        public void onClick(DialogInterface d, int w)
+                                        {
+                                            controller.getApk(version.getUrl(), path, myHandler);
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.cancel, null)
+                                    .show();
+                            }
+                        }
                     }
                     break;
             }
         }
     };
-    
     @Override
     protected void onCreate(Bundle arg0)
     {
@@ -102,42 +136,15 @@ public class MainActivity extends FragmentActivity implements IChangeFragment
         setContentView(R.layout.main);
         init();
         initListener(newsFragment);
-        startService(new Intent(MainActivity.this, AlarmCenterAService.class));
-        controller.sync();
-        final ApkVersion version = controller.checkVersion();
-        if (version != null)
-        {
-            final String path = Environment.getExternalStorageDirectory() + "/ttyy/ttyy.apk";
-            String myVersion = SysUtil.getAppVersionName();
-            String serverVersion = version.getVersion();
-            if (!myVersion.equals(serverVersion))
-            {
-                Long size = version.getSize()/(1024*1024);
-                StringBuilder sb = new StringBuilder();
-                sb.append("当前版本： ")
-                    .append(myVersion)
-                    .append("\n")
-                    .append("更新版本： ")
-                    .append(serverVersion)
-                    .append("\n")
-                    .append("新版本大小： ")
-                    .append(size).append("MB")
-                    .append("\n")
-                    .append("更新信息： ")
-                    .append(version.getDes());
-                new AlertDialog.Builder(context).setTitle("发现新版本")
-                    .setMessage(sb)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-                    {
-                        public void onClick(DialogInterface d, int w)
-                        {
-                            controller.getApk(version.getUrl(), path, myHandler);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show();
-            }
-        }
+        controller.checkVersion(myHandler);
+        Log.e("xpf", "--------onCreate----------");
+    }
+    @Override
+    protected void onResume()
+    {
+        // TODO Auto-generated method stub
+        super.onResume();
+        Log.e("xpf", "--------onResume----------");
     }
     
     private void init()

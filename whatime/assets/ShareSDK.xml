@@ -48,16 +48,16 @@
     -->
     
     <ShareSDK 
-        AppKey = "androidv1101"/> <!-- 修改成你在sharesdk后台注册的应用的appkey"-->
+        AppKey = "1a3c4a9eb1be"/> <!-- 修改成你在sharesdk后台注册的应用的appkey"-->
     
     
     <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
     <SinaWeibo
         Id="1"
         SortId="1"
-        AppKey="568898243"
-        AppSecret="38a4f8204cc784f81f9f0daaf31e02e3"
-        RedirectUrl="http://www.sharesdk.cn"
+        AppKey="2646340338"
+        AppSecret="0b36f02f6d4f8966cc2ca9f318ac5448"
+        RedirectUrl="http://whatime.duapp.com/android/android"
         ShareByAppClient="false"
         Enable="true" />
 

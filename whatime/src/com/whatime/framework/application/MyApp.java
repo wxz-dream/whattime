@@ -33,8 +33,6 @@ public class MyApp extends Application
     
     private static List<User> myFriends;
     
-    private static String url = "";
-    
     public MyApp()
     {
     }
@@ -65,25 +63,21 @@ public class MyApp extends Application
         {
             citys = new HashMap<String, List<String>>();
             List<String> ps = getProvince();
-            for (String pro : ps)
+            if (ps != null)
             {
-                List<String> city = WebServiceUtil.getCityListByProvince(pro);
-                Collections.sort(city);
-                citys.put(pro, city);
+                for (String pro : ps)
+                {
+                    List<String> city = WebServiceUtil.getCityListByProvince(pro);
+                    if(city!=null)
+                    {
+                        Collections.sort(city);
+                        citys.put(pro, city);
+                    }
+                }
             }
         }
         
         return citys;
-    }
-    
-    public String getAppUrl()
-    {
-        return url;
-    }
-    
-    public void setAppUrl(String u)
-    {
-        url = u;
     }
     
     public synchronized List<String> getProvince()
@@ -91,7 +85,10 @@ public class MyApp extends Application
         if (null == providers || providers.size() == 0)
         {
             providers = WebServiceUtil.getProvinceList();
-            Collections.sort(providers);
+            if (providers != null)
+            {
+                Collections.sort(providers);
+            }
         }
         return providers;
     }
