@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color_deep"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/login_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/title_bg_blue" >
+
+        <Button
+            android:id="@+id/login_reback_btn"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/title_btn_back"
+            android:text="@string/login_back"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="用户帮助"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+             >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="10dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="为什么闹钟没有按时提醒？"
+                    android:textColor="@color/black"
+                    android:textSize="20dip"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip"
+                    android:text="以下情况，会导致闹钟无法响铃：\n1.关机；\n2.闹钟被第三方安全软件误清理（请在安全软件中将天天有约设置为白名单应用或信任应用）；\n3.闹钟音量被调至最小。"
+                    android:textSize="17dip" />
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="10dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="为什么应用需要发送短信的权限？"
+                    android:textColor="@color/black"
+                    android:textSize="20dip"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip"
+                    android:text="天天有约起床模块包含起床监督人功能，如果您设置了起床监督人，而您在起床闹钟响起时没有在一分钟之内关闭闹钟，系统会认为闹钟没有叫醒您，此时会根据您的设置，为每一位监督人发送一条短信息，提醒他打电话叫您起床。"
+                    android:textSize="17dip" />
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="10dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="为什么我设置了起床联系人，却没有发送短信给她？"
+                    android:textColor="@color/black"
+                    android:textSize="20dip"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip"
+                    android:text="以下情况下系统不能成功发送短信息：\n1.手机欠费；\n2.应用申请发送短信息的请求被第三方安全软件拦截，请在安全软件中设置允许天天有约的发送短信权限，并设置授权为下次不提醒。"
+                    android:textSize="17dip" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="10dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="为什么要设计成一个主活动与多个子活动的模式？"
+                    android:textColor="@color/black"
+                    android:textSize="20dip"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip"
+                    android:text="考虑到一个活动的进行通常都包含较多的事件，比如一个旅游活动包含1.集合出发；2.定点吃饭；3.自由活动；4.某地点集合;5.集合返回。"
+                    android:textSize="17dip" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="10dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="我在另一台手机上登录，数据能同步吗？"
+                    android:textColor="@color/black"
+                    android:textSize="20dip"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dip"
+                    android:text="天天有约从设计之初就支持数据的云备份。您的每一条活动提醒都在后台备份到云服务器。您在另一台手机登录或者卸载重新安装登录，只要登录您的帐号，数据会自动同步更新。"
+                    android:textSize="17dip" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

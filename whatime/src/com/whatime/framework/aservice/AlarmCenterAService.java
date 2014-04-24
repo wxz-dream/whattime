@@ -42,16 +42,20 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Vibrator;
 import android.telephony.PhoneStateListener;
+import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.whatime.R;
 import com.whatime.controller.center.AlarmController;
+import com.whatime.controller.cons.AlarmCons;
 import com.whatime.controller.cons.AlarmServiceCons;
 import com.whatime.controller.service.AlarmAlertWakeLock;
 import com.whatime.controller.service.AlarmUtil;
 import com.whatime.db.Alarm;
 import com.whatime.db.Task;
+import com.whatime.db.User;
+import com.whatime.framework.application.MyApp;
 import com.whatime.framework.ui.activity.MainActivity;
 
 /**
@@ -116,6 +120,10 @@ public class AlarmCenterAService extends Service
     
     Notification notification;
     
+    private Context context;
+    
+    private static boolean isClose = false;
+    
     private Handler mHandler = new Handler()
     {
         public void handleMessage(Message msg)
@@ -126,6 +134,7 @@ public class AlarmCenterAService extends Service
                     Log.v("wangxianming", "*********** Alarm killer triggered ***********");
                     sendKillBroadcast((Alarm)msg.obj);
                     stopSelf();
+                    isClose = true;
                     break;
                 case FOCUSCHANGE:
                     switch (msg.arg1)
@@ -177,6 +186,7 @@ public class AlarmCenterAService extends Service
             {
                 sendKillBroadcast(mCurrentAlarm);
                 stopSelf();
+                isClose = true;
             }
         }
     };
@@ -184,6 +194,7 @@ public class AlarmCenterAService extends Service
     @Override
     public void onCreate()
     {
+        context = this;
         mNM = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
         try
         {
@@ -230,12 +241,12 @@ public class AlarmCenterAService extends Service
         if (a != null)
         {
             Task t = a.getTask();
-            if(t==null)
+            if (t == null)
             {
                 return;
             }
             title = t.getTitle();
-            if(title.length()==0)
+            if (title.length() == 0)
             {
                 title = a.getTitle();
             }
@@ -547,9 +558,57 @@ public class AlarmCenterAService extends Service
                 @Override
                 public void run()
                 {
+                    if (!isClose)
+                    {
+                        
+                        //TODO
+                        if (mCurrentAlarm.getType().equals(AlarmCons.TYPE_GETUP))
+                        {
+                            String surpervise = mCurrentAlarm.getTask().getSurpervise();
+                            Log.e("xpf-message", surpervise);
+                            if (surpervise != null && surpervise.length() > 0)
+                            {
+                                String[] mans = surpervise.split(",");
+                                if (mans != null)
+                                {
+                                    User user = MyApp.getInstance().getUser();
+                                    for (String man : mans)
+                                    {
+                                        String[] tel = man.split(":");
+                                        SmsManager smsManager = SmsManager.getDefault();
+                                        PendingIntent sentIntent =
+                                            PendingIntent.getBroadcast(context, 0, new Intent(), 0);
+                                        String name = "";
+                                        String sex = "他";
+                                        if (user != null)
+                                        {
+                                            name = user.getNickName();
+                                            if (user.getSex() == 1)
+                                            {
+                                                sex = "她";
+                                            }
+                                        }
+                                        StringBuilder content =
+                                            new StringBuilder().append("您的好友【")
+                                                .append(name)
+                                                .append(":")
+                                                .append(tel[1])
+                                                .append("】将您设置为起床监督人，现在我们的应用[天天有约]没有成功将")
+                                                .append(sex)
+                                                .append("叫醒，快打个电话叫")
+                                                .append(sex)
+                                                .append("起床吧");
+                                        smsManager.sendTextMessage(tel[1], null, content.toString(), sentIntent, null);
+                                        
+                                    }
+                                }
+                            }
+                        }
+                    }
                     stopSelf();
                 }
-            }, 1000 * 60);
+            },
+            1000 * 60);//
         }
     }
     
@@ -588,6 +647,7 @@ public class AlarmCenterAService extends Service
             
             // Stop vibrator
             mVibrator.cancel();
+            isClose = true;
         }
         disableKiller();
     }

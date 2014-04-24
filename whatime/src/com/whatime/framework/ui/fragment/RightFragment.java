@@ -35,6 +35,8 @@ import com.whatime.module.history.HistoryActivity_;
 import com.whatime.module.login.LoginActivity;
 import com.whatime.module.login.UserInfoActivity;
 import com.whatime.module.thirdLogin.AuthActivity;
+import com.whatime.module.userheler.AboutUsActivity_;
+import com.whatime.module.userheler.UserHelperActivity_;
 
 public class RightFragment extends Fragment
 {
@@ -142,8 +144,10 @@ public class RightFragment extends Fragment
                     startActivity(new Intent(mContext, HistoryActivity_.class));
                     break;
                 case R.id.help_iv:
+                    startActivity(new Intent(mContext, UserHelperActivity_.class));
                     break;
                 case R.id.about_iv:
+                    startActivity(new Intent(mContext, AboutUsActivity_.class));
                     break;
             }
         }

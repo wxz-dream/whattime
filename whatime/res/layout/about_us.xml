@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color_deep"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/login_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/title_bg_blue" >
+
+        <Button
+            android:id="@+id/login_reback_btn"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/title_btn_back"
+            android:text="@string/login_back"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="关于我们"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+             >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dip"
+                android:layout_marginRight="10dip"
+                android:layout_marginTop="10dip"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="[天天有约]\n是$起航工作室$的第一个互联网产品，我们是追逐梦想的一帮人。我们坚信人的一生在于体验，虽不能自由的生，但能自由的活。我们每一天都是在体验着这个世界，体会着不同的酸甜苦辣。而在这人生旅途中，周围风景很重要，但陪伴我们一起走过的朋友们更加重要。我们不但要体验不同的生活，还要珍惜每一位陪伴我们的朋友。因此，[天天有约]承载着我们的这种梦想出现。我们需要与朋友们一起好好的体验这个花花世界。\n\n联系我们\n\n邮箱：devilangelxpf@163.com\nQQ:2429270269"
+                    android:textColor="@color/black"
+                    android:textSize="20dip"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
