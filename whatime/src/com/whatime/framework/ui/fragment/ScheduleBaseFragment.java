@@ -137,19 +137,36 @@ public class ScheduleBaseFragment extends BaseFragment
             @Override
             public void onClick(View arg0)
             {
-                startActivity(new Intent(mContext,QuickAddActivity.class));
+                startActivity(new Intent(mContext, QuickAddActivity.class));
             }
         });
     }
     
     private void getWeatherData()
     {
-        if (!SysUtil.hasNetWorkConection(mContext))
+        long time = preference.getLong("time", 0);
+        long cur = System.currentTimeMillis();
+        if (cur - time < 1000 * 60 * 60)
         {
-            return;
+            Message msg = new Message();
+            msg.what = 0x01;
+            Bundle data = new Bundle();
+            data.putString("city", preference.getString("city", "北京"));
+            data.putInt("icon", preference.getInt("icon", 0));
+            data.putString("temperature", preference.getString("temperature", ""));
+            msg.setData(data);
+            handler.sendMessage(msg);
         }
-        task = new GetWhearTask();
-        task.execute("");
+        else
+        {
+            if (!SysUtil.hasNetWorkConection(mContext))
+            {
+                return;
+            }
+            task = new GetWhearTask();
+            task.execute("");
+        }
+        
     }
     
     class GetWhearTask extends AsyncTask<String, Integer, String>
@@ -176,6 +193,12 @@ public class ScheduleBaseFragment extends BaseFragment
                 msg.setData(data);
                 handler.sendMessage(msg);
                 
+                SharedPreferences.Editor editor = preference.edit();
+                editor.putString("city", city);
+                editor.putInt("icon", WeatherUtil.parseIcon(detail.getProperty(10).toString()));
+                editor.putString("temperature", detail.getProperty(8).toString());
+                editor.putLong("time", System.currentTimeMillis());
+                editor.commit();
             }
             catch (Exception e)
             {
