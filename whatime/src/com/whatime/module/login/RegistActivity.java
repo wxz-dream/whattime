@@ -14,6 +14,7 @@ import com.whatime.R;
 import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.view.ToastMaster;
+import com.whatime.framework.util.SysUtil;
 
 public class RegistActivity extends Activity {
 	private EditText mUser;
@@ -76,7 +77,24 @@ public class RegistActivity extends Activity {
                 case R.id.regist_btn:
                     String userName = mUser.getText().toString();
                     String password = mPassword.getText().toString();
-                    new RemoteApiImpl().registUser(userName, password,myHandler);
+                    if(userName.length()==0||password.length()==0)
+                    {
+                        Toast toast = Toast.makeText(RegistActivity.this, "用户名或密码不能为空。", Toast.LENGTH_SHORT);
+                        ToastMaster.setToast(toast);
+                        toast.show();
+                        break;
+                    }
+                    if(SysUtil.checkEmail(userName)||SysUtil.isMobileNO(userName))
+                    {
+                        new RemoteApiImpl().registUser(userName, password,myHandler);
+                    }
+                    else
+                    {
+                        Toast toast = Toast.makeText(RegistActivity.this, "格式错误，请输入正确的邮箱或手机号。", Toast.LENGTH_SHORT);
+                        ToastMaster.setToast(toast);
+                        toast.show();
+                    }
+                    
                     break;
             }
         }

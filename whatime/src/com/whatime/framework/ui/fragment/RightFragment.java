@@ -106,7 +106,10 @@ public class RightFragment extends Fragment
         if (user != null)
         {
             user_name.setText(user.getNickName());
-            bitmapUtils.display(login_iv, user.getUserphotoUri());
+            if(user.getUserphotoUri()!=null)
+            {
+                bitmapUtils.display(login_iv, user.getUserphotoUri());
+            }
         }
     }
     

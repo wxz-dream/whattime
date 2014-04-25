@@ -142,7 +142,10 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
         if (user != null)
         {
             users.add(i, user);
-            sb.append(user.getNickName());
+            if(user.getNickName()!=null)
+            {
+                sb.append(user.getNickName());
+            }
         }
         sb.append(" * ")
             .append(c.get(Calendar.YEAR))

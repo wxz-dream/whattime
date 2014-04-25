@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.Intent;
@@ -334,6 +336,41 @@ public class SysUtil
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(realFilePath), "application/vnd.android.package-archive");
         context.startActivity(intent);
+    }
+    
+    /**
+     * 验证邮箱地址是否正确
+     * @param email
+     * @return
+     */
+    public static boolean checkEmail(String email){
+     boolean flag = false;
+     try{
+      String check = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+      Pattern regex = Pattern.compile(check);
+      Matcher matcher = regex.matcher(email);
+      flag = matcher.matches();
+     }catch(Exception e){
+      flag = false;
+     }
+     
+     return flag;
+    }
+    /**
+     * 验证手机号码
+     * @param mobiles
+     * @return
+     */
+    public static boolean isMobileNO(String mobiles){
+     boolean flag = false;
+     try{
+      Pattern p = Pattern.compile("1[0-9]{10}");
+      Matcher m = p.matcher(mobiles);
+      flag = m.matches();
+     }catch(Exception e){
+      flag = false;
+     }
+     return flag;
     }
     
 }
