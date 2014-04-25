@@ -57,7 +57,7 @@
         SortId="1"
         AppKey="2646340338"
         AppSecret="0b36f02f6d4f8966cc2ca9f318ac5448"
-        RedirectUrl="http://whatime.duapp.com/android/android"
+        RedirectUrl="http://whatime.duapp.com"
         ShareByAppClient="false"
         Enable="true" />
 
