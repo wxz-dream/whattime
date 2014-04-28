@@ -193,7 +193,7 @@ public class AlarmUtil
             Alarm uptAlarm = DBHelper.getInstance().getAlarmById(ps.getId());
             uptAlarm.setTask(DBHelper.getInstance().getNextTaskByAlarmId(ps.getId()));
             DBHelper.getInstance().uptAlarm(uptAlarm);
-            
         }
     }
+    
 }

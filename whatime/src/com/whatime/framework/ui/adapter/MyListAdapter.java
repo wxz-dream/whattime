@@ -20,6 +20,9 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+
 import com.lidroid.xutils.BitmapUtils;
 import com.whatime.R;
 import com.whatime.controller.center.AlarmController;
@@ -124,6 +127,37 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
                             DBHelper.getInstance().addTask(task);
                         }
                         controller.addAlarm(alarm, handler);
+                      //share
+                        if (alarm.getShare() != null && alarm.getShare().contains("2"))
+                        {
+                            String url = "http://whatime.duapp.com/android/android";
+                            Calendar c = Calendar.getInstance(TimeZone.getDefault());
+                            c.setTimeInMillis(alarm.getAlarmTime());
+                            StringBuilder title = new StringBuilder();
+                            title.append("天天有约(")
+                                .append(c.get(Calendar.MONTH) + 1)
+                                .append(".")
+                                .append(c.get(Calendar.DAY_OF_MONTH))
+                                .append(")一起来[")
+                                .append(alarm.getTitle())
+                                .append("]吧");
+                            StringBuilder des = new StringBuilder();
+                            des.append("快下载APP[天天有约]来参加吧。下载地址：")
+                                .append(url)
+                                .append("\n*详情：\n")
+                                .append("*主题：")
+                                .append(alarm.getTitle())
+                                .append("\n")
+                                .append("*时间：")
+                                .append(c.get(Calendar.MONTH) + 1)
+                                .append(".")
+                                .append(c.get(Calendar.DAY_OF_MONTH))
+                                .append("\n")
+                                .append("*描述：")
+                                .append(alarm.getDes());
+                            ShareSDK.initSDK(context);
+                            showOnekeyshare(null, false, url, title.toString(), des.toString());
+                        }
                     }
                     else
                     {
@@ -182,6 +216,31 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
         TextView joinNum = (TextView)v.findViewById(R.id.item_joinNum);
         joinNum.setText(String.valueOf(alarm.getJoinNum()));
         return v;
+    }
+    private void showOnekeyshare(String platform, boolean silent, String url, String title, String des)
+    {
+        OnekeyShare oks = new OnekeyShare();
+        // 分享时Notification的图标和文字
+        oks.setNotification(R.drawable.ic_launcher, context.getString(R.string.app_name));
+        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+        oks.setTitle(title);
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText(des);
+        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+        oks.setTitleUrl(url);
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl(url);
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl(url);
+        // 是否直接分享（true则直接分享）
+        oks.setSilent(silent);
+        // 指定分享平台，和slient一起使用可以直接分享到指定的平台
+        if (platform != null)
+        {
+            oks.setPlatform(platform);
+        }
+        
+        oks.show(context);
     }
     
     @Override
