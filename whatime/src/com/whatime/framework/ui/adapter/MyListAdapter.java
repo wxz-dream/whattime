@@ -91,7 +91,7 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
                 }
             }
         });
-        if (user.getUserphotoUri() != null)
+        if (user!=null&&user.getUserphotoUri() != null)
         {
             bitmapUtils.display(userPhoto, user.getUserphotoUri());
         }
