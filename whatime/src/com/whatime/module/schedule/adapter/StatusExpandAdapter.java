@@ -287,7 +287,7 @@ public class StatusExpandAdapter extends BaseExpandableListAdapter
             }
             if (taskTitle != null && taskTitle.length() > 0)
             {
-                oneLine.append("★").append(taskTitle);
+                oneLine.append("\n★").append(taskTitle);
             }
             labelView.setText(oneLine);
         }

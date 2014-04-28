@@ -122,9 +122,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="left"
                 android:paddingLeft="8dip"
-                android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?android:attr/textColorTertiary"
+                android:maxLines="2"
                 android:textStyle="bold" />
 
             <TextView
@@ -133,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:gravity="left"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:paddingLeft="8dip"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?android:attr/textColorTertiary" />

@@ -712,6 +712,10 @@ public class RemoteApiImpl
                             {
                                 DBHelper.getInstance().addCate(cate);
                             }
+                            Context context = MyApp.getInstance().getApplicationContext();
+                            Intent i = new Intent(context, MainActivity.class);
+                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(i);
                         }
                     }
                 }

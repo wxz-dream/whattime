@@ -214,7 +214,16 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
             .append(SysUtil.doubleDataFormat(alarmC.get(Calendar.MINUTE)));
         alarmTime.setText(alarmLabel);
         TextView joinNum = (TextView)v.findViewById(R.id.item_joinNum);
-        joinNum.setText(String.valueOf(alarm.getJoinNum()));
+        long num = alarm.getJoinNum();
+        if(num<10000)
+        {
+            joinNum.setText(String.valueOf(num));
+        }
+        else
+        {
+            joinNum.setText(String.valueOf(num/10000)+"W+");
+        }
+        
         return v;
     }
     private void showOnekeyshare(String platform, boolean silent, String url, String title, String des)
