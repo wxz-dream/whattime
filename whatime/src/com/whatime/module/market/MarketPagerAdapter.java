@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 import com.whatime.R;
 import com.whatime.db.Alarm;
@@ -26,6 +27,7 @@ import com.whatime.framework.ui.adapter.MyListAdapter;
 import com.whatime.framework.ui.pull.XListView;
 import com.whatime.framework.ui.pull.XListView.IXListViewListener;
 import com.whatime.framework.ui.view.ToastMaster;
+import com.whatime.framework.util.SysUtil;
 
 public class MarketPagerAdapter extends PagerAdapter implements IXListViewListener
 {
@@ -170,6 +172,7 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
         {
             return;
         }
+        toastNet();
         Calendar startC = Calendar.getInstance(TimeZone.getDefault());
         if (startC.getTimeInMillis() < startTime)
         {
@@ -216,6 +219,7 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
         {
             return;
         }
+        toastNet();
         new RemoteApiImpl().getMarketAlarm(handler,
             cates.get(mPager.getCurrentItem()).getId(),
             "",
@@ -240,6 +244,16 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
         plv.stopLoadMore();
         plv.setRefreshTime("刚刚");
         
+    }
+    
+    private void toastNet()
+    {
+        if(!SysUtil.hasNetWorkConection(context))
+        {
+            Toast toast = Toast.makeText(context, "请检查网络连接", Toast.LENGTH_SHORT);
+            ToastMaster.setToast(toast);
+            toast.show();
+        }
     }
     
     public String getScope()
