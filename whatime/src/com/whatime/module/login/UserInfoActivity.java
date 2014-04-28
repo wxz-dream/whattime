@@ -37,6 +37,7 @@ import com.whatime.framework.application.MyApp;
 import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.view.ToastMaster;
+import com.whatime.framework.util.SysUtil;
 
 public class UserInfoActivity extends Activity
 {
@@ -452,15 +453,27 @@ public class UserInfoActivity extends Activity
             /*
             Bitmap dBitmap = BitmapFactory.decodeFile(tp);
             Drawable drawable = new BitmapDrawable(dBitmap);*/
-            File f = new File(Environment.getExternalStorageDirectory() + "/ttyy/myPhoto.jpg");
+            File f = new File(SysUtil.getPath() + File.separator + "myPhoto.jpg");
             FileOutputStream fOut = null;
             try
             {
-                f.createNewFile();
-                fOut = new FileOutputStream(f);
+                if(SysUtil.checkSDCard())
+                {
+                    if(f.exists())
+                    {
+                        f.deleteOnExit();
+                    }
+                    f.createNewFile();
+                    fOut = new FileOutputStream(f);
+                }
+                else
+                {
+                    context.openFileOutput(f.getName(), Context.MODE_APPEND);
+                }
             }
             catch (Exception e1)
             {
+                return;
             }
             photo.compress(Bitmap.CompressFormat.PNG, 100, fOut);
             try

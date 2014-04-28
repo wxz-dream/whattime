@@ -198,13 +198,13 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
         
         <activity
-            android:name="com.whatime.module.userheler.UserHelperActivity_"
+            android:name="com.whatime.module.userhelp.UserHelperActivity_"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         
         <activity
-            android:name="com.whatime.module.userheler.AboutUsActivity_"
+            android:name="com.whatime.module.userhelp.AboutUsActivity_"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />

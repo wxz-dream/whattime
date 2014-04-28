@@ -1,6 +1,7 @@
 package com.whatime.framework.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -332,7 +333,7 @@ public class SysUtil
     public static void installApp(Context context)
     {
         // 获取url,然后调用系统的Intent,来自动安装下载的apk文件
-        final File realFilePath = new File(Environment.getExternalStorageDirectory() + "/ttyy/ttyy.apk");
+        final File realFilePath = new File(getPath() + File.separator + "ttyy.apk");
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(realFilePath), "application/vnd.android.package-archive");
         context.startActivity(intent);
@@ -343,34 +344,77 @@ public class SysUtil
      * @param email
      * @return
      */
-    public static boolean checkEmail(String email){
-     boolean flag = false;
-     try{
-      String check = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-      Pattern regex = Pattern.compile(check);
-      Matcher matcher = regex.matcher(email);
-      flag = matcher.matches();
-     }catch(Exception e){
-      flag = false;
-     }
-     
-     return flag;
+    public static boolean checkEmail(String email)
+    {
+        boolean flag = false;
+        try
+        {
+            String check = "^([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+            Pattern regex = Pattern.compile(check);
+            Matcher matcher = regex.matcher(email);
+            flag = matcher.matches();
+        }
+        catch (Exception e)
+        {
+            flag = false;
+        }
+        
+        return flag;
     }
+    
     /**
      * 验证手机号码
      * @param mobiles
      * @return
      */
-    public static boolean isMobileNO(String mobiles){
-     boolean flag = false;
-     try{
-      Pattern p = Pattern.compile("1[0-9]{10}");
-      Matcher m = p.matcher(mobiles);
-      flag = m.matches();
-     }catch(Exception e){
-      flag = false;
-     }
-     return flag;
+    public static boolean isMobileNO(String mobiles)
+    {
+        boolean flag = false;
+        try
+        {
+            Pattern p = Pattern.compile("1[0-9]{10}");
+            Matcher m = p.matcher(mobiles);
+            flag = m.matches();
+        }
+        catch (Exception e)
+        {
+            flag = false;
+        }
+        return flag;
     }
     
+    /** 
+     * 检验SDcard状态 
+     * @return boolean 
+     */
+    public static boolean checkSDCard()
+    {
+        if (android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    public static String getPath()
+    {
+        String res = "";
+        if (checkSDCard())
+        {
+            res = Environment.getExternalStorageDirectory() + File.separator + "ttyy";
+        }
+        else
+        {
+            res = MyApp.getInstance().getApplicationContext().getCacheDir().getAbsolutePath() + File.separator + "ttyy";
+        }
+        File f = new File(res);
+        if (!f.exists())
+        {
+            f.mkdirs();
+        }
+        return res;
+    }
 }

@@ -35,8 +35,8 @@ import com.whatime.module.history.HistoryActivity_;
 import com.whatime.module.login.LoginActivity;
 import com.whatime.module.login.UserInfoActivity;
 import com.whatime.module.thirdLogin.AuthActivity;
-import com.whatime.module.userheler.AboutUsActivity_;
-import com.whatime.module.userheler.UserHelperActivity_;
+import com.whatime.module.userhelp.AboutUsActivity_;
+import com.whatime.module.userhelp.UserHelperActivity_;
 
 public class RightFragment extends Fragment
 {
