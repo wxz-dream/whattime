@@ -63,6 +63,9 @@ public class FriendReqActivity extends Activity
                             reqs = (List<FriendReq>)list.get(0);
                             firend_req_lv.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
+                            Toast toast = Toast.makeText(FriendReqActivity.this, "消息已发送", Toast.LENGTH_SHORT);
+                            ToastMaster.setToast(toast);
+                            toast.show();
                         }
                     }
                     else
