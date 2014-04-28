@@ -178,12 +178,14 @@ public class AlarmUtil
                     if (t != null)
                     {
                         psTask.setAlarm(ps);
+                        psTask.setAlarmUuid(ps.getUuid());
                         psTask.setId(t.getId());
                         DBHelper.getInstance().uptTask(psTask);
                     }
                     else
                     {
                         psTask.setAlarm(ps);
+                        psTask.setAlarmUuid(ps.getUuid());
                         DBHelper.getInstance().addTask(psTask);
                     }
                 }

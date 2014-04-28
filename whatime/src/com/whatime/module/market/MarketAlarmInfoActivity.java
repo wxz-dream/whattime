@@ -167,8 +167,19 @@ public class MarketAlarmInfoActivity extends Activity
             market_alarm_cate.setText(DBHelper.getInstance().getcaById(mAlarm.getCateId()).getName());
         }
         market_alarm_scope.setText(mAlarm.getScope());
-        market_alarm_linkman.setText("");
-        
+        market_alarm_linkman.setText(mAlarm.getLinkman());
+        market_alarm_max_joinNum.setText(String.valueOf(mAlarm.getMaxJoinNum()));
+        Calendar c = Calendar.getInstance(TimeZone.getDefault());
+        c.setTimeInMillis(mAlarm.getEndTime());
+        market_alarm_endTime.setText(new StringBuilder().append(c.get(Calendar.YEAR))
+            .append("-")
+            .append(c.get(Calendar.MONTH) + 1)
+            .append("-")
+            .append(SysUtil.doubleDataFormat(c.get(Calendar.DAY_OF_MONTH)))
+            .append(" (")
+            .append(SysUtil.getCurrentDayOfWeek(context, c.get(Calendar.DAY_OF_WEEK)))
+            .append(")")
+            .toString());
     }
     
     @Click
@@ -192,6 +203,7 @@ public class MarketAlarmInfoActivity extends Activity
             {
                 task.setUuid(UUID.randomUUID().toString());
                 task.setAlarm(mAlarm);
+                task.setAlarmUuid(mAlarm.getUuid());
                 DBHelper.getInstance().addTask(task);
             }
             controller.addAlarm(mAlarm, handler);

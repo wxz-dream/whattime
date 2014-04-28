@@ -302,7 +302,7 @@ public class AlarmAddActivity extends Activity
                         public void onClick(DialogInterface d, int w)
                         {
                             DBHelper.getInstance().deleteTask(mAlarm.getTasks().get(arg2).getId());
-                            adapter.notifyDataSetChanged();
+                            onResume();
                         }
                     })
                     .setNegativeButton(android.R.string.cancel, null)

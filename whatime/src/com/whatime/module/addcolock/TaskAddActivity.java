@@ -695,7 +695,7 @@ public class TaskAddActivity extends Activity
         mTask.setAddress(address.getText().toString());
         mTask.setNotice(notice.getText().toString());
         mTask.setAlarmUuid(mAlarm.getUuid());
-        mTask.setAlarmUuid(mAlarm.getUuid());
+        mTask.setAlarm(mAlarm);
         if (task_id == -1)
         {
             DBHelper.getInstance().addTask(mTask);

@@ -120,6 +120,7 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
                         {
                             task.setUuid(UUID.randomUUID().toString());
                             task.setAlarm(alarm);
+                            task.setAlarmUuid(alarm.getUuid());
                             DBHelper.getInstance().addTask(task);
                         }
                         controller.addAlarm(alarm, handler);
