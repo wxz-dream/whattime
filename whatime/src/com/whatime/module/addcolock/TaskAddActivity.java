@@ -105,8 +105,8 @@ public class TaskAddActivity extends Activity
     @ViewById
     RelativeLayout advance;
     
-    @ViewById
-    RelativeLayout play;
+    /*@ViewById
+    RelativeLayout play;*/
     
     @ViewById
     RelativeLayout music;
@@ -481,12 +481,12 @@ public class TaskAddActivity extends Activity
         }
         if (mAlarm.getType() == AlarmCons.TYPE_SLEEP)
         {
-            play.setVisibility(View.VISIBLE);
+            //play.setVisibility(View.VISIBLE);
             advance.setVisibility(View.GONE);
         }
         else
         {
-            play.setVisibility(View.GONE);
+            //play.setVisibility(View.GONE);
             advance.setVisibility(View.VISIBLE);
         }
     }
