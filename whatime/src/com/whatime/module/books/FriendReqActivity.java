@@ -24,8 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lidroid.xutils.BitmapUtils;
 import com.whatime.R;
-import com.whatime.framework.application.MyApp;
 import com.whatime.framework.network.pojo.ResponseCons;
 import com.whatime.framework.network.service.RemoteApiImpl;
 import com.whatime.framework.ui.view.MyListView;
@@ -40,6 +40,8 @@ public class FriendReqActivity extends Activity
     private Context context;
     
     private MyAdapter adapter;
+    
+    private BitmapUtils bitmapUtils;
     
     private List<FriendReq> reqs = new ArrayList<FriendReq>();
     
@@ -80,6 +82,7 @@ public class FriendReqActivity extends Activity
         super.onCreate(savedInstanceState);
         context = this;
         adapter = new MyAdapter();
+        bitmapUtils = new BitmapUtils(this);
         new RemoteApiImpl().findMyAddFriendsReq(myHandler);
     }
     
@@ -129,7 +132,10 @@ public class FriendReqActivity extends Activity
             View v = LayoutInflater.from(context).inflate(R.layout.friend_req_item, null);
             ImageView item_friend_photo = (ImageView)v.findViewById(R.id.item_friend_photo);
             String photo = req.getUserphotoUri();
-            
+            if (photo != null)
+            {
+                bitmapUtils.display(item_friend_photo, photo);
+            }
             TextView item_friend_nickName = (TextView)v.findViewById(R.id.item_friend_nickName);
             item_friend_nickName.setText(req.getNickName());
             TextView item_friend_remark = (TextView)v.findViewById(R.id.item_friend_remark);
