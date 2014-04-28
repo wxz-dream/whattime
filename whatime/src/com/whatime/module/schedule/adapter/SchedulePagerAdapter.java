@@ -156,26 +156,8 @@ public class SchedulePagerAdapter extends PagerAdapter implements IXListViewList
                     if (state == ResponseCons.STATE_SUCCESS)
                     {
                         ArrayList list = msg.getData().getParcelableArrayList(ResponseCons.RESINFO);
-                        alarms = (List<Alarm>)list.get(0);
-                        if (alarms.size() > 0)
-                        {
-                            listAdapter = new MyListAdapter(context, alarms);
-                            friend_alarm_lv.setOnItemClickListener(new OnItemClickListener()
-                            {
-                                
-                                @Override
-                                public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
-                                {
-                                    int position = (int)arg3;
-                                    if (position != -1)
-                                    {
-                                        context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm",
-                                            alarms.get(position)));
-                                    }
-                                }
-                            });
-                            friend_alarm_lv.setAdapter(listAdapter);
-                        }
+                        alarms.addAll((List<Alarm>)list.get(0));
+                        listAdapter.notifyDataSetChanged();
                     }
                     onLoad();
                     break;
@@ -245,8 +227,10 @@ public class SchedulePagerAdapter extends PagerAdapter implements IXListViewList
             case 1:
                 onRefresh();
                 listAdapter = new MyListAdapter(context, alarms);
-                friend_alarm_lv = (XListView)LayoutInflater.from(context)
-                    .inflate(R.layout.layout_listview_in_viewpager, container, false);
+                friend_alarm_lv =
+                    (XListView)LayoutInflater.from(context).inflate(R.layout.layout_listview_in_viewpager,
+                        container,
+                        false);
                 friend_alarm_lv.setAdapter(listAdapter);
                 friend_alarm_lv.setXListViewListener(this);
                 friend_alarm_lv.setOnItemClickListener(new OnItemClickListener()
@@ -272,7 +256,6 @@ public class SchedulePagerAdapter extends PagerAdapter implements IXListViewList
         return obj;
     }
     
-
     @Override
     public void onRefresh()
     {
@@ -299,10 +282,9 @@ public class SchedulePagerAdapter extends PagerAdapter implements IXListViewList
         }
         startTime = startC.getTimeInMillis();
         endTime = endC.getTimeInMillis();
-        new RemoteApiImpl().findUserFriendsAlarms(myHandler,
-            startTime,
-            endTime,
-            0);
+        mPage = 0;
+        alarms.clear();
+        new RemoteApiImpl().findUserFriendsAlarms(myHandler, startTime, endTime, mPage);
         myHandler.postDelayed(new Runnable()
         {
             @Override
@@ -316,10 +298,7 @@ public class SchedulePagerAdapter extends PagerAdapter implements IXListViewList
     @Override
     public void onLoadMore()
     {
-        new RemoteApiImpl().findUserFriendsAlarms(myHandler,
-            startTime,
-            endTime,
-            mPage++);
+        new RemoteApiImpl().findUserFriendsAlarms(myHandler, startTime, endTime, ++mPage);
         myHandler.postDelayed(new Runnable()
         {
             @Override

@@ -45,7 +45,7 @@ public class XListView extends ListView implements OnScrollListener {
 
 	// -- footer view
 	private XListViewFooter mFooterView;
-	private boolean mEnablePullLoad;
+	private boolean mEnablePullLoad = true;
 	private boolean mPullLoading;
 	private boolean mIsFooterReady = false;
 	
@@ -109,6 +109,7 @@ public class XListView extends ListView implements OnScrollListener {
 								.removeGlobalOnLayoutListener(this);
 					}
 				});
+		setPullLoadEnable(true);
 	}
 
 	@Override

@@ -54,6 +54,8 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     
     private List<View> views = new ArrayList<View>();
     
+    private List<MyListAdapter> adapters = new ArrayList<MyListAdapter>();
+    
     private Handler handler = new Handler()
     {
         public void handleMessage(android.os.Message msg)
@@ -65,26 +67,21 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
                     if (state == ResponseCons.STATE_SUCCESS)
                     {
                         ArrayList list = msg.getData().getParcelableArrayList(ResponseCons.RESINFO);
-                        alarms.add(mPager.getCurrentItem(), (List<Alarm>)list.get(0));
+                        
+                        if (mPage == 0)
+                        {
+                            alarms.add(mPager.getCurrentItem(), (List<Alarm>)list.get(0));
+                        }
+                        if (mPage > 0)
+                        {
+                            alarms.get(mPager.getCurrentItem()).addAll((List<Alarm>)list.get(0));
+                        }
                         if (alarms.size() > 0)
                         {
-                            listAdapter = new MyListAdapter(context, alarms.get(mPager.getCurrentItem()));
+                            
                             plv = (XListView)views.get(mPager.getCurrentItem());
-                            plv.setOnItemClickListener(new OnItemClickListener()
-                            {
-                                
-                                @Override
-                                public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
-                                {
-                                    int position = (int)arg3;
-                                    if (position != -1)
-                                    {
-                                        context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm",
-                                            alarms.get(mPager.getCurrentItem()).get((int)arg3)));
-                                    }
-                                }
-                            });
-                            plv.setAdapter(listAdapter);
+                            adapters.get(mPager.getCurrentItem()).setAlarms(alarms.get(mPager.getCurrentItem()));
+                            adapters.get(mPager.getCurrentItem()).notifyDataSetChanged();
                         }
                     }
                     onLoad();
@@ -111,6 +108,7 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
                     .inflate(R.layout.layout_listview_in_viewpager, container, false);
             alarms.add(position, new ArrayList<Alarm>());
             listAdapter = new MyListAdapter(context, alarms.get(position));
+            adapters.add(position, listAdapter);
             plv.setAdapter(listAdapter);
             plv.setXListViewListener(this);
             plv.setOnItemClickListener(new OnItemClickListener()
@@ -129,7 +127,6 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
             });
             views.add(position, plv);
         }
-        mPage = 0;
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         container.addView(views.get(position), 0, params);
         onRefresh();
@@ -196,12 +193,14 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
         }
         startTime = startC.getTimeInMillis();
         endTime = endC.getTimeInMillis();
+        alarms.get(mPager.getCurrentItem()).clear();
+        mPage = 0;
         new RemoteApiImpl().getMarketAlarm(handler,
             cates.get(mPager.getCurrentItem()).getId(),
             "",
             startTime,
             endTime,
-            0);
+            mPage);
         handler.postDelayed(new Runnable()
         {
             @Override
@@ -225,7 +224,7 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
             "",
             startTime,
             endTime,
-            mPage++);
+            ++mPage);
         handler.postDelayed(new Runnable()
         {
             @Override
@@ -248,7 +247,7 @@ public class MarketPagerAdapter extends PagerAdapter implements IXListViewListen
     
     private void toastNet()
     {
-        if(!SysUtil.hasNetWorkConection(context))
+        if (!SysUtil.hasNetWorkConection(context))
         {
             Toast toast = Toast.makeText(context, "请检查网络连接", Toast.LENGTH_SHORT);
             ToastMaster.setToast(toast);

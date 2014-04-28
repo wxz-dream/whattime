@@ -101,25 +101,10 @@ public class FriendInfoActivity extends Activity implements IXListViewListener
                     if (state == ResponseCons.STATE_SUCCESS)
                     {
                         ArrayList list = msg.getData().getParcelableArrayList(ResponseCons.RESINFO);
-                        alarms = (List<Alarm>)list.get(0);
+                        alarms.addAll((List<Alarm>)list.get(0));
                         if (alarms.size() > 0)
                         {
-                            listAdapter = new MyListAdapter(context, alarms);
-                            friend_alarm_lv.setOnItemClickListener(new OnItemClickListener()
-                            {
-                                
-                                @Override
-                                public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
-                                {
-                                    int position = (int)arg3;
-                                    if (position != -1)
-                                    {
-                                        context.startActivity(new Intent(context, MarketAlarmInfoActivity_.class).putExtra("alarm",
-                                            alarms.get(position)));
-                                    }
-                                }
-                            });
-                            friend_alarm_lv.setAdapter(listAdapter);
+                            listAdapter.notifyDataSetChanged();
                         }
                     }
                     onLoad();
@@ -224,11 +209,13 @@ public class FriendInfoActivity extends Activity implements IXListViewListener
         }
         startTime = startC.getTimeInMillis();
         endTime = endC.getTimeInMillis();
+        mPage = 0;
+        alarms.clear();
         new RemoteApiImpl().getManAlarm(handler,
             user.getUuid(),
             startTime,
             endTime,
-            0);
+            mPage);
         handler.postDelayed(new Runnable()
         {
             @Override
@@ -246,7 +233,7 @@ public class FriendInfoActivity extends Activity implements IXListViewListener
             user.getUuid(),
             startTime,
             endTime,
-            mPage++);
+            ++mPage);
         handler.postDelayed(new Runnable()
         {
             @Override

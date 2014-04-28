@@ -322,4 +322,9 @@ public class MyListAdapter extends BaseAdapter implements ListAdapter
         super.notifyDataSetChanged();
     }
     
+    public void setAlarms(List<Alarm> alarms)
+    {
+        this.alarms = alarms;
+    }
+    
 }
